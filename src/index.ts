@@ -57,24 +57,24 @@ let p: PostsCon[] = [
     },
     {
 
-        title: "Let try",
-        shortDescription: "Search",
+        title: "write",
+        shortDescription: "reason",
         content: "super decision",
         bloggerId: 2,
         bloggerName: 'goTry'
     },
     {
 
-        title: "Let try",
-        shortDescription: "Search",
+        title: "a good",
+        shortDescription: "watch",
         content: "super decision",
         bloggerId: 3,
         bloggerName: 'hard'
     },
     {
 
-        title: "Let try",
-        shortDescription: "Search",
+        title: "code",
+        shortDescription: "more",
         content: "super decision",
         bloggerId: 4,
         bloggerName: 'dontLookBack'
