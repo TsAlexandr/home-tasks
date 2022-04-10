@@ -8,13 +8,19 @@ export const bloggersRepository = {
         return bloggers.find(p => p.id === id)
     },
     deletePostsById(id: number) {
-
+        return bloggers.findIndex(delBlog => delBlog.id != id)
     },
-    updatePostsById(id: number, title: string) {
-
+    updatePostsById(id: number) {
+        return bloggers.find(b => b.id === id)
     },
-    createPosts(title: string, youtubeUrl: string) {
-
+    createPosts(name: string, youtubeUrl: string) {
+        const newBlogger = {
+            id: +(new Date()),
+            name: name,
+            youtubeUrl: youtubeUrl
+        }
+        bloggers.push(newBlogger)
+        return newBlogger
     }
 }
 

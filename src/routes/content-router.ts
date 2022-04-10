@@ -2,31 +2,33 @@ import {request, Request, Response, Router} from "express";
 import {postsRepository} from "../repositories/posts-repository";
 import {posts} from "../repositories/db";
 import {body, validationResult} from "express-validator";
+import {inputValidator} from "../middlewares/input-validator-middlewares";
+
 
 export const contentRouter = Router({})
 
+
 contentRouter.get('/', (req, res) => {
     const posts = postsRepository.getPosts()
-    if (posts) {
-        res.send(200).send(posts)
-    } else {
-        res.send(400)
-    }
-    })
+    res.send(posts)
+})
 
-    .get('/:id', (req, res) => {
+    .get('/:id',
+
+        inputValidator,
+        (req, res) => {
         const id = +req.params.id
         const postCon = postsRepository.getPostsById(id)
         if (postCon) {
-            res.send(postCon)
+            res.send(postCon).send(200)
         } else {
-            res.send(404).json({})
+            res.send(404)
         }
     })
 
-    .post('/', body(), (req, res) => {
+    .post('/',  (req, res) => {
         const newPost = postsRepository.createPosts(
-            req.body.id,
+
             req.body.title,
             req.body.shortDescription,
             req.body.content,
@@ -41,20 +43,20 @@ contentRouter.get('/', (req, res) => {
 
     .put('/:id', (req, res) => {
         const id = parseInt(req.params.id)
-        const post = posts.find(post => post.bloggerId === id)
+        const post = postsRepository.updatePostsById(id)
         if (post) {
-            post.title = req.body.title
-            res.send(204).json(post)
+            post.title = req.body.title,
+                res.send(204).send(post)
         } else {
-            res.send(400).json({})
+            res.send(400).send({})
         }
     })
 
     .delete('/:id', (req, res) => {
         const id = +req.params.id
-        const delPost = posts.findIndex(delPost => delPost.bloggerId === id)
+        const delPost = postsRepository.deletePostsById(id)
         if (delPost < 0) {
-            res.send(404).json({})
+            res.send(404).send({})
         } else {
             posts.slice(delPost, 1)
             res.send(204)

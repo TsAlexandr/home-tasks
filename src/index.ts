@@ -15,8 +15,7 @@ app.use(cors())
 app.use(bodyParser.json())
 app.use('/posts', contentRouter)
 app.use('/bloggers', bloggersRouter)
-// let regExp = '^https://([a-zA-Z0-9_-]+.)+[a-zA-Z0-9_-]+(/[a-zA-Z0-9_-]+)*/?$'
-// let reg = new RegExp(regExp)
+
 
 
 

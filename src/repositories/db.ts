@@ -1,5 +1,6 @@
 interface PostsCon {
-    bloggerId: Bloggers['id'],
+    id: number
+    bloggerId?: Bloggers['id'],
     title: string | null
     shortDescription: string | null
     content: string | null
@@ -23,6 +24,7 @@ export let bloggers: Bloggers[] = [
 
 export let posts: PostsCon[] = [
     {
+        id: 1,
         title: "Let try",
         shortDescription: "Search",
         content: "super decision",
@@ -30,7 +32,7 @@ export let posts: PostsCon[] = [
         bloggerName: 'Alex'
     },
     {
-
+        id: 2,
         title: "write",
         shortDescription: "reason",
         content: "group therapy",
@@ -38,7 +40,7 @@ export let posts: PostsCon[] = [
         bloggerName: 'goTry'
     },
     {
-
+        id: 3,
         title: "a good",
         shortDescription: "watch",
         content: "new version",
@@ -46,7 +48,7 @@ export let posts: PostsCon[] = [
         bloggerName: 'hard'
     },
     {
-
+        id: 4,
         title: "code",
         shortDescription: "more",
         content: "clockwork",

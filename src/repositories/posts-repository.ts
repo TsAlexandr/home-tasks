@@ -5,23 +5,22 @@ export const postsRepository = {
         return posts
     },
     getPostsById(id: number) {
-        return posts.find(p => p.bloggerId === id)
+        return posts.find(p => p.id === id)
     },
     deletePostsById: function(id: number) {
-
+        return posts.findIndex(delPost => delPost.bloggerId === id)
     },
-    updatePostsById(id: number, title: string) {
-
+    updatePostsById(id: number) {
+        return posts.find(post => post.bloggerId === id)
     },
     createPosts(
-        id: number,
         title : string,
         shortDescription: string,
         content: string,
         bloggerName: string
     ) {
         const newPost = {
-            bloggerId: id,
+            id: +(new Date()),
             title: title,
             shortDescription: shortDescription,
             content: content,
