@@ -1,7 +1,6 @@
 import {Router} from "express";
 import {bloggersRepository} from "../repositories/bloggers-repository";
-import {bloggers} from "../repositories/db";
-import {body, validationResult} from "express-validator";
+import {body} from "express-validator";
 import {inputValidator} from "../middlewares/input-validator-middlewares";
 
 const reg = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+$/
@@ -13,60 +12,71 @@ const blogValid = () => {
         .withMessage('Max 15 symbols')
         .matches(/^[\w ]*$/)
         .withMessage('Only letters/numbers-_ and whitespace')
+        .not()
+        .isEmpty()
 }
 
 const urlValid = () => {
     body('youtubeUrl')
         .matches(reg)
         .withMessage('Please enter a valid url')
+        .not()
+        .isEmpty()
 }
 
 export const bloggersRouter = Router({})
 
-bloggersRouter.get('/', (req, res) => {
-    const bloggers = bloggersRepository.getBloggers()
-    res.send(bloggers)
-})
+bloggersRouter.get('/',
+    async (req, res) => {
+        const bloggers = await bloggersRepository.getBloggers()
+        res.send(bloggers)
+    })
 
-    .get('/:id', (req, res) => {
-    const id = +req.params.id
-    const blogger = bloggersRepository.getPostsById(id)
-    if (blogger) {
-        res.send(blogger)
-    }
-})
+    .get('/:id',
+        async (req, res) => {
+            const blogger = await bloggersRepository.getBloggersById(+req.params.id)
+            if (blogger) {
+                res.send(blogger)
+            } else {
+                res.status(404)
+            }
+        })
 
-    .put('/:id', blogValid, urlValid, inputValidator, (req, res) => {
-    const id = parseInt(req.params.id);
-    const blogger = bloggersRepository.updatePostsById(id)
-    if (blogger === undefined) {
-        res.send(404).json({})
-    } else {
-        blogger.name = req.body.name
-        blogger.youtubeUrl = req.body.youtubeUrl
-        res.status(204).send(blogger)
-    }
-})
+    .put('/:id',
+        blogValid,
+        urlValid,
+        inputValidator,
+        async (req, res) => {
+            const updBlogger = await bloggersRepository.updateBloggerById(+req.params.id, req.body.name, req.body.youtubeUrl)
+            if (updBlogger) {
+                const blogger = bloggersRepository.getBloggersById(+req.params.id)
+                res.status(204).send(blogger)
+            } else {
+                res.sendStatus(404)
+            }
+        })
 
-    .post('/', blogValid, urlValid, inputValidator,(req, res) => {
-    const newBlogger = bloggersRepository.createPosts(req.body.name, req.body.youtubeUrl)
-    res.send(newBlogger)
-    if ((newBlogger.youtubeUrl)) {
-        res.send(400).json({})
+    .post('/',
+        blogValid,
+        urlValid,
+        inputValidator,
+        async (req, res) => {
+            const newBlogger = await bloggersRepository.createBlogger(req.body.name, req.body.youtubeUrl)
+            if (newBlogger) {
+                res.send(newBlogger)
 
-    } else if (newBlogger) {
-        res.send(201).send(newBlogger)
+            } else {
+                res.status(400)
 
-    }
-})
+            }
+        })
 
-    .delete('/:id', (req, res) => {
-    const id = parseInt(req.params.id)
-    const delBlog = bloggersRepository.deletePostsById(id)
-    if (delBlog < 0) {
-        res.send(404).json({})
-    } else {
-        bloggers.splice(delBlog, 1)
-        res.send(204)
-    }
-})
+    .delete('/:id',
+        async (req, res) => {
+            const isDeleted = await bloggersRepository.deleteBloggerById(+req.params.id)
+            if (isDeleted) {
+                res.sendStatus(404)
+            } else {
+                res.sendStatus(204)
+            }
+        })

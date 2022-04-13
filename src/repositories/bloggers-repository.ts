@@ -1,19 +1,27 @@
-import {bloggers} from "./db";
+import {bloggers, bloggersCollection} from "./db";
 
 export const bloggersRepository = {
-    getBloggers() {
-        return bloggers
+    async getBloggers() {
+        return bloggersCollection.find().toArray()
     },
-    getPostsById(id: number) {
-        return bloggers.find(p => p.id === id)
+    async getBloggersById(id: number) {
+        const blogger = bloggersCollection.findOne({id})
+            if(blogger) {
+                return blogger
+            } else {
+                return null
+            }
     },
-    deletePostsById(id: number) {
-        return bloggers.findIndex(delBlog => delBlog.id != id)
+    async deleteBloggerById(id: number) {
+        const delBlog = await bloggersCollection.deleteOne({id})
+        return delBlog.deletedCount === 1
     },
-    updatePostsById(id: number) {
-        return bloggers.find(b => b.id === id)
+    async updateBloggerById(id: number, name: string, youtubeUrl: string) {
+        const updBlog = await bloggersCollection.updateOne(
+            {id}, {$set: {name,youtubeUrl}})
+        return updBlog.matchedCount === 1
     },
-    createPosts(name: string, youtubeUrl: string) {
+    async createBlogger(name: string, youtubeUrl: string) {
         const newBlogger = {
             id: +(new Date()),
             name: name,
