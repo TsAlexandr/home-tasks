@@ -5,24 +5,6 @@ import {inputValidator} from "../middlewares/input-validator-middlewares";
 
 const reg = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+$/
 
-const blogValid = () => {
-    body('name')
-        .trim()
-        .isLength({min: 2, max: 15})
-        .withMessage('Max 15 symbols')
-        .matches(/^[\w ]*$/)
-        .withMessage('Only letters/numbers-_ and whitespace')
-        .not()
-        .isEmpty()
-}
-
-const urlValid = () => {
-    body('youtubeUrl')
-        .matches(reg)
-        .withMessage('Please enter a valid url')
-        .not()
-        .isEmpty()
-}
 
 export const bloggersRouter = Router({})
 
@@ -44,8 +26,19 @@ bloggersRouter.get('/',
         })
 
     .put('/:id',
-        blogValid,
-        urlValid,
+        body('name')
+            .trim()
+            .isLength({min: 2, max: 15})
+            .withMessage('Max 15 symbols')
+            .matches(/^[\w ]*$/)
+            .withMessage('Only letters/numbers-_ and whitespace')
+            .not()
+            .isEmpty(),
+        body('youtubeUrl')
+            .matches(reg)
+            .withMessage('Please enter a valid url')
+            .not()
+            .isEmpty(),
         inputValidator,
         async (req, res) => {
         const id = +req.params.id
@@ -59,13 +52,24 @@ bloggersRouter.get('/',
         })
 
     .post('/',
-        blogValid,
-        urlValid,
+        body('name')
+            .trim()
+            .isLength({min: 2, max: 15})
+            .withMessage('Max 15 symbols')
+            .matches(/^[\w ]*$/)
+            .withMessage('Only letters/numbers-_ and whitespace')
+            .not()
+            .isEmpty(),
+        body('youtubeUrl')
+            .matches(reg)
+            .withMessage('Please enter a valid url')
+            .not()
+            .isEmpty(),
         inputValidator,
         async (req, res) => {
             const newBlogger = await bloggersService.createBlogger(req.body.name, req.body.youtubeUrl)
             if (newBlogger) {
-                res.send(newBlogger)
+                res.status(201).send(newBlogger)
             } else {
                 res.status(400)
 
@@ -74,11 +78,11 @@ bloggersRouter.get('/',
 
     .delete('/:id',
         async (req, res) => {
-        const id = +req.params.id
+            const id = +req.params.id
             const isDeleted = await bloggersService.deleteBloggerById(id)
             if (isDeleted) {
-                res.sendStatus(404)
-            } else {
                 res.sendStatus(204)
+            } else {
+                res.sendStatus(404)
             }
         })
