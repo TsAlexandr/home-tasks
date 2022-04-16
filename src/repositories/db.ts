@@ -4,13 +4,16 @@ const mongoUri =
     process.env.MONGO_URI || "mongodb://localhost:27017/?maxPoolSize=20&w=majority"
 
 export const client = new MongoClient(mongoUri);
+export const bloggersCollection = client.db("bloggers-posts").collection('bloggers-management')
+export const postsCollection = client.db("bloggers-posts").collection('posts-management')
+
 
 export async function runDb() {
     try {
         // Connect the client to the server
         await client.connect();
         // Establish and verify connection
-        await client.db("bloggers - posts").command({ ping: 1 });
+        await client.db("bloggers-posts").command({ ping: 1 });
         console.log("Connected successfully to mongo server");
 
     } catch {
@@ -18,8 +21,6 @@ export async function runDb() {
         await client.close();
     }
 }
-
-export const bloggersCollection = client.db().collection('bloggers-management')
 
 
 

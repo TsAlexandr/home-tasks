@@ -2,7 +2,9 @@ import {Bloggers, bloggersCollection} from "./db";
 
 export const bloggersRepository = {
     async getBloggers() {
-        const bloggers = await bloggersCollection.find().toArray()
+        const bloggers = await bloggersCollection
+            .find()
+            .toArray()
         return bloggers
     },
     async getBloggersById(id: number) {
