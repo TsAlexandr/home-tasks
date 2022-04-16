@@ -1,10 +1,9 @@
 import {Router} from "express";
 import {bloggersService} from "../domain/bloggers-service";
-import {body} from "express-validator";
+import {body, check} from "express-validator";
 import {inputValidator} from "../middlewares/input-validator-middlewares";
 
 const reg = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+$/
-
 
 export const bloggersRouter = Router({})
 
@@ -15,6 +14,8 @@ bloggersRouter.get('/',
     })
 
     .get('/:id',
+        check('id').isNumeric(),
+        inputValidator,
         async (req, res) => {
         const id = +req.params.id
             const blogger = await bloggersService.getBloggersById(id)
@@ -25,27 +26,25 @@ bloggersRouter.get('/',
             }
         })
 
-    .put('/:id',
+    .put('/:id', check('id').isNumeric(),
         body('name')
+            .isString()
             .trim()
-            .isLength({min: 2, max: 15})
-            .withMessage('Max 15 symbols')
-            .matches(/^[\w ]*$/)
-            .withMessage('Only letters/numbers-_ and whitespace')
             .not()
             .isEmpty(),
         body('youtubeUrl')
             .matches(reg)
-            .withMessage('Please enter a valid url')
-            .not()
-            .isEmpty(),
+            .withMessage('Please enter a valid url'),
         inputValidator,
         async (req, res) => {
         const id = +req.params.id
-            const updBlogger = await bloggersService.updateBloggerById(id, req.body.name, req.body.youtubeUrl)
+            const updBlogger = await bloggersService.updateBloggerById(
+                id,
+                req.body.name,
+                req.body.youtubeUrl
+            )
             if (updBlogger) {
-                const blogger = bloggersService.getBloggersById(+req.params.id)
-                res.status(204).send(blogger)
+                res.status(204).send(updBlogger)
             } else {
                 res.sendStatus(404)
             }
@@ -53,21 +52,19 @@ bloggersRouter.get('/',
 
     .post('/',
         body('name')
+            .isString()
             .trim()
-            .isLength({min: 2, max: 15})
-            .withMessage('Max 15 symbols')
-            .matches(/^[\w ]*$/)
-            .withMessage('Only letters/numbers-_ and whitespace')
             .not()
             .isEmpty(),
         body('youtubeUrl')
             .matches(reg)
-            .withMessage('Please enter a valid url')
-            .not()
-            .isEmpty(),
+            .withMessage('Please enter a valid url'),
         inputValidator,
         async (req, res) => {
-            const newBlogger = await bloggersService.createBlogger(req.body.name, req.body.youtubeUrl)
+            const newBlogger = await bloggersService.createBlogger(
+                req.body.name,
+                req.body.youtubeUrl
+            )
             if (newBlogger) {
                 res.status(201).send(newBlogger)
             } else {
@@ -76,7 +73,8 @@ bloggersRouter.get('/',
             }
         })
 
-    .delete('/:id',
+    .delete('/:id', check('id').isNumeric(),
+        inputValidator,
         async (req, res) => {
             const id = +req.params.id
             const isDeleted = await bloggersService.deleteBloggerById(id)

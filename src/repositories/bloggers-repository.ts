@@ -16,7 +16,7 @@ export const bloggersRepository = {
                 youtubeUrl: bloggerById.youtubeUrl
             }
         } else {
-            return null
+            return false
         }
     },
     async deleteBloggerById(id: number) {
@@ -25,7 +25,12 @@ export const bloggersRepository = {
     },
     async updateBloggerById(id: number, name: string, youtubeUrl: string) {
         const updBlog = await bloggersCollection.updateOne(
-            {id}, {$set: {"name": name, "youtubeUrl": youtubeUrl}})
+            {id}, {
+                $set: {
+                    "name": name,
+                    "youtubeUrl": youtubeUrl
+                }
+            })
         return updBlog.matchedCount === 1
     },
     async createBlogger(newBlogger: Bloggers) {
