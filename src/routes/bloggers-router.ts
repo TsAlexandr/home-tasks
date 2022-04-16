@@ -1,5 +1,5 @@
 import {Router} from "express";
-import {bloggersRepository} from "../repositories/bloggers-repository";
+import {bloggersService} from "../domain/bloggers-service";
 import {body} from "express-validator";
 import {inputValidator} from "../middlewares/input-validator-middlewares";
 
@@ -28,13 +28,13 @@ export const bloggersRouter = Router({})
 
 bloggersRouter.get('/',
     async (req, res) => {
-        const bloggers = await bloggersRepository.getBloggers()
+        const bloggers = await bloggersService.getBloggers()
         res.send(bloggers)
     })
 
     .get('/:id',
         async (req, res) => {
-            const blogger = await bloggersRepository.getBloggersById(+req.params.id)
+            const blogger = await bloggersService.getBloggersById(+req.params.id)
             if (blogger) {
                 res.send(blogger)
             } else {
@@ -47,9 +47,9 @@ bloggersRouter.get('/',
         urlValid,
         inputValidator,
         async (req, res) => {
-            const updBlogger = await bloggersRepository.updateBloggerById(+req.params.id, req.body.name, req.body.youtubeUrl)
+            const updBlogger = await bloggersService.updateBloggerById(+req.params.id, req.body.name, req.body.youtubeUrl)
             if (updBlogger) {
-                const blogger = bloggersRepository.getBloggersById(+req.params.id)
+                const blogger = bloggersService.getBloggersById(+req.params.id)
                 res.status(204).send(blogger)
             } else {
                 res.sendStatus(404)
@@ -61,10 +61,9 @@ bloggersRouter.get('/',
         urlValid,
         inputValidator,
         async (req, res) => {
-            const newBlogger = await bloggersRepository.createBlogger(req.body.name, req.body.youtubeUrl)
+            const newBlogger = await bloggersService.createBlogger(req.body.name, req.body.youtubeUrl)
             if (newBlogger) {
                 res.send(newBlogger)
-
             } else {
                 res.status(400)
 
@@ -73,7 +72,7 @@ bloggersRouter.get('/',
 
     .delete('/:id',
         async (req, res) => {
-            const isDeleted = await bloggersRepository.deleteBloggerById(+req.params.id)
+            const isDeleted = await bloggersService.deleteBloggerById(+req.params.id)
             if (isDeleted) {
                 res.sendStatus(404)
             } else {

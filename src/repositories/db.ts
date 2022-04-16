@@ -1,7 +1,7 @@
 import {MongoClient} from 'mongodb'
 
 const mongoUri =
-    process.env.mongoURI = "mongodb://localhost:27017/?maxPoolSize=20&w=majority";
+    process.env.MONGO_URI || "mongodb://localhost:27017/?maxPoolSize=20&w=majority"
 
 export const client = new MongoClient(mongoUri);
 
@@ -23,7 +23,7 @@ export const bloggersCollection = client.db().collection('bloggers-management')
 
 
 
-interface PostsCon {
+export type PostsCon = {
     id: number
     bloggerId?: Bloggers['id'],
     title: string | null
@@ -33,7 +33,7 @@ interface PostsCon {
 
 }
 
-interface Bloggers {
+export type Bloggers = {
     id: number,
     name: string | null
     youtubeUrl: string | null
