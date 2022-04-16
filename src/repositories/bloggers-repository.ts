@@ -2,12 +2,17 @@ import {Bloggers, bloggersCollection} from "./db";
 
 export const bloggersRepository = {
     async getBloggers() {
-        return await bloggersCollection.find().toArray()
+        const bloggers = await bloggersCollection.find().toArray()
+        return bloggers
     },
     async getBloggersById(id: number) {
-        const blogger = await bloggersCollection.findOne({id})
-        if (blogger) {
-            return blogger
+        const bloggerById = await bloggersCollection.findOne({id})
+        if (bloggerById) {
+            return {
+                id: bloggerById.id,
+                name: bloggerById.name,
+                youtubeUrl: bloggerById.youtubeUrl
+            }
         } else {
             return null
         }
@@ -22,7 +27,12 @@ export const bloggersRepository = {
         return updBlog.matchedCount === 1
     },
     async createBlogger(newBlogger: Bloggers) {
-        return await bloggersCollection.insertOne(newBlogger)
+        await bloggersCollection.insertOne(newBlogger)
+        return {
+            id: newBlogger.id,
+            name: newBlogger.name,
+            youtubeUrl: newBlogger.youtubeUrl
+        }
     }
 
 }

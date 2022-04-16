@@ -29,14 +29,15 @@ export const bloggersRouter = Router({})
 bloggersRouter.get('/',
     async (req, res) => {
         const bloggers = await bloggersService.getBloggers()
-        res.send(bloggers)
+        res.status(200).send(bloggers)
     })
 
     .get('/:id',
         async (req, res) => {
-            const blogger = await bloggersService.getBloggersById(+req.params.id)
+        const id = +req.params.id
+            const blogger = await bloggersService.getBloggersById(id)
             if (blogger) {
-                res.send(blogger)
+                res.send(blogger).status(200)
             } else {
                 res.status(404)
             }
@@ -47,7 +48,8 @@ bloggersRouter.get('/',
         urlValid,
         inputValidator,
         async (req, res) => {
-            const updBlogger = await bloggersService.updateBloggerById(+req.params.id, req.body.name, req.body.youtubeUrl)
+        const id = +req.params.id
+            const updBlogger = await bloggersService.updateBloggerById(id, req.body.name, req.body.youtubeUrl)
             if (updBlogger) {
                 const blogger = bloggersService.getBloggersById(+req.params.id)
                 res.status(204).send(blogger)
@@ -72,7 +74,8 @@ bloggersRouter.get('/',
 
     .delete('/:id',
         async (req, res) => {
-            const isDeleted = await bloggersService.deleteBloggerById(+req.params.id)
+        const id = +req.params.id
+            const isDeleted = await bloggersService.deleteBloggerById(id)
             if (isDeleted) {
                 res.sendStatus(404)
             } else {
