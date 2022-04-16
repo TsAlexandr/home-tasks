@@ -1,46 +1,58 @@
-import {posts} from "./db";
+import {postsCollection, PostsCon} from "./db";
 
 export const postsRepository = {
     async getPosts() {
+        const posts = await postsCollection.find().toArray()
         return posts
     },
     async getPostsById(id: number) {
-        return posts.find(p => p.id === id)
+        const postsById = await postsCollection.findOne({id})
+            if(postsById) {
+                return {
+                    id: postsById.id,
+                    title: postsById.title,
+                    content: postsById.content,
+                    shortDescription: postsById.shortDescription,
+                    bloggerId: postsById.bloggerId,
+                    bloggerName: postsById.bloggerName
+                }
+            } else {
+                return false
+            }
     },
     async deletePostsById(id: number) {
-        for (let i = 0; i < posts.length; i++) {
-            if (posts[i].id === id) {
-                posts.splice(i, 1)
-                return true
-            }
-        }
-        return false
+        const delPost = await postsCollection.deleteOne({id})
+        return delPost.deletedCount === 1
     },
-    async updatePostsById(id: number, title: string, content: string, shortDescription: string) {
-        let updPost = posts.find(post => post.bloggerId === id)
-        if (updPost) {
-            updPost.title = title
-            updPost.content = content
-            updPost.shortDescription = shortDescription
-            return true
-        } else {
-            return false
-        }
-    },
-    async createPosts(
-        title : string,
-        shortDescription: string,
+    async updatePostsById
+        (
+        id: number,
+        title: string,
         content: string,
-        bloggerName: string
-    ) {
-        const newPost = {
+        shortDescription: string,
+        bloggerId: number
+        ) {
+            const updPosts = await postsCollection.updateOne(
+            {id},
+                {
+                    $set: {
+                        "title": title,
+                        "content": content,
+                        "shortDescription": shortDescription,
+                        "bloggerId": bloggerId
+                         }
+                    })
+            return updPosts.matchedCount === 1
+    },
+    async createPosts(newPost: PostsCon) {
+        await postsCollection.insertOne(newPost)
+        return {
             id: +(new Date()),
-            title: title,
-            shortDescription: shortDescription,
-            content: content,
-            bloggerName: bloggerName
+            title: newPost.title,
+            shortDescription: newPost.shortDescription,
+            content: newPost.content,
+            bloggerName: newPost.bloggerName,
+            bloggerId: newPost.bloggerId
         }
-        posts.push(newPost)
-        return newPost
     }
 }
