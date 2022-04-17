@@ -2,7 +2,7 @@ import {postsCollection, PostsCon} from "./db";
 
 export const postsRepository = {
     async getPosts() {
-        const posts = await postsCollection.find().toArray()
+        const posts = await postsCollection.find({}, {projection: {_id:0}}).toArray()
         return posts
     },
     async getPostsById(id: number) {
@@ -45,7 +45,9 @@ export const postsRepository = {
             return updPosts.matchedCount === 1
     },
     async createPosts(newPost: PostsCon) {
-        await postsCollection.insertOne(newPost)
+        await postsCollection.insertOne(newPost, {
+            forceServerObjectId: true
+        })
         return {
             id: +(new Date()),
             title: newPost.title,
