@@ -1,6 +1,7 @@
 import {Router} from "express";
 import {inputValidator} from "../middlewares/input-validator-middlewares";
 import {postsService} from "../domain/posts-service";
+import {body, check} from "express-validator";
 
 
 export const contentRouter = Router({})
@@ -16,6 +17,8 @@ contentRouter.get('/', async (req, res) => {
 })
 
     .get('/:id',
+        check('id').isNumeric(),
+        inputValidator,
         inputValidator,
         async (req, res) => {
         const postCon = await postsService.getPostsById(+req.params.id)
@@ -26,7 +29,25 @@ contentRouter.get('/', async (req, res) => {
             }
     })
 
-    .post('/', async (req, res) => {
+    .post('/',
+        check('id').isNumeric(),
+        body('title')
+            .isString()
+            .trim()
+            .not()
+            .isEmpty(),
+        body('shortDescription')
+            .isString()
+            .trim()
+            .not()
+            .isEmpty(),
+        body('content')
+            .isString()
+            .trim()
+            .not()
+            .isEmpty(),
+        inputValidator,
+        async (req, res) => {
         const newPost = await postsService.createPosts
             (
             req.body.title,
@@ -42,7 +63,25 @@ contentRouter.get('/', async (req, res) => {
                 }
     })
 
-    .put('/:id', async (req, res) => {
+    .put('/:id',
+        check('id').isNumeric(),
+        body('title')
+            .isString()
+            .trim()
+            .not()
+            .isEmpty(),
+        body('shortDescription')
+            .isString()
+            .trim()
+            .not()
+            .isEmpty(),
+        body('content')
+            .isString()
+            .trim()
+            .not()
+            .isEmpty(),
+        inputValidator,
+        async (req, res) => {
         const id = +req.params.id
         const isUpdPost = await postsService.updatePostsById
         (
@@ -59,7 +98,10 @@ contentRouter.get('/', async (req, res) => {
             }
     })
 
-    .delete('/:id', async (req, res) => {
+    .delete('/:id',
+        check('id').isNumeric(),
+        inputValidator,
+        async (req, res) => {
         const isDeleted = await postsService.deletePostsById(+req.params.id)
             if (!isDeleted) {
                 res.sendStatus(404)
