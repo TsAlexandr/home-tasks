@@ -35,7 +35,7 @@ contentRouter.get('/', async (req, res) => {
             req.body.bloggerId,
             req.body.bloggerName
             )
-                if (newPost) {
+                if (!newPost) {
                     res.status(400)
                 } else {
                     res.status(201).send(newPost)

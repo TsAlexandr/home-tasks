@@ -22,7 +22,7 @@ bloggersRouter.get('/',
             if (blogger) {
                 res.send(blogger).status(200)
             } else {
-                res.status(404)
+                res.sendStatus(404)
             }
         })
 
