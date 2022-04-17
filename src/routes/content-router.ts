@@ -61,7 +61,7 @@ contentRouter.get('/', async (req, res) => {
 
     .delete('/:id', async (req, res) => {
         const isDeleted = await postsService.deletePostsById(+req.params.id)
-            if (isDeleted) {
+            if (!isDeleted) {
                 res.sendStatus(404)
             } else {
                 res.sendStatus(204)
