@@ -25,7 +25,7 @@ export const postsRepository = {
     },
     async updatePostsById(isUpdPost: PostsCon) {
         const id = isUpdPost.id
-        const updPosts = await postsCollection.updateOne(
+        const updPosts = await postsCollection.findOneAndUpdate(
             {id},
                 {
                     $set: {
@@ -35,7 +35,7 @@ export const postsRepository = {
                         bloggerId: isUpdPost.bloggerId
                          }
                     })
-            return updPosts.matchedCount === 1
+            return updPosts
     },
     async createPosts(newPost: PostsCon) {
         await postsCollection.insertOne(newPost, {

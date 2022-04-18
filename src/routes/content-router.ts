@@ -2,6 +2,7 @@ import {Router} from "express";
 import {inputValidator} from "../middlewares/input-validator-middlewares";
 import {postsService} from "../domain/posts-service";
 import {body, check} from "express-validator";
+import {bloggersService} from "../domain/bloggers-service";
 
 export const contentRouter = Router({})
 
@@ -44,8 +45,15 @@ contentRouter.get('/', async (req, res) => {
             .trim()
             .not()
             .isEmpty(),
+        check('bloggerId')
+            .isNumeric(),
         inputValidator,
         async (req, res) => {
+        const bloggerId = +req.body.bloggerId
+        const blogger = await bloggersService.getBloggersById(bloggerId)
+            if(!blogger) {
+                res.status(400)
+            }
         const newPost = await postsService.createPosts
             ({
                     title: req.body.title,
@@ -86,7 +94,10 @@ contentRouter.get('/', async (req, res) => {
                 shortDescription: req.body.shortDescription,
                 bloggerId: req.body.bloggerId
             }
-
+            const blogger = await bloggersService.getBloggersById(isUpdPost.bloggerId)
+            if (!blogger) {
+                res.status(400)
+            }
             const updPost = await postsService.updatePostsById(id,isUpdPost)
             if (!updPost) {
                 res.status(404)
@@ -99,7 +110,8 @@ contentRouter.get('/', async (req, res) => {
         check('id').isNumeric(),
         inputValidator,
         async (req, res) => {
-        const isDeleted = await postsService.deletePostsById(+req.params.id)
+        const id = +req.params.id
+        const isDeleted = await postsService.deletePostsById(id)
             if (!isDeleted) {
                 res.sendStatus(404)
             } else {
