@@ -1,4 +1,4 @@
-import {postsCollection, PostsCon} from "./db";
+import {bloggersCollection, postsCollection, PostsCon} from "./db";
 import {bloggersService} from "../domain/bloggers-service";
 
 export const postsRepository = {
@@ -38,9 +38,14 @@ export const postsRepository = {
             return updPosts
     },
     async createPosts(newPost: PostsCon) {
+        const blogger = await bloggersCollection.findOne({id: newPost.bloggerId})
+
         await postsCollection.insertOne(newPost, {
             forceServerObjectId: true
         })
-        return newPost
+        return {
+            ...newPost,
+            bloggerName: blogger!.name
+        }
     }
 }
