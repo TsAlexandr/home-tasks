@@ -8,17 +8,16 @@ export const postsRepository = {
     },
     async getPostsById(id: number) {
         const postsById = await postsCollection.findOne({id}, {projection: {_id:0}})
-        if (!postsById) return false
-        const blogger = await bloggersService.getBloggersById(postsById.bloggerId)
-        if (!blogger) return false
-                return ({
-                    id: postsById.id,
-                    title: postsById.title,
-                    content: postsById.content,
-                    shortDescription: postsById.shortDescription,
-                    bloggerId: blogger.id,
-                    bloggerName: blogger.name
-                })
+               if (postsById) {
+                   return ({
+                       id: postsById.id,
+                       title: postsById.title,
+                       content: postsById.content,
+                       shortDescription: postsById.shortDescription,
+                       bloggerId: postsById.bloggerId,
+                       bloggerName: postsById.bloggerName
+                   })
+               }
     },
     async deletePostsById(id: number) {
         const delPost = await postsCollection.deleteOne({id})
