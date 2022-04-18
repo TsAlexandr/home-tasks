@@ -90,7 +90,8 @@ contentRouter.get('/', async (req, res) => {
                 title: req.body.title,
                 content: req.body.content,
                 shortDescription: req.body.shortDescription,
-                bloggerId: req.body.bloggerId
+                bloggerId: req.body.bloggerId,
+                bloggerName: req.body.bloggerName
             }
             const blogger = await bloggersService.getBloggersById(isUpdPost.bloggerId)
             if (blogger) {

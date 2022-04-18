@@ -38,7 +38,9 @@ export const postsRepository = {
             return updPosts
     },
     async createPosts(newPost: PostsCon) {
-        await postsCollection.insertOne(newPost)
+        await postsCollection.insertOne(newPost, {
+            forceServerObjectId: true
+        })
         return newPost
     }
 }
