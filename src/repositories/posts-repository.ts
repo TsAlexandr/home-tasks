@@ -1,4 +1,4 @@
-import {postsCollection, UpdPost} from "./db";
+import {postsCollection, PostsCon, UpdPost} from "./db";
 
 import {bloggersRepository} from "./bloggers-repository";
 
@@ -40,19 +40,11 @@ export const postsRepository = {
             })
         return updPosts.modifiedCount === 1
     },
-    async createPosts(newPost: UpdPost) {
+    async createPosts(newPost: PostsCon) {
         await postsCollection.insertOne(newPost, {
             forceServerObjectId: true
         })
-        const crPost = await postsCollection.findOne({id: newPost.id})
-        return({
-            id: crPost!.id,
-            title: crPost!.title,
-            hortDescription: crPost!.shortDescription,
-            content: crPost!.content,
-            bloggerId: crPost!.bloggerId,
-            bloggerName: await crPost!.findOne({id: crPost!.bloggerId})
-
-        })
+        return newPost
     }
+
 }
