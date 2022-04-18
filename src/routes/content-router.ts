@@ -49,7 +49,7 @@ contentRouter.get('/', async (req, res) => {
         async (req, res) => {
         const bloggerId = +req.body.bloggerId
         const blogger = await bloggersService.getBloggersById(bloggerId)
-            if(!blogger) {
+            if(blogger) {
                 res.status(400)
             }
         const newPost = await postsService.createPosts
@@ -93,7 +93,7 @@ contentRouter.get('/', async (req, res) => {
                 bloggerId: req.body.bloggerId
             }
             const blogger = await bloggersService.getBloggersById(isUpdPost.bloggerId)
-            if (!blogger) {
+            if (blogger) {
                 res.status(400)
             }
             const updPost = await postsService.updatePostsById(id,isUpdPost)
@@ -111,7 +111,7 @@ contentRouter.get('/', async (req, res) => {
         const id = +req.params.id
         const isDeleted = await postsService.deletePostsById(id)
             if (!isDeleted) {
-                res.sendStatus(404)
+                res.status(404)
             } else {
                 res.status(204)
             }

@@ -21,7 +21,7 @@ export const postsRepository = {
     },
     async deletePostsById(id: number) {
         const delPost = await postsCollection.deleteOne({id})
-        return delPost.deletedCount === 1
+        return delPost
     },
     async updatePostsById(isUpdPost: PostsCon) {
         const id = isUpdPost.id
@@ -38,9 +38,7 @@ export const postsRepository = {
             return updPosts
     },
     async createPosts(newPost: PostsCon) {
-        await postsCollection.insertOne(newPost, {
-            forceServerObjectId: true
-        })
+        await postsCollection.insertOne(newPost)
         return newPost
     }
 }

@@ -5,22 +5,22 @@ import {bloggersService} from "./bloggers-service";
 
 export const postsService = {
     async getPosts() {
-        return await postsRepository.getPosts()
+        return postsRepository.getPosts()
     },
     async getPostsById(id: number) {
-        return await postsRepository.getPostsById(id)
+        return postsRepository.getPostsById(id)
     },
     async deletePostsById(id: number) {
-        return await postsRepository.deletePostsById(id)
+        return postsRepository.deletePostsById(id)
     },
     async updatePostsById(id: number, isUpdPost: PostsCon) {
-        return await postsRepository.updatePostsById({id, ...isUpdPost})
+        return postsRepository.updatePostsById({id, ...isUpdPost})
     },
     async createPosts(newPost: PostsCon) {
             const createPost = {
                 ...newPost,
                 id: +(new Date())
         }
-            return await postsRepository.createPosts(createPost)
+            return postsRepository.createPosts(createPost)
         }
 }
