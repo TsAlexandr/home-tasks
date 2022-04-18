@@ -1,4 +1,4 @@
-import {bloggersCollection, postsCollection, PostsCon} from "./db";
+import {postsCollection, PostsCon} from "./db";
 import {bloggersService} from "../domain/bloggers-service";
 
 export const postsRepository = {
@@ -11,14 +11,13 @@ export const postsRepository = {
         if (!postsById) return false
         const blogger = await bloggersService.getBloggersById(postsById.bloggerId)
         if (!blogger) return false
-        const bloggerName = blogger.name
                 return ({
                     id: postsById.id,
                     title: postsById.title,
                     content: postsById.content,
                     shortDescription: postsById.shortDescription,
                     bloggerId: blogger.id,
-                    bloggerName
+                    bloggerName: blogger.name
                 })
     },
     async deletePostsById(id: number) {
@@ -43,12 +42,6 @@ export const postsRepository = {
         await postsCollection.insertOne(newPost, {
             forceServerObjectId: true
         })
-        return {
-            id: +(new Date()),
-            title: newPost.title,
-            shortDescription: newPost.shortDescription,
-            content: newPost.content,
-            bloggerId: newPost.bloggerId
-        }
+        return newPost
     }
 }

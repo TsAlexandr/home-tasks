@@ -2,7 +2,6 @@ import {Router} from "express";
 import {inputValidator} from "../middlewares/input-validator-middlewares";
 import {postsService} from "../domain/posts-service";
 import {body, check} from "express-validator";
-import {bloggersCollection} from "../repositories/db";
 import {bloggersService} from "../domain/bloggers-service";
 
 
@@ -50,11 +49,6 @@ contentRouter.get('/', async (req, res) => {
             .isEmpty(),
         inputValidator,
         async (req, res) => {
-        const id = +req.body.bloggerId
-        const bloggerById = await bloggersService.getBloggersById(id)
-            if(!bloggerById) {
-                res.status(400)
-            } else {
         const newPost = await postsService.createPosts
             ({
                     title: req.body.title,
@@ -63,7 +57,7 @@ contentRouter.get('/', async (req, res) => {
                     bloggerId: +req.body.bloggerId
             })
                 res.status(201).send(newPost)
-            }
+
     })
 
     .put('/:id',
@@ -92,13 +86,10 @@ contentRouter.get('/', async (req, res) => {
                 shortDescription: req.body.shortDescription,
                 bloggerId: req.body.bloggerId
             }
-        const blogger = await bloggersService.getBloggersById(isUpdPost.bloggerId)
-        if (!blogger) {
-            res.status(400)
-        }  else {
+
             const updPost = await postsService.updatePostsById(id,isUpdPost)
             res.status(204).send(updPost)
-            }
+
     })
 
     .delete('/:id',
