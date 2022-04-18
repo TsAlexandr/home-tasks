@@ -1,5 +1,6 @@
-import {postsCollection, PostsCon} from "./db";
-import {bloggersService} from "../domain/bloggers-service";
+import {postsCollection, UpdPost} from "./db";
+
+import {bloggersRepository} from "./bloggers-repository";
 
 export const postsRepository = {
     async getPosts() {
@@ -8,24 +9,26 @@ export const postsRepository = {
     },
     async getPostsById(id: number) {
         const postsById = await postsCollection.findOne({id}, {projection: {_id:0}})
-        if (postsById) {
+        if(!postsById) return false
+        const blogger = await bloggersRepository.getBloggersById(postsById.bloggerId)
+        if (!blogger) return false
             return ({
                 id: postsById.id,
                 title: postsById.title,
                 content: postsById.content,
                 shortDescription: postsById.shortDescription,
                 bloggerId: postsById.bloggerId,
-                bloggerName: postsById.bloggerName
+                bloggerName: blogger.name
             })
-        }
+
     },
     async deletePostsById(id: number) {
         const delPost = await postsCollection.deleteOne({id})
         return delPost.deletedCount === 1
     },
-    async updatePostsById(isUpdPost: PostsCon) {
+    async updatePostsById(isUpdPost: UpdPost) {
         const id = isUpdPost.id
-        const updPosts = await postsCollection.findOneAndUpdate(
+        const updPosts = await postsCollection.updateOne(
             {id},
             {
                 $set: {
@@ -35,12 +38,21 @@ export const postsRepository = {
                     bloggerId: isUpdPost.bloggerId
                 }
             })
-        return updPosts
+        return updPosts.modifiedCount === 1
     },
-    async createPosts(newPost: PostsCon) {
+    async createPosts(newPost: UpdPost) {
         await postsCollection.insertOne(newPost, {
             forceServerObjectId: true
         })
-        return newPost
+        const crPost = await postsCollection.findOne({id: newPost.id})
+        return({
+            id: crPost!.id,
+            title: crPost!.title,
+            hortDescription: crPost!.shortDescription,
+            content: crPost!.content,
+            bloggerId: crPost!.bloggerId,
+            bloggerName: await crPost!.findOne({id: crPost!.bloggerId})
+
+        })
     }
 }

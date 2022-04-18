@@ -40,6 +40,21 @@ export type Bloggers = {
     youtubeUrl: string | null
 }
 
+export type NewPost = {
+    title: string | null
+    shortDescription: string | null
+    content: string | null
+    bloggerId: number
+}
+
+export type UpdPost = {
+    id: number
+    title: string | null
+    shortDescription: string | null
+    content: string | null
+    bloggerId: number
+}
+
 export let bloggers: Bloggers[] = [
     {id: 1, name: 'Alex', youtubeUrl: 'https://www.google.com'},
     {id: 2, name: 'goTry', youtubeUrl: 'https://www.freecodecamp.com'},
