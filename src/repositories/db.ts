@@ -22,22 +22,15 @@ export async function runDb() {
     }
 }
 
-export type PostType = {
-    id: number;
-    title: string | null;
-    shortDescription: string | null;
-    content: string | null;
-    bloggerId: number;
-    bloggerName?: string | null | undefined;
-}
+
 
 export type PostsCon = {
-    id: number;
-    title: string | null;
-    shortDescription: string | null;
-    content: string | null;
-    bloggerId: number;
-    bloggerName?: string | null | undefined;
+    id?: number
+    bloggerId: Bloggers['id'],
+    title: string | null
+    shortDescription: string | null
+    content: string | null
+    bloggerName?: Bloggers['name']
 
 }
 

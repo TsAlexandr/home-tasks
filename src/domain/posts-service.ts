@@ -1,32 +1,35 @@
-import {NewPostType, postsRepository} from "../repositories/posts-repository";
+import {postsRepository} from "../repositories/posts-repository";
+import {NewPost, PostsCon} from "../repositories/db";
+import {bloggersService} from "./bloggers-service";
+
 
 export const postsService = {
     async getPosts() {
-        const posts = await postsRepository.getPosts()
-        return posts
-
+        return await postsRepository.getPosts()
     },
-    async getPostById(id: number) {
-        const post = await postsRepository.getPostById(id)
-        if(post){
-            return post
-        }else return false
+    async getPostsById(id: number) {
+        return await postsRepository.getPostsById(id)
     },
-    async createPost(newPost: NewPostType) {
-        const postToPush = {
-            ...newPost,
-            id: +(new Date()),
+    async deletePostsById(id: number) {
+        return await postsRepository.deletePostsById(id)
+    },
+    async updatePostsById(isUpdPost: PostsCon) {
+        return await postsRepository.updatePostsById(isUpdPost)
+    },
+    async createPosts
+    (
+        newPost: NewPost
+    )
+    {
+        const blogger = await  bloggersService.getBloggersById(newPost.bloggerId)
+        if(!blogger) {
+            return false
         }
-        return await postsRepository.createPost(postToPush)
-
-    },
-    async updatePostById(id: number, newPost: NewPostType) {
-        return await postsRepository.updatePostById({
-            id,
-            ...newPost
-        })
-    },
-    async deletePostById(id: number) {
-        return await postsRepository.deletePostById(id)
+        const createPost = {
+            ...newPost,
+            bloggerName: blogger.name,
+            id: +(new Date())
+        }
+        return postsRepository.createPosts(createPost)
     }
 }

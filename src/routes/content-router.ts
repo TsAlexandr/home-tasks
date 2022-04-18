@@ -1,137 +1,111 @@
-import {Request, Response, Router} from 'express'
-import {body, check} from "express-validator";
-import {postsService} from "../domain/posts-service";
-import {bloggersService} from "../domain/bloggers-service";
+import {Router} from "express";
 import {inputValidator} from "../middlewares/input-validator-middlewares";
+import {postsService} from "../domain/posts-service";
+import {body, check} from "express-validator";
+import {bloggersService} from "../domain/bloggers-service";
+import {NewPost} from "../repositories/db";
+
+export const contentRouter = Router({})
 
 
-export const postsRouter = Router()
+contentRouter.get('/', async (req, res) => {
+    const posts = await postsService.getPosts()
+    if(!posts) {
+        res.sendStatus(400)
+    } else {
+        res.send(posts)
+    }
+})
 
-//---------------------------------Posts---------------------------------
-
-postsRouter
-    //Returns all posts
-    .get('/',
-        async (req: Request, res: Response) => {
-            const allPosts = await postsService.getPosts()
-            res.status(200).send(allPosts)
+    .get('/:id',
+        check('id').isNumeric(),
+        inputValidator,
+        async (req, res) => {
+            const id = +req.params.id
+            const postCon = await postsService.getPostsById(id)
+            if (!postCon) {
+                res.status(404)
+            } else {
+                res.send(postCon).status(200)
+            }
         })
-    //Create new post
+
     .post('/',
-        body('title').isString().withMessage('Name should be a string')
-            .trim().not().isEmpty().withMessage('Name should be not empty'),
-        body('shortDescription').isString().withMessage('shortDescription should be a string')
-            .trim().not().isEmpty().withMessage('shortDescription should be not empty'),
-        body('content').isString().withMessage('shortDescription should be a string')
-            .trim().not().isEmpty().withMessage('shortDescription should be not empty'),
+        body('title')
+            .isString()
+            .trim()
+            .not()
+            .isEmpty(),
+        body('shortDescription')
+            .isString()
+            .trim()
+            .not()
+            .isEmpty(),
+        body('content')
+            .isString()
+            .trim()
+            .not()
+            .isEmpty(),
+        check('bloggerId')
+            .isNumeric(),
         inputValidator,
-        async (req: Request, res: Response) => {
-            const id: number = parseInt(req.body.bloggerId)
-            const blogger = await bloggersService.getBloggersById(id)
-            if (!blogger) {
-                res.status(400).send({
-                    "data": {},
-                    "errorsMessages": [
-                        {
-                            message: "blogger not found",
-                            field: "blogger"
-                        }
-                    ],
-                    "resultCode": 1
-                })
+        async (req, res) => {
+            const newPost = await postsService.createPosts(req.body.NewPost)
+
+            if (!newPost) {
+                res.status(400)
             } else {
-                const newPost = await postsService.createPost({
-                    title: req.body.title,
-                    shortDescription: req.body.shortDescription,
-                    content: req.body.content,
-                    bloggerId: +req.body.bloggerId,
-                })
-                res.status(201).send({
-                    ...newPost,
-                    bloggerName: blogger.name
-                })
+                res.status(201).send(newPost)
             }
         })
-    //Return post by id
-    .get('/:postId',
-        check('postId').isNumeric().withMessage('id should be numeric value'),
+
+    .put('/:id',
+        check('id').isNumeric(),
+        body('title')
+            .isString()
+            .trim()
+            .not()
+            .isEmpty(),
+        body('shortDescription')
+            .isString()
+            .trim()
+            .not()
+            .isEmpty(),
+        body('content')
+            .isString()
+            .trim()
+            .not()
+            .isEmpty(),
         inputValidator,
-        async (req: Request, res: Response) => {
-            const id = +req.params.postId
-            const returnedPost = await postsService.getPostById(id)
-            if (returnedPost) {
-                res.send(returnedPost)
-            } else {
-                res.status(404).send({
-                    "data": {},
-                    "errorsMessages": [{
-                        message: "post not found",
-                        field: "id"
-                    }],
-                    "resultCode": 1
-                })
-            }
-        })
-    //Update existing post by id with InputModel
-    .put('/:postId',
-        body('title').isString().withMessage('Name should be a string')
-            .trim().not().isEmpty().withMessage('Name should be not empty'),
-        body('shortDescription').isString().withMessage('shortDescription should be a string')
-            .trim().not().isEmpty().withMessage('shortDescription should be not empty'),
-        body('content').isString().withMessage('shortDescription should be a string')
-            .trim().not().isEmpty().withMessage('shortDescription should be not empty'),
-        check('postId').isNumeric().withMessage('id should be numeric value'),
-        inputValidator,
-        async (req: Request, res: Response) => {
-            const id = +req.params.postId
-            const updatePost = {
+        async (req, res) => {
+            const id = +req.params.id
+            const isUpdPost = {
                 title: req.body.title,
-                shortDescription: req.body.shortDescription,
                 content: req.body.content,
+                shortDescription: req.body.shortDescription,
                 bloggerId: req.body.bloggerId
             }
-            const bloggerToUpdate = await bloggersService.getBloggersById(updatePost.bloggerId)
-            if(!bloggerToUpdate){
-                res.status(400).send({
-                    "data": {},
-                    "errorsMessages": [{
-                        message: "blogger not found",
-                        field: "bloggerId"
-                    }],
-                    "resultCode": 0
-                })
-                return
+            const blogger = await bloggersService.getBloggersById(isUpdPost.bloggerId)
+            if (!blogger) {
+                res.status(400)
             }
-            const updatedPost = await postsService.updatePostById(id, updatePost)
-            if (!updatedPost) {
+            const updPost = await postsService.updatePostsById(isUpdPost)
+            if (!updPost) {
                 res.status(404)
-                res.send({
-                    "data": {},
-                    "errorsMessages": [{
-                        message: "post not found",
-                        field: "id"
-                    }],
-                    "resultCode": 0
-                })
             } else {
-                res.status(204).send(updatedPost)
+                res.status(204).send(updPost)
             }
         })
-    //Delete post specified by id
-    .delete('/:postId',
-        async (req: Request, res: Response) => {
-            const id = +req.params.postId
-            const isDeleted = await postsService.deletePostById(id)
-            if (isDeleted) {
-                res.sendStatus(204)
+
+    .delete('/:id',
+        check('id').isNumeric(),
+        inputValidator,
+        async (req, res) => {
+            const id = +req.params.id
+            const isDeleted = await postsService.deletePostsById(id)
+            if (!isDeleted) {
+                res.sendStatus(404)
             } else {
-                res.status(404).send({
-                    "data": {},
-                    "errorsMessages": [{
-                        message: "post not found",
-                        field: "id"
-                    }],
-                    "resultCode": 1
-                })
+                res.status(204)
             }
         })
