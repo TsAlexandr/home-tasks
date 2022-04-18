@@ -49,7 +49,7 @@ contentRouter.get('/', async (req, res) => {
         async (req, res) => {
         const bloggerId = +req.body.bloggerId
         const blogger = await bloggersService.getBloggersById(bloggerId)
-            if(blogger) {
+            if(!blogger) {
                 res.status(400)
             }
         const newPost = await postsService.createPosts

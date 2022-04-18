@@ -14,7 +14,13 @@ export const postsService = {
         return await postsRepository.deletePostsById(id)
     },
     async updatePostsById(id: number, isUpdPost: PostsCon) {
-        return await postsRepository.updatePostsById({id, ...isUpdPost})
+        const blogger = await  bloggersService.getBloggersById(isUpdPost.bloggerId)
+        if(!blogger) return false
+        const createPost = {
+            ...isUpdPost,
+            bloggerName: blogger.name
+        }
+        return await postsRepository.updatePostsById(createPost)
     },
     async createPosts(newPost: PostsCon) {
             const createPost = {
