@@ -35,17 +35,12 @@ export const postsRepository = {
                         bloggerId: isUpdPost.bloggerId
                          }
                     })
-            return updPosts
+            return updPosts.matchedCount === 1
     },
     async createPosts(newPost: PostsCon) {
-        const blogger = await bloggersCollection.findOne({id: newPost.bloggerId})
-
         await postsCollection.insertOne(newPost, {
             forceServerObjectId: true
         })
-        return {
-            ...newPost,
-            bloggerName: blogger!.name
-        }
+        return newPost
     }
 }
