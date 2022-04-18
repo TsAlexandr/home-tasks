@@ -35,7 +35,8 @@ export const postsRepository = {
         if(!post) return false
         const blogger = await bloggersRepository.getBloggersById(post.bloggerId)
         if(!blogger) return false
-            delete post._id
+            // @ts-ignore
+        delete post._id
             return ({
                 id: post.id,
                 title: post.title,
@@ -48,14 +49,15 @@ export const postsRepository = {
     async createPost(newPost: PostToPushType) {
         await postsCollection.insertOne(newPost)
         const postToReturn = await postsCollection.findOne({id: newPost.id})
+        // @ts-ignore
         delete postToReturn._id
         return   ({
-            id: postToReturn.id,
-            title: postToReturn.title,
-            shortDescription: postToReturn.shortDescription,
-            content: postToReturn.content,
-            bloggerId: postToReturn.bloggerId,
-            bloggerName: await bloggersCollection.findOne({id: postToReturn.bloggerId})
+            id: postToReturn!.id,
+            title: postToReturn!.title,
+            shortDescription: postToReturn!.shortDescription,
+            content: postToReturn!.content,
+            bloggerId: postToReturn!.bloggerId,
+            bloggerName: await bloggersCollection.findOne({id: postToReturn!.bloggerId})
         })
     },
     async updatePostById (newPost: PostToPushType) {
