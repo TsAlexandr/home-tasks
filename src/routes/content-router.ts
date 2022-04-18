@@ -23,10 +23,10 @@ contentRouter.get('/', async (req, res) => {
         async (req, res) => {
         const id = +req.params.id
         const postCon = await postsService.getPostsById(id)
-            if (postCon) {
-                res.send(postCon).status(200)
-            } else {
+            if (!postCon) {
                 res.status(404)
+            } else {
+                res.send(postCon).status(200)
             }
     })
 
@@ -91,7 +91,7 @@ contentRouter.get('/', async (req, res) => {
 
             const updPost = await postsService.updatePostsById(id,isUpdPost)
             if (!updPost) {
-                res.status(400)
+                res.status(404)
             } else {
                 res.status(204).send(updPost)
             }
@@ -105,6 +105,6 @@ contentRouter.get('/', async (req, res) => {
             if (!isDeleted) {
                 res.sendStatus(404)
             } else {
-                res.sendStatus(204)
+                res.status(204)
             }
     })

@@ -26,11 +26,11 @@ export async function runDb() {
 
 export type PostsCon = {
     id?: number
-    bloggerId: number,
+    bloggerId: Bloggers['id'],
     title: string | null
     shortDescription: string | null
     content: string | null
-    bloggerName?: string | null
+    bloggerName?: Bloggers['name']
 
 }
 
