@@ -2,8 +2,6 @@ import {Router} from "express";
 import {inputValidator} from "../middlewares/input-validator-middlewares";
 import {postsService} from "../domain/posts-service";
 import {body, check} from "express-validator";
-import {bloggersService} from "../domain/bloggers-service";
-
 
 export const contentRouter = Router({})
 
