@@ -1,45 +1,40 @@
-import {postsCollection, PostsCon} from "./db";
+import {bloggersCollection, postsCollection, PostsCon} from "./db";
+import {bloggersService} from "../domain/bloggers-service";
 
 export const postsRepository = {
     async getPosts() {
-        const posts = await postsCollection.find({}, {projection: {_id:0}}).toArray()
+        const posts = await postsCollection.find({}, ).toArray()
         return posts
     },
     async getPostsById(id: number) {
-        const postsById = await postsCollection.findOne({id})
-            if(postsById) {
-                return {
+        const postsById = await postsCollection.findOne({id}, {projection: {_id:0}})
+        if (!postsById) return false
+        const blogger = await bloggersService.getBloggersById(postsById.bloggerId)
+        if (!blogger) return false
+        const bloggerName = blogger.name
+                return ({
                     id: postsById.id,
                     title: postsById.title,
                     content: postsById.content,
                     shortDescription: postsById.shortDescription,
-                    bloggerId: postsById.bloggerId,
-                    bloggerName: postsById.bloggerName
-                }
-            } else {
-                return false
-            }
+                    bloggerId: blogger.id,
+                    bloggerName
+                })
     },
     async deletePostsById(id: number) {
         const delPost = await postsCollection.deleteOne({id})
         return delPost.deletedCount === 1
     },
-    async updatePostsById
-        (
-        id: number,
-        title: string,
-        content: string,
-        shortDescription: string,
-        bloggerId: number
-        ) {
-            const updPosts = await postsCollection.updateOne(
+    async updatePostsById(isUpdPost: PostsCon) {
+        const id = isUpdPost.id
+        const updPosts = await postsCollection.updateOne(
             {id},
                 {
                     $set: {
-                        "title": title,
-                        "content": content,
-                        "shortDescription": shortDescription,
-                        "bloggerId": bloggerId
+                        title: isUpdPost.title,
+                        content: isUpdPost.content,
+                        shortDescription: isUpdPost.shortDescription,
+                        bloggerId: isUpdPost.bloggerId
                          }
                     })
             return updPosts.matchedCount === 1
@@ -53,7 +48,6 @@ export const postsRepository = {
             title: newPost.title,
             shortDescription: newPost.shortDescription,
             content: newPost.content,
-            bloggerName: newPost.bloggerName,
             bloggerId: newPost.bloggerId
         }
     }
