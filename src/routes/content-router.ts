@@ -45,8 +45,6 @@ contentRouter.get('/', async (req, res) => {
             .trim()
             .not()
             .isEmpty(),
-        check('bloggerId')
-            .isNumeric(),
         inputValidator,
         async (req, res) => {
         const bloggerId = +req.body.bloggerId
@@ -59,7 +57,7 @@ contentRouter.get('/', async (req, res) => {
                     title: req.body.title,
                     shortDescription: req.body.shortDescription,
                     content: req.body.content,
-                    bloggerId: +req.body.bloggerId
+                    bloggerId
             })
             if (!newPost) {
                 res.status(400)
