@@ -25,7 +25,7 @@ export const postsRepository = {
     },
     async updatePostsById(isUpdPost: PostsCon) {
         const id = isUpdPost.id
-        const updPosts = await postsCollection.findOneAndUpdate(
+        const updPosts = await postsCollection.updateOne(
             {id},
             {
                 $set: {

@@ -3,6 +3,7 @@ import {inputValidator} from "../middlewares/input-validator-middlewares";
 import {postsService} from "../domain/posts-service";
 import {body, check} from "express-validator";
 import {bloggersService} from "../domain/bloggers-service";
+import {NewPost} from "../repositories/db";
 
 export const contentRouter = Router({})
 
@@ -49,18 +50,8 @@ contentRouter.get('/', async (req, res) => {
             .isNumeric(),
         inputValidator,
         async (req, res) => {
-            const bloggerId = +req.body.bloggerId
-            const blogger = await bloggersService.getBloggersById(bloggerId)
-            if(!blogger) {
-                res.status(400)
-            }
-            const newPost = await postsService.createPosts
-            ({
-                title: req.body.title,
-                shortDescription: req.body.shortDescription,
-                content: req.body.content,
-                bloggerId: +req.body.bloggerId
-            })
+            const newPost = await postsService.createPosts(req.body.NewPost)
+
             if (!newPost) {
                 res.status(400)
             } else {
@@ -98,7 +89,7 @@ contentRouter.get('/', async (req, res) => {
             if (!blogger) {
                 res.status(400)
             }
-            const updPost = await postsService.updatePostsById(id,isUpdPost)
+            const updPost = await postsService.updatePostsById(isUpdPost)
             if (!updPost) {
                 res.status(404)
             } else {
