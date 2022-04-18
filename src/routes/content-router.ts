@@ -31,7 +31,6 @@ contentRouter.get('/', async (req, res) => {
     })
 
     .post('/',
-        check('id').isNumeric(),
         body('title')
             .isString()
             .trim()
