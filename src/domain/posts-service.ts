@@ -25,12 +25,14 @@ export const postsService = {
     async createPosts(newPost: PostsCon)
         {
             const blogger = await  bloggersService.getBloggersById(newPost.bloggerId)
-            if(!blogger) return false
+            if(!blogger) {
+                return false
+            }
             const createPost = {
                 ...newPost,
                 bloggerName: blogger.name,
                 id: +(new Date())
         }
-            return await postsRepository.createPosts(createPost)
+            return postsRepository.createPosts(createPost)
         }
 }

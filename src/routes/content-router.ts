@@ -56,8 +56,11 @@ contentRouter.get('/', async (req, res) => {
                     content: req.body.content,
                     bloggerId: +req.body.bloggerId
             })
+            if (!newPost) {
+                res.status(400)
+            } else {
                 res.status(201).send(newPost)
-
+            }
     })
 
     .put('/:id',
@@ -88,8 +91,11 @@ contentRouter.get('/', async (req, res) => {
             }
 
             const updPost = await postsService.updatePostsById(id,isUpdPost)
-            res.status(204).send(updPost)
-
+            if (!updPost) {
+                res.status(400)
+            } else {
+                res.status(204).send(updPost)
+            }
     })
 
     .delete('/:id',
