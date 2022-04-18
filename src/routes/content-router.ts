@@ -45,13 +45,15 @@ contentRouter.get('/', async (req, res) => {
             .trim()
             .not()
             .isEmpty(),
+        check('bloggerId')
+            .isNumeric(),
         inputValidator,
         async (req, res) => {
             const bloggerId = +req.body.bloggerId
             const blogger = await bloggersService.getBloggersById(bloggerId)
             if(!blogger) {
                 res.status(400)
-            } else {
+            }
             const newPost = await postsService.createPosts
             ({
                 title: req.body.title,
@@ -59,12 +61,11 @@ contentRouter.get('/', async (req, res) => {
                 content: req.body.content,
                 bloggerId: +req.body.bloggerId
             })
-                res.status(201).send(
-                    {
-                        ...newPost,
-                        bloggerName: blogger.name
-                    })
-                }
+            if (!newPost) {
+                res.status(400)
+            } else {
+                res.status(201).send(newPost)
+            }
         })
 
     .put('/:id',
@@ -106,6 +107,7 @@ contentRouter.get('/', async (req, res) => {
         })
 
     .delete('/:id',
+        check('id').isNumeric(),
         inputValidator,
         async (req, res) => {
             const id = +req.params.id

@@ -1,6 +1,5 @@
-import {postsCollection, PostsCon, UpdPost} from "./db";
-
-import {bloggersRepository} from "./bloggers-repository";
+import {postsCollection, PostsCon} from "./db";
+import {bloggersService} from "../domain/bloggers-service";
 
 export const postsRepository = {
     async getPosts() {
@@ -9,26 +8,24 @@ export const postsRepository = {
     },
     async getPostsById(id: number) {
         const postsById = await postsCollection.findOne({id}, {projection: {_id:0}})
-        if(!postsById) return false
-        const blogger = await bloggersRepository.getBloggersById(postsById.bloggerId)
-        if (!blogger) return false
+        if (postsById) {
             return ({
                 id: postsById.id,
                 title: postsById.title,
                 content: postsById.content,
                 shortDescription: postsById.shortDescription,
                 bloggerId: postsById.bloggerId,
-                bloggerName: blogger.name
+                bloggerName: postsById.bloggerName
             })
-
+        }
     },
     async deletePostsById(id: number) {
         const delPost = await postsCollection.deleteOne({id})
         return delPost.deletedCount === 1
     },
-    async updatePostsById(isUpdPost: UpdPost) {
+    async updatePostsById(isUpdPost: PostsCon) {
         const id = isUpdPost.id
-        const updPosts = await postsCollection.updateOne(
+        const updPosts = await postsCollection.findOneAndUpdate(
             {id},
             {
                 $set: {
@@ -38,7 +35,7 @@ export const postsRepository = {
                     bloggerId: isUpdPost.bloggerId
                 }
             })
-        return updPosts.modifiedCount === 1
+        return updPosts
     },
     async createPosts(newPost: PostsCon) {
         await postsCollection.insertOne(newPost, {
@@ -46,5 +43,4 @@ export const postsRepository = {
         })
         return newPost
     }
-
 }
