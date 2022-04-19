@@ -2,11 +2,8 @@ import {Router} from "express";
 import {inputValidator} from "../middlewares/input-validator-middlewares";
 import {postsService} from "../domain/posts-service";
 import {body, check} from "express-validator";
-import {bloggersService} from "../domain/bloggers-service";
-import {NewPost} from "../repositories/db";
 
 export const contentRouter = Router({})
-
 
 contentRouter.get('/', async (req, res) => {
     const posts = await postsService.getPosts()
@@ -22,11 +19,11 @@ contentRouter.get('/', async (req, res) => {
         inputValidator,
         async (req, res) => {
             const id = +req.params.id
-            const postCon = await postsService.getPostsById(id)
-            if (!postCon) {
+            const post = await postsService.getPostsById(id)
+            if (!post) {
                 res.status(404)
             } else {
-                res.send(postCon).status(200)
+                res.status(200).send(post)
             }
         })
 
@@ -50,7 +47,13 @@ contentRouter.get('/', async (req, res) => {
             .isNumeric(),
         inputValidator,
         async (req, res) => {
-            const newPost = await postsService.createPosts(req.body.NewPost)
+            const newPost = await postsService.createPosts
+            ({
+                title: req.body.title,
+                content: req.body.content,
+                bloggerId: req.body.bloggerId,
+                shortDescription: req.body.shortDescription
+            })
 
             if (!newPost) {
                 res.status(400)
@@ -79,17 +82,13 @@ contentRouter.get('/', async (req, res) => {
         inputValidator,
         async (req, res) => {
             const id = +req.params.id
-            const isUpdPost = {
+            const updPost = await postsService.updatePostsById ({
+                id,
                 title: req.body.title,
                 content: req.body.content,
                 shortDescription: req.body.shortDescription,
                 bloggerId: req.body.bloggerId
-            }
-            const blogger = await bloggersService.getBloggersById(isUpdPost.bloggerId)
-            if (!blogger) {
-                res.status(400)
-            }
-            const updPost = await postsService.updatePostsById(isUpdPost)
+            })
             if (!updPost) {
                 res.status(404)
             } else {
@@ -106,6 +105,6 @@ contentRouter.get('/', async (req, res) => {
             if (!isDeleted) {
                 res.sendStatus(404)
             } else {
-                res.status(204)
+                res.sendStatus(204)
             }
         })
