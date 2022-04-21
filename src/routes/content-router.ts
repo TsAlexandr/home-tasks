@@ -2,10 +2,12 @@ import {Router} from "express";
 import {inputValidator} from "../middlewares/input-validator-middlewares";
 import {postsService} from "../domain/posts-service";
 import {body, check} from "express-validator";
+import {bloggersService} from "../domain/bloggers-service";
 
 export const contentRouter = Router({})
 
 contentRouter.get('/', async (req, res) => {
+    const {pageNumber, pageSize} = req.query
     const posts = await postsService.getPosts()
     if(!posts) {
         res.sendStatus(400)
@@ -108,3 +110,20 @@ contentRouter.get('/', async (req, res) => {
                 res.sendStatus(204)
             }
         })
+
+    .get('/:bloggerId/posts',
+        async (req, res) => {
+            const bloggerId = parseInt(req.params.bloggerId)
+            // @ts-ignore
+            const pageSize = parseInt(req.query.pageSize)
+            // @ts-ignore
+            const pageNumber = parseInt(req.query.pageNumber)
+            const pages = postsService.getPages(bloggerId, pageSize, pageNumber)
+            if(!pages) {
+                res.status(404)
+            } else {
+                res.status(200).send(pages)
+            }
+        })
+
+

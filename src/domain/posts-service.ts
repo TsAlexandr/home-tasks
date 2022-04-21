@@ -1,6 +1,7 @@
 import {postsRepository} from "../repositories/posts-repository";
 import {NewPost, PostsCon} from "../repositories/db";
 import {bloggersService} from "./bloggers-service";
+import {bloggersRepository} from "../repositories/bloggers-repository";
 
 
 export const postsService = {
@@ -36,5 +37,9 @@ export const postsService = {
             id: +(new Date())
         }
         return postsRepository.createPosts(createPost)
+    },
+
+    async getPages(bloggerId: number, pageNumber: number, pageSize: number) {
+        return await postsRepository.getPagesOfPosts(bloggerId, pageNumber, pageSize)
     }
 }

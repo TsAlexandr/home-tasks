@@ -1,11 +1,26 @@
-import {Bloggers, bloggersCollection} from "./db";
+import {Bloggers, bloggersCollection, Paginator, PostsCon} from "./db";
+
 
 export const bloggersRepository = {
-    async getBloggers() {
-        const bloggers = await bloggersCollection
-            .find()
+    async getBloggers(name: string, pageSize: number, pageNumber: number) {
+        const bloggers:Bloggers[] = await bloggersCollection
+            .find({name: {$regex: name}})
+            .limit(pageSize)
+            .skip((pageNumber - 1) * pageSize)
             .toArray()
-        return bloggers
+
+        const count = await bloggersCollection.countDocuments()
+        const total = Math.ceil(count/pageSize)
+
+        const bloggersInPage:Paginator<Bloggers> = {
+            page: pageNumber,
+            pageSize: pageSize,
+            totalCount: total,
+            pagesCount: count,
+            items: bloggers
+        }
+        return bloggersInPage
+
     },
     async getBloggersById(id: number) {
         const bloggerById = await bloggersCollection.findOne({id})
@@ -41,6 +56,5 @@ export const bloggersRepository = {
             youtubeUrl: newBlogger.youtubeUrl
         }
     }
-
 }
 

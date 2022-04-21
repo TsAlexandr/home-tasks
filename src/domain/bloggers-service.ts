@@ -1,10 +1,12 @@
 import {bloggersRepository} from "../repositories/bloggers-repository";
+import {Bloggers, Paginator, PostsCon} from "../repositories/db";
 
 
 
 export const bloggersService = {
-    async getBloggers() {
-        return await bloggersRepository.getBloggers()
+    async getBloggers(name: string, pageSize: number, pageNumber: number ) {
+        const bloggerByName = await bloggersRepository.getBloggers(name, pageSize, pageNumber)
+        return bloggerByName
     },
     async getBloggersById(id: number) {
         return await bloggersRepository.getBloggersById(id)

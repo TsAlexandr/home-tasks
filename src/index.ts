@@ -6,6 +6,7 @@ import {contentRouter} from "./routes/content-router";
 import {bloggersRouter} from "./routes/bloggers-router";
 
 
+
 const app = express()
 
 
@@ -14,6 +15,7 @@ app.use(cors())
 app.use(bodyParser.json())
 app.use('/posts', contentRouter)
 app.use('/bloggers', bloggersRouter)
+
 
 
 

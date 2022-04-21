@@ -2,6 +2,8 @@ import {Router} from "express";
 import {bloggersService} from "../domain/bloggers-service";
 import {body, check} from "express-validator";
 import {inputValidator} from "../middlewares/input-validator-middlewares";
+import * as url from "url";
+
 
 const reg = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+$/
 
@@ -9,7 +11,26 @@ export const bloggersRouter = Router({})
 
 bloggersRouter.get('/',
     async (req, res) => {
-        const bloggers = await bloggersService.getBloggers()
+    const url_parts = url.parse(req.url, true)
+
+    const name = url_parts.query.name
+
+        // @ts-ignore
+        const pageSize = parseInt(req.query.pageSize)
+
+        // @ts-ignore
+        const pageNumber = parseInt(req.query.pageNumber)
+
+    let currentName
+        if(typeof name === "string") {
+            currentName = name
+        } else if(Array.isArray(name) && name[0]) {
+            currentName = name[0]
+        }
+
+
+        // @ts-ignore
+        const bloggers = await bloggersService.getBloggers(currentName, pageNumber, pageSize)
         res.status(200).send(bloggers)
     })
 
@@ -38,10 +59,11 @@ bloggersRouter.get('/',
         inputValidator,
         async (req, res) => {
         const id = +req.params.id
+            const {name, youtubeUrl} = req.body
             const updBlogger = await bloggersService.updateBloggerById(
                 id,
-                req.body.name,
-                req.body.youtubeUrl
+                name,
+                youtubeUrl
             )
             if (updBlogger) {
                 res.status(204).send(updBlogger)

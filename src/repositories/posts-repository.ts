@@ -1,5 +1,5 @@
-import {postsCollection, PostsCon} from "./db";
-import {bloggersService} from "../domain/bloggers-service";
+import {Bloggers, bloggersCollection, Paginator, postsCollection, PostsCon} from "./db";
+
 
 export const postsRepository = {
     async getPosts() {
@@ -42,5 +42,24 @@ export const postsRepository = {
             forceServerObjectId: true
         })
         return newPost
+    },
+
+    async getPagesOfPosts(bloggerId: number, pageNumber: number, pageSize: number) {
+            const posts:PostsCon[] = await postsCollection
+                .find({bloggerId})
+                .limit(pageSize)
+                .skip((pageNumber - 1) * pageSize)
+                .toArray()
+            const count = await bloggersCollection.countDocuments()
+            const total = Math.ceil(count/pageSize)
+
+            const postsInPages:Paginator<PostsCon> = {
+                page: pageNumber,
+                pageSize: pageSize,
+                totalCount: total,
+                pagesCount: count,
+                items: posts
+            }
+            return postsInPages
     }
 }
