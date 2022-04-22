@@ -7,8 +7,11 @@ import {bloggersService} from "../domain/bloggers-service";
 export const contentRouter = Router({})
 
 contentRouter.get('/', async (req, res) => {
-    const {pageNumber, pageSize} = req.query
-    const posts = await postsService.getPosts()
+    // @ts-ignore
+    const pageSize = parseInt(req.query.pageSize)
+    // @ts-ignore
+    const pageNumber = parseInt(req.query.pageNumber)
+    const posts = await postsService.getPosts(pageNumber, pageSize)
     if(!posts) {
         res.sendStatus(400)
     } else {
