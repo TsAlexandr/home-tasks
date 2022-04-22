@@ -6,6 +6,7 @@ const mongoUri =
 export const client = new MongoClient(mongoUri);
 export const bloggersCollection = client.db("bloggers-posts").collection<Bloggers>('bloggers-management')
 export const postsCollection = client.db("bloggers-posts").collection<PostsCon>('posts-management')
+export const usersCollection = client.db("bloggers-posts").collection<PostsCon>('users-management')
 
 
 export async function runDb() {
@@ -47,6 +48,11 @@ export type Bloggers = {
     youtubeUrl: string | null
 }
 
+export type Users = {
+    id: string | null
+    login: string | null
+}
+
 export type Paginator<T> = {
     pagesCount: number,
     page: number,
@@ -55,5 +61,9 @@ export type Paginator<T> = {
     items: T[]
 }
 
+export type userInput = {
+    username: string,
+    password: string
+}
 
 
