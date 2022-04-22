@@ -1,12 +1,11 @@
 import {postsRepository} from "../repositories/posts-repository";
 import {NewPost, PostsCon} from "../repositories/db";
 import {bloggersService} from "./bloggers-service";
-import {bloggersRepository} from "../repositories/bloggers-repository";
 
 
 export const postsService = {
-    async getPosts() {
-        return await postsRepository.getPosts()
+    async getPosts(pageNumber: number, pageSize: number) {
+        return await postsRepository.getPosts(pageSize, pageNumber)
     },
     async getPostsById(id: number) {
         return await postsRepository.getPostsById(id)

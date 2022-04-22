@@ -1,10 +1,24 @@
-import {Bloggers, bloggersCollection, Paginator, postsCollection, PostsCon} from "./db";
+import {bloggersCollection, Paginator, postsCollection, PostsCon} from "./db";
 
 
 export const postsRepository = {
-    async getPosts() {
-        const posts = await postsCollection.find({}, ).toArray()
-        return posts
+    async getPosts(pageNumber: number, pageSize: number) {
+        const post = await postsCollection
+            .find({}, )
+            .limit(pageSize)
+            .skip((pageNumber - 1) * pageSize)
+            .toArray()
+        const count = await postsCollection.countDocuments()
+        const total = Math.ceil(count/pageSize)
+
+        const postInPages:Paginator<PostsCon> = {
+            page: pageNumber,
+            pageSize: pageSize,
+            totalCount: total,
+            pagesCount: count,
+            items: post
+        }
+        return postInPages
     },
     async getPostsById(id: number) {
         const postsById = await postsCollection.findOne({id}, {projection: {_id:0}})
