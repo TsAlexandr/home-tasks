@@ -3,6 +3,7 @@ import {bloggersService} from "../domain/bloggers-service";
 import {body, check} from "express-validator";
 import {inputValidator} from "../middlewares/input-validator-middlewares";
 import * as url from "url";
+import {postsService} from "../domain/posts-service";
 
 
 const reg = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+$/
@@ -106,3 +107,36 @@ bloggersRouter.get('/',
                 res.sendStatus(404)
             }
         })
+
+
+    .get('/:bloggerId/posts',
+        check('bloggerId').isNumeric(), inputValidator,
+        async (req, res) => {
+            const bloggerId = parseInt(req.params.bloggerId)
+            // @ts-ignore
+            const pageSize = parseInt(req.query.pageSize)
+            // @ts-ignore
+            const pageNumber = parseInt(req.query.pageNumber)
+            const pages = bloggersService.getPages(bloggerId, pageSize, pageNumber)
+            if(!pages) {
+                res.status(404)
+            } else {
+                res.status(200).send(pages)
+            }
+        })
+
+    .post('/:bloggerId/posts', async (req, res) => {
+            const bloggerId = parseInt(req.params.bloggerId)
+            const newPostForBlogger = bloggersService.createNewPostForBlogger(
+                bloggerId,
+                req.body.title,
+                req.body.shortDescription,
+                req.body.content
+            )
+                if(!newPostForBlogger) {
+                    res.status(404)
+                } else {
+                    res.status(201).send(newPostForBlogger)
+                }
+
+    })

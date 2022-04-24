@@ -1,6 +1,5 @@
 import {bloggersRepository} from "../repositories/bloggers-repository";
-import {Bloggers, Paginator, PostsCon} from "../repositories/db";
-
+import {postsRepository} from "../repositories/posts-repository";
 
 
 export const bloggersService = {
@@ -24,7 +23,27 @@ export const bloggersService = {
             youtubeUrl: youtubeUrl
         }
         return await bloggersRepository.createBlogger(newBlogger)
-    }
+    },
+    async getPages(bloggerId: number, pageNumber: number, pageSize: number) {
+        return await bloggersRepository.getPagesOfPosts(bloggerId, pageNumber, pageSize)
+    },
+    async createNewPostForBlogger
+        (
+            bloggerId: number,
+            title: string,
+            shortDescription: string,
+            content: string
+        )
+        {
+            const newPostForBlogger = {
+                id: +(new Date()),
+                title: title,
+                shortDescription: shortDescription,
+                content: content,
+                bloggerId: bloggerId
+            }
+            return await bloggersRepository.createPostForBlogger(newPostForBlogger)
+        }
 }
 
 
