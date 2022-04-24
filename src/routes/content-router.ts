@@ -2,11 +2,12 @@ import {Router} from "express";
 import {inputValidator} from "../middlewares/input-validator-middlewares";
 import {postsService} from "../domain/posts-service";
 import {body, check} from "express-validator";
-import {bloggersService} from "../domain/bloggers-service";
+import {bloggersRepository} from "../repositories/bloggers-repository";
 
 export const contentRouter = Router({})
 
-contentRouter.get('/', async (req, res) => {
+contentRouter
+    .get('/', async (req, res) => {
     // @ts-ignore
     const pageSize = parseInt(req.query.pageSize)
     // @ts-ignore
@@ -52,17 +53,18 @@ contentRouter.get('/', async (req, res) => {
             .isNumeric(),
         inputValidator,
         async (req, res) => {
+            const bloggerId = parseInt(req.body.bloggerId)
+            const blogger = await bloggersRepository.getBloggersById(bloggerId)
+                if(!blogger) {
+                    res.status(400)
+                } else {
             const newPost = await postsService.createPosts
             ({
                 title: req.body.title,
                 content: req.body.content,
-                bloggerId: req.body.bloggerId,
+                bloggerId,
                 shortDescription: req.body.shortDescription
             })
-
-            if (!newPost) {
-                res.status(400)
-            } else {
                 res.status(201).send(newPost)
             }
         })
@@ -87,18 +89,22 @@ contentRouter.get('/', async (req, res) => {
         inputValidator,
         async (req, res) => {
             const id = +req.params.id
-            const updPost = await postsService.updatePostsById ({
-                id,
+            const updPost = {
                 title: req.body.title,
                 content: req.body.content,
                 shortDescription: req.body.shortDescription,
                 bloggerId: req.body.bloggerId
-            })
-            if (!updPost) {
-                res.status(404)
-            } else {
-                res.status(204).send(updPost)
             }
+            const bloggerUpd = await bloggersRepository.getBloggersById(updPost.bloggerId)
+                if(!bloggerUpd) {
+                    res.status(400)
+                }
+            const updatePost = await postsService.updatePostsById(id, updPost)
+                if (!updatePost) {
+                    res.status(404)
+                } else {
+                    res.status(204).send(updPost)
+                }
         })
 
     .delete('/:id',
@@ -114,19 +120,6 @@ contentRouter.get('/', async (req, res) => {
             }
         })
 
-    .get('/:bloggerId/posts',
-        async (req, res) => {
-            const bloggerId = parseInt(req.params.bloggerId)
-            // @ts-ignore
-            const pageSize = parseInt(req.query.pageSize)
-            // @ts-ignore
-            const pageNumber = parseInt(req.query.pageNumber)
-            const pages = postsService.getPages(bloggerId, pageSize, pageNumber)
-            if(!pages) {
-                res.status(404)
-            } else {
-                res.status(200).send(pages)
-            }
-        })
+
 
 

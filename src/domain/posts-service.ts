@@ -1,6 +1,5 @@
 import {postsRepository} from "../repositories/posts-repository";
 import {NewPost, PostsCon} from "../repositories/db";
-import {bloggersService} from "./bloggers-service";
 
 
 export const postsService = {
@@ -13,32 +12,20 @@ export const postsService = {
     async deletePostsById(id: number) {
         return await postsRepository.deletePostsById(id)
     },
-    async updatePostsById(isUpdPost: PostsCon) {
-        const blogger = await bloggersService.getBloggersById(isUpdPost.bloggerId)
-            if(!blogger) {
-                return false
-            }
+    async updatePostsById(id: number, isUpdPost: PostsCon) {
             const updPost = {
                 ...isUpdPost,
-                bloggerName: blogger.name
+                id
             }
-
-            return postsRepository.updatePostsById(updPost)
+            return await postsRepository.updatePostsById(updPost)
     },
     async createPosts(newPost: NewPost) {
-        const blogger = await  bloggersService.getBloggersById(newPost.bloggerId)
-            if(!blogger) {
-                return false
-            }
         const createPost = {
             ...newPost,
-            bloggerName: blogger.name,
             id: +(new Date())
         }
-        return postsRepository.createPosts(createPost)
+        return await postsRepository.createPosts(createPost)
     },
 
-    async getPages(bloggerId: number, pageNumber: number, pageSize: number) {
-        return await postsRepository.getPagesOfPosts(bloggerId, pageNumber, pageSize)
-    }
+
 }
