@@ -3,6 +3,7 @@ import {body, check} from "express-validator";
 import {postsService} from "../domain/posts-service";
 import {bloggersService} from "../domain/bloggers-service";
 import {inputValidator} from "../middlewares/input-validator-middlewares";
+import {authMiddleware} from "../middlewares/auth-middleware";
 
 
 export const postsRouter = Router()
@@ -18,6 +19,7 @@ postsRouter
         })
     //Create new post
     .post('/',
+        authMiddleware,
         body('title').isString().withMessage('Name should be a string')
             .trim().not().isEmpty().withMessage('Name should be not empty'),
         body('shortDescription').isString().withMessage('shortDescription should be a string')
@@ -74,6 +76,7 @@ postsRouter
         })
     //Update existing post by id with InputModel
     .put('/:postId',
+        authMiddleware,
         body('title').isString().withMessage('Name should be a string')
             .trim().not().isEmpty().withMessage('Name should be not empty'),
         body('shortDescription').isString().withMessage('shortDescription should be a string')
@@ -119,6 +122,7 @@ postsRouter
         })
     //Delete post specified by id
     .delete('/:postId',
+        authMiddleware,
         async (req: Request, res: Response) => {
             const id = +req.params.postId
             const isDeleted = await postsService.deletePostById(id)

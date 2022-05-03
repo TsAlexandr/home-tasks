@@ -2,6 +2,7 @@ import {Router} from "express";
 import {bloggersService} from "../domain/bloggers-service";
 import {body, check} from "express-validator";
 import {inputValidator} from "../middlewares/input-validator-middlewares";
+import {authMiddleware} from "../middlewares/auth-middleware";
 
 const reg = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+$/
 
@@ -26,7 +27,8 @@ bloggersRouter.get('/',
             }
         })
 
-    .put('/:id', check('id').isNumeric(),
+    .put('/:id',
+        authMiddleware,check('id').isNumeric(),
         body('name')
             .isString()
             .trim()
@@ -51,6 +53,7 @@ bloggersRouter.get('/',
         })
 
     .post('/',
+        authMiddleware,
         body('name')
             .isString()
             .trim()
@@ -73,7 +76,8 @@ bloggersRouter.get('/',
             }
         })
 
-    .delete('/:id', check('id').isNumeric(),
+    .delete('/:id',
+        authMiddleware,check('id').isNumeric(),
         inputValidator,
         async (req, res) => {
             const id = +req.params.id
