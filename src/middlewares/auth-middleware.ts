@@ -1,18 +1,32 @@
 import {NextFunction, Request, Response} from "express";
+import {usersService} from "../domain/users-service";
 
-export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
-    const authHeader = req.headers.authorization
-    if(!authHeader){
-        return
-}else if(!authHeader.split(' ')[1] ||  authHeader.split(' ')[1]=='admin:qwerty' || authHeader.split(' ')[0]!= 'Basic') {
-            res.status(401)
+export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+    try{
+        let authorizationHeader = req.headers.authorization
+        let authorizationData = ""
+        let authorizationDecoded = ""
+        if(authorizationHeader){
+            authorizationData = authorizationHeader.split(" ")[1]
+            if(!authorizationData){
+                res.sendStatus(401)
+                return
+            }
+            authorizationDecoded =  Buffer.from(authorizationData, 'base64').toString()
+
+        }else {
+            res.sendStatus(401)//400
         }
-    const auth = Buffer.from(authHeader.split(' ')[1], 'base64').toString().split(':')
-    const login = auth[0]
-    const password = auth[1]
-    if (login === 'admin' && password === 'qwerty') {
-        next()
-    } else {
-        res.status(401)
+        const login = authorizationDecoded.split(":")[0]
+        const password = authorizationDecoded.split(":")[1]
+        const result = await usersService.checkCredentials(login, password)
+        if(result.resultCode === 1){
+            res.sendStatus(401)
+        }else{
+            next()
+        }
+    }catch (e) {
+        console.log(e)
+        res.sendStatus(401)
     }
 }
