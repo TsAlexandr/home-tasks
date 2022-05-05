@@ -3,7 +3,7 @@ import {body, check} from "express-validator";
 import {postsService} from "../domain/posts-service";
 import {bloggersService} from "../domain/bloggers-service";
 import {inputValidator} from "../middlewares/input-validator-middlewares";
-import {authMiddleware} from "../middlewares/auth-middleware";
+import {authMiddleware, checkHeaders} from "../middlewares/auth-middleware";
 
 
 export const postsRouter = Router()
@@ -18,7 +18,7 @@ postsRouter
             res.status(200).send(allPosts)
         })
     //Create new post
-    .post('/',
+    .post('/',checkHeaders,
         authMiddleware,
         body('title').isString().withMessage('Name should be a string')
             .trim().not().isEmpty().withMessage('Name should be not empty'),
@@ -75,7 +75,7 @@ postsRouter
             }
         })
     //Update existing post by id with InputModel
-    .put('/:postId',
+    .put('/:postId',checkHeaders,
         authMiddleware,
         body('title').isString().withMessage('Name should be a string')
             .trim().not().isEmpty().withMessage('Name should be not empty'),
@@ -121,7 +121,7 @@ postsRouter
             }
         })
     //Delete post specified by id
-    .delete('/:postId',
+    .delete('/:postId',checkHeaders,
         authMiddleware,
         async (req: Request, res: Response) => {
             const id = +req.params.postId

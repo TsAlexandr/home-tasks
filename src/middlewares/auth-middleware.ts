@@ -1,6 +1,25 @@
 import {NextFunction, Request, Response} from "express";
 import {usersService} from "../domain/users-service";
 
+export const checkHeaders = async (req: Request, res: Response, next: NextFunction) => {
+    if(!req.headers){
+        res.sendStatus(401)
+        return
+    }
+    else if(!req.headers.authorization || typeof req.headers.authorization != 'string'
+    ){
+        res.sendStatus(401)
+        return
+    }else if(!req.headers.authorization.split(" ")[1]
+        || req.headers.authorization.split(" ")[1]=="admin:qwerty"
+        || req.headers.authorization.split(" ")[0]!="Basic"){
+        res.sendStatus(401)
+        return
+    }
+    next()
+}
+
+
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     try{
         let authorizationHeader = req.headers.authorization
