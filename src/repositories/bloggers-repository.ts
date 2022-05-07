@@ -56,31 +56,6 @@ export const bloggersRepository = {
             name: newBlogger.name,
             youtubeUrl: newBlogger.youtubeUrl
         }
-    },
-
-    async getPagesOfPosts(bloggerId: number, pageNumber: number, pageSize: number) {
-        const posts:PostsCon[] = await postsCollection
-            .find({bloggerId})
-            .limit(pageSize)
-            .skip((pageNumber - 1) * pageSize)
-            .toArray()
-        const count = await postsCollection.countDocuments()
-        const total = Math.ceil(count/pageSize)
-
-        const postsInPages:Paginator<PostsCon> = {
-            page: pageNumber,
-            pageSize: pageSize,
-            totalCount: total,
-            pagesCount: count,
-            items: posts
-        }
-        return postsInPages
-    },
-    async createPostForBlogger(newPostForBlogger: PostsCon){
-        await postsCollection.insertOne(newPostForBlogger)
-        return {
-            ...newPostForBlogger
-        }
     }
 }
 

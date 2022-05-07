@@ -1,5 +1,6 @@
 import {postsRepository} from "../repositories/posts-repository";
 import {NewPost, PostsCon} from "../repositories/db";
+import {bloggersService} from "./bloggers-service";
 
 
 export const postsService = {
@@ -20,8 +21,13 @@ export const postsService = {
             return await postsRepository.updatePostsById(updPost)
     },
     async createPosts(newPost: NewPost) {
+        const blogger = await bloggersService.getBloggersById(newPost.bloggerId)
+            if(!blogger) {
+                return false
+            }
         const createPost = {
             ...newPost,
+            bloggerName: blogger.name,
             id: +(new Date())
         }
         return await postsRepository.createPosts(createPost)

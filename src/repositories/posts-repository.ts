@@ -58,15 +58,7 @@ export const postsRepository = {
         return updPosts.modifiedCount === 1
     },
     async createPosts(newPost: PostsCon) {
-        const blogger = await bloggersCollection.findOne({id: newPost.bloggerId})
-        await postsCollection.insertOne({
-            ...newPost,
-            bloggerName: blogger?.name
-        }, {
-            forceServerObjectId: true
-        })
-        const reNewPost = await postsCollection.findOne({id: newPost.id},{projection: {_id:0}})
-        return reNewPost
+        await postsCollection.insertOne(newPost, {forceServerObjectId: true})
+        return newPost
     }
-
 }

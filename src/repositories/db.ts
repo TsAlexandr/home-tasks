@@ -1,12 +1,13 @@
-import {MongoClient} from 'mongodb'
+import {MongoClient, ObjectId} from 'mongodb'
 
 const mongoUri =
     process.env.MONGO_URI || "mongodb://localhost:27017/?maxPoolSize=20&w=majority"
 
 export const client = new MongoClient(mongoUri);
-export const bloggersCollection = client.db("bloggers-posts").collection<Bloggers>('bloggers-management')
-export const postsCollection = client.db("bloggers-posts").collection<PostsCon>('posts-management')
-export const usersCollection = client.db("bloggers-posts").collection<PostsCon>('users-management')
+export const bloggersCollection = client.db("bloggers-posts").collection<Bloggers>('bloggers')
+export const postsCollection = client.db("bloggers-posts").collection<PostsCon>('posts')
+export const usersCollection = client.db("bloggers-posts").collection<PostsCon>('users')
+export const commentsCollection = client.db("bloggers-posts").collection<PostsCon>('comments')
 
 
 export async function runDb() {
@@ -23,7 +24,18 @@ export async function runDb() {
     }
 }
 
+export type Bloggers = {
+    id: number,
+    name: string | null
+    youtubeUrl: string | null
+}
 
+export type Users = {
+    id?: ObjectId
+    login: string | null
+    passwordHash: string
+    passwordSalt: string
+}
 
 export type PostsCon = {
     id?: number
@@ -42,28 +54,12 @@ export type NewPost = {
     bloggerId: number
 }
 
-export type Bloggers = {
-    id: number,
-    name: string | null
-    youtubeUrl: string | null
-}
-
-export type Users = {
-    id: string | null
-    login: string | null
-}
-
 export type Paginator<T> = {
     pagesCount: number,
     page: number,
     pageSize: number,
     totalCount: number,
     items: T[]
-}
-
-export type userInput = {
-    username: string,
-    password: string
 }
 
 

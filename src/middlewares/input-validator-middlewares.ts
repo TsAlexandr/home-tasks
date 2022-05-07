@@ -1,5 +1,8 @@
 import {NextFunction, Request, Response} from "express";
-import {validationResult} from "express-validator";
+import {body, check, validationResult} from "express-validator";
+
+const reg = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+$/
+
 
 export const inputValidator = (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
@@ -16,3 +19,42 @@ export const inputValidator = (req: Request, res: Response, next: NextFunction) 
         next()
     }
 }
+
+export const isValidId = [
+    check('id').isInt({min: 1})
+]
+
+export const isValidBlog = [
+    body('name').isString().trim().not().isEmpty(),
+    body('youtubeUrl').matches(reg).withMessage('Please enter a valid url')
+    ]
+
+export const isValidPost = [
+    body('title')
+        .isString()
+        .trim()
+        .not()
+        .isEmpty(),
+    body('shortDescription')
+        .isString()
+        .trim()
+        .not()
+        .isEmpty(),
+    body('content')
+        .isString()
+        .trim()
+        .not()
+        .isEmpty()
+]
+
+export const isValidPage = [
+
+]
+
+export const isValidUser = [
+
+]
+
+export const isValidComma = [
+
+]
