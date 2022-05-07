@@ -8,18 +8,13 @@ export const inputValidator = (req: Request, res: Response, next: NextFunction) 
     if (errors.isEmpty()) {
         next()
     } else {
-        const errorsCatch = errors.array({ onlyFirstError: true }).map(e => {
+        const errorsMessages = errors.array({ onlyFirstError: true }).map(e => {
             return {
                 message: e.msg,
                 field: e.param
             }
         })
-        res.status(400).json(
-            {
-                "errorsMessages": errorsCatch,
-                "resultCode": 1
-            }
-        )
+        res.status(400).send(errorsMessages)
     }
 }
 
@@ -29,7 +24,7 @@ export const isValidId = [
 
 export const isValidBlog = [
     body('name').isString().trim().not().isEmpty(),
-    body('youtubeUrl').matches(reg).withMessage('Please enter a valid url')
+    body('youtubeUrl').matches(reg).isLength({max:100}).withMessage('Please enter a valid url')
     ]
 
 export const isValidPost = [
