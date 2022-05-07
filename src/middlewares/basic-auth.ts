@@ -1,16 +1,58 @@
 import {Request, Response, NextFunction} from "express";
 
+interface BaseAuthData {
+    login: string;
+    password: string;
+}
+
+enum BaseAuthPayload {
+    login = "admin",
+    password = "qwerty",
+}
+
+
 
 export const checkAuth = async (req: Request, res: Response, next: NextFunction) => {
-    const auth = {login: 'admin', password: 'qwerty'}
+    if (!req.headers.authorization) {
+        res.send(401);
+        return;
+    }
 
-    // parse login and password from headers
-    const b64auth = (req.headers.authorization || '').split(' ')[1] || ''
-    const [login, password] = Buffer.from(b64auth, 'base64').toString().split(':')
+    if (req.headers.authorization.split(" ")[0] !== "Basic") {
+        res.send(401);
+        return;
+    }
 
-    // Verify login and password are set and correct
-    if (login && password && login === auth.login && password === auth.password) {
+    const token = req.headers.authorization.split(" ")[1];
 
-        next()
+    const decodedBaseData = authService.decodeBaseAuth(token);
+
+    if (
+        (decodedBaseData.login !== BaseAuthPayload.login,
+        decodedBaseData.password !== BaseAuthPayload.password)
+    ) {
+        res.send(401);
+        return;
+    }
+
+    next();
+
+
+
+}
+
+const authService = {
+
+    decodeBaseAuth(token: string): BaseAuthData {
+        const buff = Buffer.from(token, "base64");
+
+        const decodedString = buff.toString("ascii");
+
+        const loginAndPassword = decodedString.split(":");
+
+        return {
+            login: loginAndPassword[0],
+            password: loginAndPassword[1],
+        };
     }
 }
