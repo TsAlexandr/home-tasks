@@ -1,14 +1,8 @@
 import {Router, Request, Response} from "express";
 import {bloggersService} from "../domain/bloggers-service";
-<<<<<<< HEAD
 import {inputValidator, isValidBlog, isValidId} from "../middlewares/input-validator-middlewares";
 // import {postsService} from "../domain/posts-service";
 // import {authMiddleware} from "../middlewares/auth-middleware";
-=======
-import {body, check} from "express-validator";
-import {inputValidator} from "../middlewares/input-validator-middlewares";
-import {authMiddleware, checkHeaders} from "../middlewares/auth-middleware";
->>>>>>> 9139f71e0ed80428aa5566df3f7bee71561c06f0
 
 export const getPaginationData = (query: any) => {
     const pageNumber = typeof query.pageNumber === 'string' ? +query.pageNumber : 1
@@ -46,62 +40,9 @@ bloggersRouter.get('/',
         res.status(200).send(bloggers)
     })
 
-<<<<<<< HEAD
     .post('/',
         isValidBlog,
         //authMiddleware,
-=======
-    .get('/:id',
-        check('id').isNumeric(),
-        inputValidator,
-        async (req, res) => {
-        const id = +req.params.id
-            const blogger = await bloggersService.getBloggersById(id)
-            if (blogger) {
-                res.send(blogger).status(200)
-            } else {
-                res.sendStatus(404)
-            }
-        })
-
-    .put('/:id',checkHeaders,
-        authMiddleware,check('id').isNumeric(),
-
-        body('name')
-            .isString()
-            .trim()
-            .not()
-            .isEmpty(),
-        body('youtubeUrl')
-            .matches(reg)
-            .withMessage('Please enter a valid url'),
-        inputValidator,
-        async (req, res) => {
-        const id = +req.params.id
-            const updBlogger = await bloggersService.updateBloggerById(
-                id,
-                req.body.name,
-                req.body.youtubeUrl
-            )
-            if (updBlogger) {
-                res.status(204).send(updBlogger)
-            } else {
-                res.sendStatus(404)
-            }
-        })
-
-    .post('/',checkHeaders,
-        authMiddleware,
-
-        body('name')
-            .isString()
-            .trim()
-            .not()
-            .isEmpty(),
-        body('youtubeUrl')
-            .matches(reg)
-            .withMessage('Please enter a valid url'),
->>>>>>> 9139f71e0ed80428aa5566df3f7bee71561c06f0
         inputValidator,
         async (req: Request, res: Response) => {
             const newBlogger = await bloggersService.createBlogger(
@@ -116,14 +57,8 @@ bloggersRouter.get('/',
             }
         })
 
-<<<<<<< HEAD
     .get('/:id',
         isValidId,
-=======
-    .delete('/:id',
-        checkHeaders,
-        authMiddleware,check('id').isNumeric(),
->>>>>>> 9139f71e0ed80428aa5566df3f7bee71561c06f0
         inputValidator,
         async (req: Request, res: Response) => {
             const id = +req.params.id

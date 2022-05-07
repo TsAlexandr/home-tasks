@@ -4,16 +4,11 @@ const mongoUri =
     process.env.MONGO_URI || "mongodb://localhost:27017/?maxPoolSize=20&w=majority"
 
 export const client = new MongoClient(mongoUri);
-<<<<<<< HEAD
+
 export const bloggersCollection = client.db("bloggers-posts").collection<Bloggers>('bloggers')
 export const postsCollection = client.db("bloggers-posts").collection<PostsCon>('posts')
-export const usersCollection = client.db("bloggers-posts").collection<PostsCon>('users')
-export const commentsCollection = client.db("bloggers-posts").collection<PostsCon>('comments')
-=======
-export const bloggersCollection = client.db("bloggers-posts").collection('bloggers-management')
-export const postsCollection = client.db("bloggers-posts").collection('posts-management')
-export const usersCollection = client.db("bloggers-posts").collection('users')
->>>>>>> 9139f71e0ed80428aa5566df3f7bee71561c06f0
+// export const usersCollection = client.db("bloggers-posts").collection<PostsCon>('users')
+// export const commentsCollection = client.db("bloggers-posts").collection<PostsCon>('comments')
 
 
 export async function runDb() {
