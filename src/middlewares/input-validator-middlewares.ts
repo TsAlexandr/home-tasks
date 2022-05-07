@@ -8,13 +8,13 @@ export const inputValidator = (req: Request, res: Response, next: NextFunction) 
     if (errors.isEmpty()) {
         next()
     } else {
-        const errorsMessages = errors.array({ onlyFirstError: true }).map(e => {
+        const err = errors.array({ onlyFirstError: true }).map(e => {
             return {
                 message: e.msg,
                 field: e.param
             }
         })
-        res.status(400).send(errorsMessages)
+        res.status(400).send({errorsMessages: err, resultCode: 1})
     }
 }
 
