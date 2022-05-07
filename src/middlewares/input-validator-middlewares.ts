@@ -14,7 +14,7 @@ export const inputValidator = (req: Request, res: Response, next: NextFunction) 
                 field: e.param
             }
         })
-        res.status(400).send({errorsMessages: err, resultCode: 1})
+        res.status(400).json({errorsMessages: err, resultCode: 1})
     }
 }
 
