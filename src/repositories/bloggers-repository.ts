@@ -5,7 +5,7 @@ import {postsRepository} from "./posts-repository";
 export const bloggersRepository = {
     async getBloggers(name: string, pageSize: number, pageNumber: number) {
         const bloggers:Bloggers[] = await bloggersCollection
-            .find({name: {$regex: name}})
+            .find({name: {$regex: name}}, {projection: {id: 0}})
             .limit(pageSize)
             .skip((pageNumber - 1) * pageSize)
             .toArray()

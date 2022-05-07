@@ -53,7 +53,6 @@ postsRouter
     //     })
     //
     // .post('/:id/comments',
-    //     authMiddleware,
     //     inputValidator,
     //     async (req: Request, res: Response) => {
     //         const postId = parseInt(req.params.id)

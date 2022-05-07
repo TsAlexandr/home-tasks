@@ -23,7 +23,7 @@ export const isValidId = [
 ]
 
 export const isValidBlog = [
-    body('name').isString().trim().not().isEmpty(),
+    body('name').isString().isLength({max:15}).trim().not().isEmpty(),
     body('youtubeUrl').matches(reg).isLength({max:100}).withMessage('Please enter a valid url')
     ]
 
