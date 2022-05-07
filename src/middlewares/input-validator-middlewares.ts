@@ -3,19 +3,23 @@ import {body, check, validationResult} from "express-validator";
 
 const reg = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+$/
 
-
 export const inputValidator = (req: Request, res: Response, next: NextFunction) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({
-            errorsMessage: errors.array({onlyFirstError: true}).map((e) => ({
+    const errors = validationResult(req)
+    if (errors.isEmpty()) {
+        next()
+    } else {
+        const errorsCatch = errors.array({ onlyFirstError: true }).map(e => {
+            return {
                 message: e.msg,
                 field: e.param
-            })),
-            resultCode: 1
+            }
         })
-    } else {
-        next()
+        res.status(400).json(
+            {
+                "errorsMessages": errorsCatch,
+                "resultCode": 1
+            }
+        )
     }
 }
 
