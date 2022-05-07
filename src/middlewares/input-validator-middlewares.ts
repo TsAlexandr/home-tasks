@@ -8,12 +8,11 @@ export const inputValidator = (req: Request, res: Response, next: NextFunction) 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({
-            data: {},
-            resultCode: 1,
             errorsMessage: errors.array().map((e) => ({
                 message: e.msg,
                 field: e.param
-            }))
+            })),
+            resultCode: 1
         })
     } else {
         next()
