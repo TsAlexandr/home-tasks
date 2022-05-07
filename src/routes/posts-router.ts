@@ -4,6 +4,7 @@ import {postsService} from "../domain/posts-service";
 import {check} from "express-validator";
 import {bloggersRepository} from "../repositories/bloggers-repository";
 import {getPageFor} from "./bloggers-router";
+import {checkAuth} from "../middlewares/basic-auth";
 //import {authMiddleware} from "../middlewares/auth-middleware";
 
 export const postsRouter = Router({})
@@ -25,7 +26,7 @@ postsRouter
         isValidPost,
         check('bloggerId')
             .isNumeric(),
-        //authMiddleware,
+        checkAuth,
         inputValidator,
         async (req: Request, res: Response) => {
             const bloggerId = parseInt(req.body.bloggerId)
@@ -82,7 +83,7 @@ postsRouter
     .put('/:id',
         isValidId,
         isValidPost,
-        //authMiddleware,
+        checkAuth,
         inputValidator,
         async (req: Request, res: Response) => {
             const id = +req.params.id
@@ -106,7 +107,7 @@ postsRouter
 
     .delete('/:id',
         isValidId,
-        //authMiddleware,
+        checkAuth,
         inputValidator,
         async (req: Request, res: Response) => {
             const id = +req.params.id

@@ -1,6 +1,7 @@
 import {Router, Request, Response} from "express";
 import {bloggersService} from "../domain/bloggers-service";
 import {inputValidator, isValidBlog, isValidId} from "../middlewares/input-validator-middlewares";
+import {checkAuth} from "../middlewares/basic-auth";
 // import {postsService} from "../domain/posts-service";
 // import {authMiddleware} from "../middlewares/auth-middleware";
 
@@ -42,7 +43,7 @@ bloggersRouter.get('/',
 
     .post('/',
         isValidBlog,
-        //authMiddleware,
+        checkAuth,
         inputValidator,
         async (req: Request, res: Response) => {
             const newBlogger = await bloggersService.createBlogger(
@@ -72,7 +73,7 @@ bloggersRouter.get('/',
 
     .put('/:id', isValidId,
         isValidBlog,
-        //authMiddleware,
+        checkAuth,
         inputValidator,
         async (req: Request, res: Response) => {
             const id = +req.params.id
@@ -91,7 +92,7 @@ bloggersRouter.get('/',
 
     .delete('/:id',
         isValidId,
-        //authMiddleware,
+        checkAuth,
         inputValidator,
         async (req: Request, res: Response) => {
             const id = +req.params.id
