@@ -29,8 +29,8 @@ postsRouter
         checkAuth,
         inputValidator,
         async (req: Request, res: Response) => {
-            const bloggerId = parseInt(req.body.bloggerId)
-            const blogger = await bloggersRepository.getBloggersById(bloggerId)
+            const id = parseInt(req.body.bloggerId)
+            const blogger = await bloggersRepository.getBloggersById(id)
             if (!blogger) {
                 res.status(400)
             } else {
@@ -38,7 +38,7 @@ postsRouter
                 ({
                     title: req.body.title,
                     content: req.body.content,
-                    bloggerId,
+                    bloggerId: id,
                     shortDescription: req.body.shortDescription
                 })
                 res.status(201).send(newPost)

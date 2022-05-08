@@ -5,9 +5,7 @@ const reg = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+$/
 
 export const inputValidator = (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req)
-    if (errors.isEmpty()) {
-        next()
-    } else {
+    if (!errors.isEmpty()) {
         const err = errors.array({ onlyFirstError: true }).map(e => {
             return {
                 message: e.msg,
@@ -15,6 +13,8 @@ export const inputValidator = (req: Request, res: Response, next: NextFunction) 
             }
         })
         res.status(400).json({errorsMessages: err, resultCode: 1})
+    } else {
+        next()
     }
 }
 
