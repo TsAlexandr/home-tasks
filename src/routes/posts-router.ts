@@ -33,6 +33,7 @@ postsRouter
             const blogger = await bloggersRepository.getBloggersById(id)
             if (!blogger) {
                 res.status(400)
+                return
             } else {
                 const newPost = await postsService.createPosts
                 ({
@@ -95,6 +96,7 @@ postsRouter
             const bloggerUpd = await bloggersRepository.getBloggersById(updPost.bloggerId)
             if (!bloggerUpd) {
                 res.status(400)
+                return
             }
             const updatePost = await postsService.updatePostsById(id, updPost)
             if (!updatePost) {
