@@ -19,7 +19,7 @@ export const inputValidator = (req: Request, res: Response, next: NextFunction) 
 }
 
 export const isValidId = [
-    check('id').isInt({min: 1})
+    check('id').isInt({gt:8})
 ]
 
 export const isValidBlog = [
@@ -49,8 +49,10 @@ export const isValidPost = [
 ]
 
 export const isValidPage = [
-
+    check('page').optional({checkFalsy: true}).isInt({gt:1}).notEmpty(),
+    check('pageSize').optional({checkFalsy: true}).isInt({gt: 1}).notEmpty()
 ]
+
 
 export const isValidUser = [
 
@@ -59,3 +61,16 @@ export const isValidUser = [
 export const isValidComma = [
 
 ]
+
+export const getDataPage = (query: any) => {
+    const page = typeof query.PageNumber === 'string' ? +query.PageNumber : 1
+    const pageSize = typeof query.PageSize === 'string' ? +query.PageSize : 10
+    const searchNameTerm = typeof query.SearchNameTerm === 'string' ? query.SearchNameTerm : ""
+    return {page, pageSize, searchNameTerm}
+}
+
+export const getPage = (query: any) => {
+    const page = typeof query.PageNumber === 'string' ? +query.PageNumber : 1
+    const pageSize = typeof query.PageSize === 'string' ? +query.PageSize : 10
+    return {page, pageSize}
+}
