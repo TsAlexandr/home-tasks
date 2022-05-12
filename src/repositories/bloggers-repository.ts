@@ -1,61 +1,50 @@
-import {Bloggers, bloggersCollection, Paginator, postsCollection, PostsCon} from "./db";
-import {postsRepository} from "./posts-repository";
-
+import {Bloggers, bloggersCollection, postsCollection} from "./db";
 
 export const bloggersRepository = {
-    async getBloggers(name: string, pageSize: number, pageNumber: number) {
-        const bloggers:Bloggers[] = await bloggersCollection
-            .find({name: {$regex: name}}, {projection: {id: 0}})
+    async getBloggers(page: number, pageSize: number, searchNameTerm: string) {
+        const filter = {name: {$regex: searchNameTerm ? searchNameTerm: ""}}
+        const bloggers = await bloggersCollection
+            .find(filter)
+            .project({_id: 0})
+            .skip((page - 1) * pageSize)
             .limit(pageSize)
-            .skip((pageNumber - 1) * pageSize)
             .toArray()
 
-        const count = await bloggersCollection.countDocuments()
+        const count = await bloggersCollection.countDocuments(filter)
         const total = Math.ceil(count/pageSize)
 
-        const bloggersInPage:Paginator<Bloggers> = {
-            page: pageNumber,
+        const bloggersInPage = {
+            pagesCount: count,
+            page: page,
             pageSize: pageSize,
             totalCount: total,
-            pagesCount: count,
             items: bloggers
         }
         return bloggersInPage
-
     },
     async getBloggersById(id: number) {
-        const bloggerById = await bloggersCollection.findOne({id})
-        if (bloggerById) {
-            return {
-                id: bloggerById.id,
-                name: bloggerById.name,
-                youtubeUrl: bloggerById.youtubeUrl
-            }
-        } else {
-            return false
-        }
+        return await bloggersCollection.findOne({id}, {projection: {_id: 0}})
+
     },
     async deleteBloggerById(id: number) {
         const delBlog = await bloggersCollection.deleteOne({id})
         return delBlog.deletedCount === 1
     },
     async updateBloggerById(id: number, name: string, youtubeUrl: string) {
-        const updBlog = await bloggersCollection.updateOne(
+        const updBlog = await bloggersCollection.findOneAndUpdate(
             {id}, {
                 $set: {
                     "name": name,
                     "youtubeUrl": youtubeUrl
                 }
             })
-        return updBlog.matchedCount === 1
+        await postsCollection.updateMany
+        ({bloggerId: id}, {$set: {'bloggerName': name}})
+        return updBlog.value
     },
     async createBlogger(newBlogger: Bloggers) {
-        await bloggersCollection.insertOne(newBlogger)
-        return {
-            id: newBlogger.id,
-            name: newBlogger.name,
-            youtubeUrl: newBlogger.youtubeUrl
-        }
+        await bloggersCollection.insertOne(newBlogger, {forceServerObjectId: true})
+        return newBlogger
     }
 }
 
