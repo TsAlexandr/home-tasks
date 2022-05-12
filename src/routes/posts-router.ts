@@ -24,8 +24,6 @@ postsRouter
 
     .post('/',
         isValidPost,
-        check('bloggerId')
-            .isNumeric(),
         checkAuth,
         inputValidator,
         async (req: Request, res: Response) => {
@@ -46,25 +44,25 @@ postsRouter
             }
         })
 
-    // .get('/:id/comments',
-    //     inputValidator,
-    //     async (req: Request, res: Response) => {
-    //         const postId = parseInt(req.params.id)
-    //
-    //     })
-    //
-    // .post('/:id/comments',
-    //     inputValidator,
-    //     async (req: Request, res: Response) => {
-    //         const postId = parseInt(req.params.id)
-    //         const {pageNumber, pageSize} = req.query
-    //         const getCom = await postsService.getComments(postId, pageNumber, pageSize)
-    //         if (!getCom) {
-    //             res.status(400)
-    //         } else {
-    //             res.send(getCom)
-    //         }
-    //     })
+    .get('/:id/comments',
+        inputValidator,
+        async (req: Request, res: Response) => {
+            const postId = parseInt(req.params.id)
+
+        })
+
+    .post('/:id/comments',
+        inputValidator,
+        async (req: Request, res: Response) => {
+            const postId = parseInt(req.params.id)
+            const {pageNumber, pageSize} = req.query
+            const getCom = await postsService.getComments(postId, pageNumber, pageSize)
+            if (!getCom) {
+                res.status(400)
+            } else {
+                res.send(getCom)
+            }
+        })
 
     .get('/:id',
         isValidId,
