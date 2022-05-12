@@ -1,26 +1,18 @@
 import {Router, Request, Response} from "express";
 import {bloggersService} from "../domain/bloggers-service";
-import {inputValidator, isValidBlog, isValidId} from "../middlewares/input-validator-middlewares";
+import {
+    getDataPage, getPage,
+    inputValidator,
+    isValidBlog,
+    isValidId,
+    isValidPage
+} from "../middlewares/input-validator-middlewares";
 import {checkAuth} from "../middlewares/basic-auth";
-// import {postsService} from "../domain/posts-service";
-// import {authMiddleware} from "../middlewares/auth-middleware";
-
-export const getPaginationData = (query: any) => {
-    const pageNumber = typeof query.pageNumber === 'string' ? +query.pageNumber : 1
-    const pageSize = typeof query.pageSize === 'string' ? +query.pageSize : 10
-    const searchNameTerm = typeof query.searchNameTerm === 'string' ? query.searchNameTerm : ""
-    return {pageNumber, pageSize, searchNameTerm}
-}
-
-export const getPageFor = (query: any) => {
-    const pageNumber = typeof query.pageNumber === 'string' ? +query.pageNumber : 1
-    const pageSize = typeof query.pageSize === 'string' ? +query.pageSize : 10
-    return {pageNumber, pageSize}
-}
 
 export const bloggersRouter = Router({})
 
 bloggersRouter.get('/',
+    isValidPage,
     inputValidator,
     async (req: Request, res: Response) => {
         // const url_parts = url.parse(req.url, true)
@@ -35,15 +27,14 @@ bloggersRouter.get('/',
         // } else if (Array.isArray(name) && name[0]) {
         //     currentName = name[0]
         // }
-        const {pageNumber, pageSize, searchNameTerm} = getPaginationData(req.query)
-
-        const bloggers = await bloggersService.getBloggers(searchNameTerm, pageNumber, pageSize)
+        const {page, pageSize, searchNameTerm} = getDataPage(req.query)
+        const bloggers = await bloggersService.getBloggers(page, pageSize, searchNameTerm)
         res.status(200).send(bloggers)
     })
 
     .post('/',
-        isValidBlog,
         checkAuth,
+        isValidBlog,
         inputValidator,
         async (req: Request, res: Response) => {
             const newBlogger = await bloggersService.createBlogger(
@@ -53,7 +44,8 @@ bloggersRouter.get('/',
             if (newBlogger) {
                 res.status(201).send(newBlogger)
             } else {
-                res.status(400)
+                res.sendStatus(400)
+                return
 
             }
         })
@@ -68,12 +60,13 @@ bloggersRouter.get('/',
                 res.send(blogger).status(200)
             } else {
                 res.sendStatus(404)
+                return
             }
         })
 
-    .put('/:id', isValidId,
-        isValidBlog,
+    .put('/:id',
         checkAuth,
+        isValidBlog,
         inputValidator,
         async (req: Request, res: Response) => {
             const id = +req.params.id
@@ -87,12 +80,13 @@ bloggersRouter.get('/',
                 res.status(204).send(updBlogger)
             } else {
                 res.sendStatus(404)
+                return
             }
         })
 
     .delete('/:id',
-        isValidId,
         checkAuth,
+        isValidId,
         inputValidator,
         async (req: Request, res: Response) => {
             const id = +req.params.id
@@ -101,41 +95,51 @@ bloggersRouter.get('/',
                 res.sendStatus(204)
             } else {
                 res.sendStatus(404)
+                return
             }
         })
 
 
-    // .get('/:id/posts',
-    //     isValidId,
-    //     inputValidator,
-    //     async (req: Request, res: Response) => {
-    //         const bloggerId = parseInt(req.params.id)
-    //         const {pageSize, pageNumber} = getPageFor(req.query)
-    //         const blogger = await bloggersService.getBloggersById(bloggerId)
-    //         if(!blogger) {
-    //             res.status(404)
-    //         } else {
-    //         const pages = await postsService.getPostsById(bloggerId, pageSize, pageNumber)
-    //             res.status(200).send(pages)
-    //         }
-    //     })
-    //
-    // .post('/:id/posts',
-    //     isValidId,
-    //     authMiddleware,
-    //     inputValidator,
-    //     async (req: Request, res: Response) => {
-    //         const bloggerId = parseInt(req.params.id)
-    //         const newPostForBlogger = await postsService.createPosts({
-    //             bloggerId,
-    //             title: req.body.title,
-    //             shortDescription: req.body.shortDescription,
-    //             content: req.body.content
-    //         })
-    //         if (!newPostForBlogger) {
-    //             res.status(404)
-    //         } else {
-    //             res.status(201).send(newPostForBlogger)
-    //         }
-    //
-    //     })
+    .get('/:bloggerId/posts',
+        isValidPage,
+        inputValidator,
+        async (req: Request, res: Response) => {
+            const bloggerId = parseInt(req.params.bloggerId)
+            const {pageSize, page} = getPage(req.query)
+            const blogger = await bloggersService.getBloggersById(bloggerId)
+            if (!blogger) {
+                res.status(404).send({
+                    "errorsMessages": [{
+                        message: "posts not found",
+                        field: "bloggerId"
+                    }],
+                    "resultCode": 1
+                })
+                return
+            } else {
+                const pages = await postsService.getPostsById(bloggerId, pageSize, page)
+                res.status(200).send(pages)
+            }
+        })
+
+    .post('/:bloggerId/posts',
+        checkAuth,
+        isValidId,
+        inputValidator,
+        async (req: Request, res: Response) => {
+            const bloggerId = +req.params.bloggerId
+            const {title, shortDescription, content} = req.body
+            const newPostForBlogger = await postsService.createPosts({
+                bloggerId,
+                title,
+                shortDescription,
+                content
+            })
+            if (!newPostForBlogger) {
+                res.sendStatus(404)
+                return
+            } else {
+                res.status(201).send(newPostForBlogger)
+            }
+
+        })
