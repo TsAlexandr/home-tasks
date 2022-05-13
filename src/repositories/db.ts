@@ -22,7 +22,7 @@ export async function runDb() {
 
 export type Bloggers = {
     id: number,
-    name: string | null
+    name: string
     youtubeUrl: string | null
 }
 
