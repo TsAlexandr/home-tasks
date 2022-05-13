@@ -8,6 +8,7 @@ import {
     isValidPage
 } from "../middlewares/input-validator-middlewares";
 import {checkAuth} from "../middlewares/basic-auth";
+import {postsService} from "../domain/posts-service";
 
 export const bloggersRouter = Router({})
 
@@ -117,7 +118,7 @@ bloggersRouter.get('/',
                 })
                 return
             } else {
-                const pages = await postsService.getPostsById(bloggerId, pageSize, page)
+                const pages = await postsService.getPostsInPages(bloggerId, pageSize, page)
                 res.status(200).send(pages)
             }
         })
