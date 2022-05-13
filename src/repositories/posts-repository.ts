@@ -1,64 +1,71 @@
-import {bloggersCollection, Paginator, postsCollection, PostsCon} from "./db";
+import {Paginator, postsCollection, PostsCon} from "./db";
 import {bloggersRepository} from "./bloggers-repository";
 
 
 export const postsRepository = {
-    async getPosts(pageNumber: number, pageSize: number) {
-        const post = await postsCollection
-            .find({}, {projection: {id:0}} )
+    async getPosts(page: number, pageSize: number) {
+        const post: PostsCon[] = await postsCollection
+            .find({}, {projection: {_id:0}} )
             .limit(pageSize)
-            .skip((pageNumber - 1) * pageSize)
+            .skip((page - 1) * pageSize)
             .toArray()
-        const count = await postsCollection.countDocuments()
+        const count = await postsCollection.countDocuments({})
         const total = Math.ceil(count/pageSize)
 
         const postInPages:Paginator<PostsCon> = {
-            page: pageNumber,
+            pagesCount: count,
+            page: page,
             pageSize: pageSize,
             totalCount: total,
-            pagesCount: count,
             items: post
         }
         return postInPages
     },
     async getPostsById(id: number) {
         const postsById = await postsCollection.findOne({id}, {projection: {_id:0}})
-            if(postsById === null) {
+            if(postsById) {
+                return {
+                    bloggerId: postsById.bloggerId,
+                    bloggerName: postsById.bloggerName,
+                    content: postsById.content,
+                    id,
+                    shortDescription: postsById.shortDescription,
+                    title: postsById.title
+                }
+            } else {
                 return false
             }
-        const blogger = await bloggersRepository.getBloggersById(postsById.bloggerId)
-            if(!blogger) return false
-
-            return ({
-                id: id,
-                title: postsById.title,
-                shortDescription: postsById.shortDescription,
-                content: postsById.content,
-                bloggerId: postsById.bloggerId,
-                bloggerName: blogger.name
-            })
 
     },
     async deletePostsById(id: number) {
         const delPost = await postsCollection.deleteOne({id})
         return delPost.deletedCount === 1
     },
-    async updatePostsById(isUpdPost: PostsCon) {
-        const id = isUpdPost.id
-        const updPosts = await postsCollection.updateOne(
-            {id},
-            {
-                $set: {
-                    title: isUpdPost.title,
-                    content: isUpdPost.content,
-                    shortDescription: isUpdPost.shortDescription,
-                    bloggerId: isUpdPost.bloggerId
-                }
-            })
-        return updPosts.modifiedCount === 1
+    async updatePostsById(updatePost: PostsCon) {
+        const id = updatePost.id
+        const updPosts = await postsCollection.findOneAndUpdate({id}, {$set: {...updatePost}}, {upsert: true})
+        return updPosts.value
     },
-    async createPosts(newPost: PostsCon) {
-        await postsCollection.insertOne(newPost, {forceServerObjectId: true})
-        return newPost
+    async createPosts(createPost: PostsCon) {
+        await postsCollection.insertOne(createPost, {forceServerObjectId: true})
+        return createPost
+    },
+    async getPostInPages(bloggerId: number, page: number, pageSize: number) {
+        const postsByBloggerId = await postsCollection
+            .find({bloggerId}, {projection: {_id: 0}})
+            .limit(page)
+            .skip((pageSize - 1) * page)
+            .toArray()
+        const total = await postsCollection.countDocuments({bloggerId})
+        const pages = Math.ceil(total / page)
+
+        const postInPages: Paginator<PostsCon> = {
+            pagesCount: pages,
+            page: pageSize,
+            pageSize: page,
+            totalCount: total,
+            items: postsByBloggerId
+        }
+        return postInPages
     }
 }
