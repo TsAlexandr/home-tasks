@@ -1,44 +1,44 @@
 import {Router, Request, Response} from "express";
-import {inputValidator, isValidId, isValidPost} from "../middlewares/input-validator-middlewares";
+import {getPage, inputValidator, isValidId, isValidPage, isValidPost} from "../middlewares/input-validator-middlewares";
 import {postsService} from "../domain/posts-service";
-import {check} from "express-validator";
 import {bloggersRepository} from "../repositories/bloggers-repository";
-import {getPageFor} from "./bloggers-router";
 import {checkAuth} from "../middlewares/basic-auth";
-//import {authMiddleware} from "../middlewares/auth-middleware";
+import {postsRepository} from "../repositories/posts-repository";
 
 export const postsRouter = Router({})
 
 postsRouter
     .get('/',
+        isValidPage,
         inputValidator,
         async (req: Request, res: Response) => {
-            const {pageNumber, pageSize} = getPageFor(req.query)
-            const posts = await postsService.getPosts(pageNumber, pageSize)
-            if (!posts) {
-                res.sendStatus(400)
-            } else {
-                res.send(posts)
-            }
+            const {page, pageSize} = getPage(req.query)
+            const posts = await postsService.getPosts(page, pageSize)
+            res.status(200).send(posts)
         })
 
     .post('/',
-        isValidPost,
         checkAuth,
+        isValidPost,
         inputValidator,
         async (req: Request, res: Response) => {
-            const id = parseInt(req.body.bloggerId)
-            const blogger = await bloggersRepository.getBloggersById(id)
+            const bloggerId = parseInt(req.body.bloggerId)
+            const blogger = await bloggersRepository.getBloggersById(bloggerId)
             if (!blogger) {
-                res.status(400)
+                res.status(400).send(
+                    { errorsMessages:
+                            [{ message: "invalid",
+                                field: "bloggerId" }],
+                                    resultCode: 1 })
                 return
             } else {
+                const {title, content, shortDescription} = req.body
                 const newPost = await postsService.createPosts
                 ({
-                    title: req.body.title,
-                    content: req.body.content,
-                    bloggerId: id,
-                    shortDescription: req.body.shortDescription
+                    title,
+                    content,
+                    bloggerId,
+                    shortDescription
                 })
                 res.status(201).send(newPost)
             }
@@ -71,7 +71,8 @@ postsRouter
             const id = +req.params.id
             const post = await postsService.getPostsById(id)
             if (!post) {
-                res.status(404)
+                res.sendStatus(404)
+                return
             } else {
                 res.status(200).send(post)
             }
@@ -79,34 +80,39 @@ postsRouter
 
 
     .put('/:id',
-        isValidId,
-        isValidPost,
         checkAuth,
+        isValidPost,
         inputValidator,
         async (req: Request, res: Response) => {
             const id = +req.params.id
+            const findPost = await postsRepository.getPostsById(id)
+            if(!findPost) {
+                res.sendStatus(404)
+                return
+            }
             const updPost = {
                 title: req.body.title,
                 content: req.body.content,
                 shortDescription: req.body.shortDescription,
-                bloggerId: req.body.bloggerId
+                bloggerId: parseInt(req.body.bloggerId)
             }
             const bloggerUpd = await bloggersRepository.getBloggersById(updPost.bloggerId)
             if (!bloggerUpd) {
-                res.status(400)
+                res.status(400).send({ errorsMessages: [{ message: 'invalid', field: "bloggerId" }], resultCode: 1 })
                 return
             }
-            const updatePost = await postsService.updatePostsById(id, updPost)
+            const updatePost = await postsService.updatePostsById(id, bloggerUpd.name, updPost)
             if (!updatePost) {
-                res.status(404)
+                res.sendStatus(404)
+                return
             } else {
-                res.status(204).send(updPost)
+                res.sendStatus(204)
             }
         })
 
     .delete('/:id',
-        isValidId,
         checkAuth,
+        isValidId,
         inputValidator,
         async (req: Request, res: Response) => {
             const id = +req.params.id
