@@ -57,16 +57,10 @@ export const isValidPage = [
 export const isValidUser = [
     body('login')
         .isString()
-        .isLength({min: 3, max: 10})
-        .trim()
-        .not()
-        .isEmpty(),
+        .isLength({min: 3, max: 10}),
     body('password')
         .isString()
         .isLength({min: 6, max: 20})
-        .trim()
-        .not()
-        .isEmpty()
 ]
 
 export const isValidComma = [
