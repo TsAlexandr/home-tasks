@@ -14,7 +14,7 @@ export const usersService = {
         const newUser = {
             id: uuid(),
             login,
-            passwordHash
+            password: passwordHash
         }
         const createdUser = await usersRepo.createUser(newUser)
         return createdUser

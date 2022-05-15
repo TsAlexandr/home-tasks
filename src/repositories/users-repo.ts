@@ -22,12 +22,10 @@ export const usersRepo = {
     },
 
     async createUser(newUser: Users) {
-        await usersCollection.insertOne(newUser)
-        const addUser = await usersCollection.findOne({id: newUser.id})
-        return {
-            id: addUser!.id,
-            login: addUser!.login
-        }
+        await usersCollection.insertOne(newUser, {forceServerObjectId: true})
+        return await usersCollection.findOne(
+            {id: newUser.id},
+            {projection: {_id: false, password: false}})
     },
 
     async findByLogin(login: string) {
