@@ -38,7 +38,7 @@ usersRouter.get('/',
         checkAuth,
         inputValidator,
         async (req: Request, res: Response) => {
-            const userId = req.body.userId
+            const userId = req.params.userId
             const delUser = await usersService.deleteUser(userId)
             if (!delUser) {
                 res.sendStatus(404)
