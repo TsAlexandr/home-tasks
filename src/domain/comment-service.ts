@@ -4,8 +4,14 @@ import {v4} from "uuid";
 
 
 export const commentService = {
+    async getCommaById(postId: string, page: number, pageSize: number) {
+        const comm = await commentsRepo.getCommaById(postId, page, pageSize)
+        return comm
+    },
+
     async getCommentById(id: string) {
-        return await commentsRepo.getById(id)
+        const comment = await commentsRepo.getById(id)
+        return comment
     },
 
     async createComments(postId: string, content: string, userId: string, userLogin: string) {
@@ -26,8 +32,9 @@ export const commentService = {
 
     },
 
-    async updComments(commentId: string, content: string) {
-        return await commentsRepo.updComments(commentId, content)
+    async updComments(id: string, content: string) {
+        const update = await commentsRepo.updComments(id, content)
+        return update
     },
 
     async deleteById(id: string) {

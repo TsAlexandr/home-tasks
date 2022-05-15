@@ -1,4 +1,4 @@
-import {Comment, commentsCollection, Paginator, postsCollection, PostsCon} from "./db";
+import {Comment, commentsCollection, Paginator, postsCollection} from "./db";
 
 
 export const commentsRepo = {
@@ -39,8 +39,7 @@ export const commentsRepo = {
         return newComment
     },
 
-    async updComments(commentId: string, content: string) {
-        const id = commentId
+    async updComments(id: string, content: string) {
         const updComment = await commentsCollection.findOneAndUpdate({id}, {$set: {'content': content}})
         return updComment.value
     },

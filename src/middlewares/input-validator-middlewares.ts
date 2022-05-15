@@ -1,5 +1,6 @@
 import {NextFunction, Request, Response} from "express";
 import {body, check, validationResult} from "express-validator";
+import {commentService} from "../domain/comment-service";
 
 const reg = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+$/
 
@@ -82,4 +83,18 @@ export const getPage = (query: any) => {
     const page = typeof query.PageNumber === 'string' ? +query.PageNumber : 1
     const pageSize = typeof query.PageSize === 'string' ? +query.PageSize : 10
     return {page, pageSize}
+}
+
+
+export const checkOwnership = async (req: Request, res: Response, next: NextFunction) => {
+    const commentId = req.params.commentId
+    const commentToChangeOrRemove = await commentService.getCommentById(commentId)
+    if(!commentToChangeOrRemove ){
+        res.sendStatus(404)
+    }else if(commentToChangeOrRemove.userLogin != req.user!.login){
+        res.sendStatus(403)
+        console.log(("Forbidden"))
+    }else{
+        next()
+    }
 }
