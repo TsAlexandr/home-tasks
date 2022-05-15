@@ -13,18 +13,23 @@ commentsRouter
         const {commentId, content} = req.body
             const findComment = await commentsRepo.getById(commentId)
             if(!findComment) {
-                res.sendStatus(404)
+                res.sendStatus(400)
                 return
             }
             const updComment = await commentService.updComments(commentId, content)
-            res.status(201).send(updComment)
+            if(!updComment) {
+                res.sendStatus(404)
+                return
+            } else {
+                res.sendStatus(204)
+            }
         })
     .get('/:id', inputValidator,
         async (req: Request, res: Response) => {
         const id = req.params.id
-        const comment = await commentService.commentsById(id)
+        const comment = await commentService.getCommentById(id)
             if (!comment) {
-                res.status(404)
+                res.sendStatus(404)
             } else {
                 res.send(comment).status(200)
             }
@@ -34,8 +39,8 @@ commentsRouter
         const id = req.params.commentId
         const delCom = await commentService.deleteById(id)
             if (!delCom) {
-                res.status(404)
+                res.sendStatus(404)
             } else {
-                res.status(204)
+                res.sendStatus(204)
             }
 }
