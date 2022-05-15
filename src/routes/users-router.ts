@@ -22,7 +22,6 @@ usersRouter.get('/',
 
     .post('/',
         checkAuth,
-        isValidUser,
         inputValidator,
         async (req: Request, res: Response) => {
         const {login, password} = req.body
