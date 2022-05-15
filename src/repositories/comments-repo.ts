@@ -3,7 +3,16 @@ import {Comment, commentsCollection, Paginator, postsCollection, PostsCon} from 
 
 export const commentsRepo = {
     async getById(id: string) {
-        return await commentsCollection.findOne({id}, {projection: {_id:0}})
+        const getCom = await commentsCollection.findOne({id}, {projection: {_id:0}})
+            if(getCom) {
+                return {
+                    id,
+                    content: getCom.content,
+                    userId: getCom.userId,
+                    userLogin: getCom.userLogin,
+                    addedAt: getCom.addedAt
+                }
+            }
     },
 
     async getCommaById(id: string, page: number, pageSize: number) {
@@ -31,7 +40,9 @@ export const commentsRepo = {
     },
 
     async updComments(commentId: string, content: string) {
-
+        const id = commentId
+        const updComment = await commentsCollection.findOneAndUpdate({id}, {$set: {'content': content}})
+        return updComment.value
     },
 
     async deleteById(id: string) {
