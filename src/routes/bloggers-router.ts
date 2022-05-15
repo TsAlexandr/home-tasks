@@ -16,18 +16,6 @@ bloggersRouter.get('/',
     isValidPage,
     inputValidator,
     async (req: Request, res: Response) => {
-        // const url_parts = url.parse(req.url, true)
-        //
-        // const name = url_parts.query.name
-        // const size = req.query.pageSize
-        // const number = req.query.pageNumber
-        //
-        // let currentName
-        // if (typeof name === "string") {
-        //     currentName = name
-        // } else if (Array.isArray(name) && name[0]) {
-        //     currentName = name[0]
-        // }
         const {page, pageSize, searchNameTerm} = getDataPage(req.query)
         const bloggers = await bloggersService.getBloggers(page, pageSize, searchNameTerm)
         res.status(200).send(bloggers)

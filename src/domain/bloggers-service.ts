@@ -1,5 +1,5 @@
 import {bloggersRepository} from "../repositories/bloggers-repository";
-import {randomUUID} from "crypto";
+import {uuid} from "uuidv4";
 
 
 export const bloggersService = {
@@ -17,7 +17,7 @@ export const bloggersService = {
     },
     async createBlogger(name: string, youtubeUrl: string) {
         const newBlogger = {
-            id: randomUUID(),
+            id: uuid(),
             name: name,
             youtubeUrl: youtubeUrl
         }

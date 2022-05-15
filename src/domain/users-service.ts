@@ -1,7 +1,7 @@
 import {usersRepo} from "../repositories/users-repo";
 import {usersCollection} from "../repositories/db";
-import {randomUUID} from "crypto";
 import {authService} from "./auth-service";
+import {uuid} from "uuidv4";
 
 export const usersService = {
     async getUsers(page: number, pageSize: number) {
@@ -11,7 +11,7 @@ export const usersService = {
     async createUser(login: string, password: string) {
         const passwordHash = await authService._generateHash(password)
         const newUser = {
-            id: randomUUID(),
+            id: uuid(),
             login,
             passwordHash
         }
