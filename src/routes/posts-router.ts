@@ -4,6 +4,9 @@ import {postsService} from "../domain/posts-service";
 import {bloggersRepository} from "../repositories/bloggers-repository";
 import {checkAuth} from "../middlewares/basic-auth";
 import {postsRepository} from "../repositories/posts-repository";
+import {commentsRepo} from "../repositories/comments-repo";
+import {commentService} from "../domain/comment-service";
+import {authMiddleware} from "../middlewares/auth-middleware";
 
 export const postsRouter = Router({})
 
@@ -22,7 +25,7 @@ postsRouter
         isValidPost,
         inputValidator,
         async (req: Request, res: Response) => {
-            const bloggerId = parseInt(req.body.bloggerId)
+            const bloggerId = req.body.bloggerId
             const blogger = await bloggersRepository.getBloggersById(bloggerId)
             if (!blogger) {
                 res.status(400).send(
@@ -44,31 +47,44 @@ postsRouter
             }
         })
 
-    .get('/:id/comments',
+    .get('/:postId/comments',
         inputValidator,
         async (req: Request, res: Response) => {
-            const postId = parseInt(req.params.id)
+            const postId = req.params.postId
+            const {page, pageSize} = getPage(req.query)
+            const isPost = await postsService.getPostsById(postId)
+            if(!isPost) {
+                res.sendStatus(404)
+                return
+            } else {
+                const commInPages = commentsRepo.getCommaById(postId, page, pageSize)
+                res.status(200).send(commInPages)
+            }
 
         })
 
-    .post('/:id/comments',
+    .post('/:postId/comments',
+        authMiddleware,
         inputValidator,
         async (req: Request, res: Response) => {
-            const postId = parseInt(req.params.id)
-            const {pageNumber, pageSize} = req.query
-            const getCom = await postsService.getComments(postId, pageNumber, pageSize)
-            if (!getCom) {
-                res.status(400)
+            const postId = req.params.postId
+            const {content} = req.body.content
+            const userId = req.user!.id
+            const userLogin = req.user!.login
+            const newPost = await commentService.createComments(postId, content, userId, userLogin)
+            if(!newPost) {
+                res.sendStatus(404)
+                return
             } else {
-                res.send(getCom)
+                res.status(201).send(newPost)
             }
+
         })
 
     .get('/:id',
-        isValidId,
         inputValidator,
         async (req: Request, res: Response) => {
-            const id = +req.params.id
+            const id = req.params.id
             const post = await postsService.getPostsById(id)
             if (!post) {
                 res.sendStatus(404)
@@ -84,7 +100,7 @@ postsRouter
         isValidPost,
         inputValidator,
         async (req: Request, res: Response) => {
-            const id = +req.params.id
+            const id = req.params.id
             const findPost = await postsRepository.getPostsById(id)
             if(!findPost) {
                 res.sendStatus(404)
@@ -94,7 +110,7 @@ postsRouter
                 title: req.body.title,
                 content: req.body.content,
                 shortDescription: req.body.shortDescription,
-                bloggerId: parseInt(req.body.bloggerId)
+                bloggerId: req.body.bloggerId
             }
             const bloggerUpd = await bloggersRepository.getBloggersById(updPost.bloggerId)
             if (!bloggerUpd) {
@@ -115,7 +131,7 @@ postsRouter
         isValidId,
         inputValidator,
         async (req: Request, res: Response) => {
-            const id = +req.params.id
+            const id = req.params.id
             const isDeleted = await postsService.deletePostsById(id)
             if (!isDeleted) {
                 res.sendStatus(404)
