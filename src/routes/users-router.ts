@@ -1,9 +1,7 @@
 import {Router, Request, Response} from "express";
 import {usersService} from "../domain/users-service";
-import {
-    getDataPage, getPage,
+import {getPage,
     inputValidator,
-    isValidPage,
     isValidUser
 } from "../middlewares/input-validator-middlewares";
 import {checkAuth} from "../middlewares/basic-auth";

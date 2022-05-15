@@ -24,12 +24,9 @@ export const usersRepo = {
 
     async createUser(newUser: Users) {
         await usersCollection.insertOne(newUser, {forceServerObjectId: true})
-        const userReturn =  await usersCollection.findOne(
-            {id: newUser.id})
-        return {
-            id: userReturn!.id,
-            login: userReturn!.login
-        }
+        return await usersCollection.findOne(
+            {id: newUser.id},
+            {projection: {passwordHash: 0, password:0}})
     },
 
     async findByLogin(login: string) {
