@@ -1,7 +1,8 @@
 import {usersRepo} from "../repositories/users-repo";
 import {usersCollection} from "../repositories/db";
 import {authService} from "./auth-service";
-import {uuid} from "uuidv4";
+import {v4} from "uuid";
+
 
 export const usersService = {
     async getUsers(page: number, pageSize: number) {
@@ -12,7 +13,7 @@ export const usersService = {
     async createUser(login: string, password: string) {
         const passwordHash = await authService._generateHash(password)
         const newUser = {
-            id: uuid(),
+            id: v4(),
             login,
             password,
             passwordHash

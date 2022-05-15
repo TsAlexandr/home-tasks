@@ -1,6 +1,6 @@
 import {commentsRepo} from "../repositories/comments-repo";
 import {postsService} from "./posts-service";
-import {uuid} from "uuidv4";
+import {v4} from "uuid";
 
 
 export const commentService = {
@@ -14,7 +14,7 @@ export const commentService = {
             return false
         } else {
             const newComment = {
-                id: uuid(),
+                id: v4(),
                 postId,
                 content,
                 userId,

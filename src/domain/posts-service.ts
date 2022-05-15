@@ -1,7 +1,7 @@
 import {postsRepository} from "../repositories/posts-repository";
 import {NewPost} from "../repositories/db";
 import {bloggersService} from "./bloggers-service";
-import {uuid} from "uuidv4";
+import {v4} from "uuid";
 
 
 export const postsService = {
@@ -26,7 +26,7 @@ export const postsService = {
         const createPost = {
             ...newPost,
             bloggerName: blogger.name,
-            id: uuid()
+            id: v4()
         }
         return await postsRepository.createPosts(createPost)
     },
