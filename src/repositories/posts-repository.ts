@@ -1,6 +1,4 @@
 import {Paginator, postsCollection, PostsCon} from "./db";
-import {bloggersRepository} from "./bloggers-repository";
-
 
 export const postsRepository = {
     async getPosts(page: number, pageSize: number) {
@@ -21,7 +19,7 @@ export const postsRepository = {
         }
         return postInPages
     },
-    async getPostsById(id: number) {
+    async getPostsById(id: string) {
         const postsById = await postsCollection.findOne({id}, {projection: {_id:0}})
             if(postsById) {
                 return {
@@ -37,7 +35,7 @@ export const postsRepository = {
             }
 
     },
-    async deletePostsById(id: number) {
+    async deletePostsById(id: string) {
         const delPost = await postsCollection.deleteOne({id})
         return delPost.deletedCount === 1
     },
@@ -50,7 +48,7 @@ export const postsRepository = {
         await postsCollection.insertOne(createPost, {forceServerObjectId: true})
         return createPost
     },
-    async getPostInPages(bloggerId: number, page: number, pageSize: number) {
+    async getPostInPages(bloggerId: string, page: number, pageSize: number) {
         const postsByBloggerId = await postsCollection
             .find({bloggerId}, {projection: {_id: 0}})
             .limit(page)
