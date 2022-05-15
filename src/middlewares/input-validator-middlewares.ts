@@ -55,11 +55,24 @@ export const isValidPage = [
 
 
 export const isValidUser = [
-
+    body('login')
+        .isString()
+        .isLength({min: 3, max: 10})
+        .trim()
+        .not()
+        .isEmpty(),
+    body('password')
+        .isString()
+        .isLength({min: 6, max: 20})
+        .trim()
+        .not()
+        .isEmpty()
 ]
 
 export const isValidComma = [
-
+    body('content')
+        .isString()
+        .isLength({min: 20, max: 300})
 ]
 
 export const getDataPage = (query: any) => {

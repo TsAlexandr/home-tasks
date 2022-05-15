@@ -1,14 +1,17 @@
 import {Router, Request, Response} from "express";
 import {authMiddleware} from "../middlewares/auth-middleware";
 import {commentService} from "../domain/comment-service";
-import {inputValidator} from "../middlewares/input-validator-middlewares";
+import {inputValidator, isValidComma} from "../middlewares/input-validator-middlewares";
 import {commentsRepo} from "../repositories/comments-repo";
 
 
 export const commentsRouter = Router({})
 
 commentsRouter
-    .put('/:commentId', authMiddleware, inputValidator,
+    .put('/:commentId',
+        authMiddleware,
+        isValidComma,
+        inputValidator,
         async (req: Request, res: Response) => {
         const {commentId, content} = req.body
             const findComment = await commentsRepo.getById(commentId)

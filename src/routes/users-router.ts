@@ -1,7 +1,7 @@
 import {Router, Request, Response} from "express";
 import {usersService} from "../domain/users-service";
 import {authMiddleware} from "../middlewares/auth-middleware";
-import {getPage, inputValidator} from "../middlewares/input-validator-middlewares";
+import {getPage, inputValidator, isValidUser} from "../middlewares/input-validator-middlewares";
 import {checkAuth} from "../middlewares/basic-auth";
 
 
@@ -18,6 +18,7 @@ usersRouter.get('/',
 
     .post('/',
         checkAuth,
+        isValidUser,
         inputValidator,
         async (req: Request, res: Response) => {
             const newUser = await usersService.createUser(
