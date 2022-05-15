@@ -1,11 +1,10 @@
 import express from 'express'
 import cors from 'cors'
 import bodyParser from 'body-parser'
+
 import {runDb} from "./repositories/db";
 import {postsRouter} from "./routes/posts-router";
 import {bloggersRouter} from "./routes/bloggers-router";
-import {checkAuth} from "./middlewares/basic-auth";
-
 import {commentsRouter} from "./routes/comments-router";
 import {usersRouter} from "./routes/users-router";
 
