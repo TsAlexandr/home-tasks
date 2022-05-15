@@ -8,11 +8,11 @@ export const usersRepo = {
             .limit(pageSize)
             .skip((page - 1) * pageSize)
             .toArray()
-        const count = await usersCollection.countDocuments({})
-        const total = Math.ceil(count / pageSize)
+        const total = await usersCollection.countDocuments({})
+        const pages = Math.ceil(total / pageSize)
 
         const userInPages:Paginator<Users> = {
-            pagesCount: count,
+            pagesCount: pages,
             page: page,
             pageSize: pageSize,
             totalCount: total,

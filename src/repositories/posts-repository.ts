@@ -7,11 +7,11 @@ export const postsRepository = {
             .limit(pageSize)
             .skip((page - 1) * pageSize)
             .toArray()
-        const count = await postsCollection.countDocuments({})
-        const total = Math.ceil(count/pageSize)
+        const total = await postsCollection.countDocuments({})
+        const pages = Math.ceil(total/pageSize)
 
         const postInPages:Paginator<PostsCon> = {
-            pagesCount: count,
+            pagesCount: pages,
             page: page,
             pageSize: pageSize,
             totalCount: total,
