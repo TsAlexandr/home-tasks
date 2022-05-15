@@ -11,7 +11,6 @@ export const usersRouter = Router({})
 
 
 usersRouter.get('/',
-    isValidUser,
     inputValidator,
     async (req: Request, res: Response) => {
         const {page, pageSize} = getPage(req.query)
@@ -21,6 +20,7 @@ usersRouter.get('/',
 
     .post('/',
         checkAuth,
+        isValidUser,
         inputValidator,
         async (req: Request, res: Response) => {
         const {login, password} = req.body
@@ -40,6 +40,7 @@ usersRouter.get('/',
             const delUser = await usersService.deleteUser(userId)
             if (!delUser) {
                 res.sendStatus(404)
+                return
             } else {
                 res.sendStatus(204)
             }
