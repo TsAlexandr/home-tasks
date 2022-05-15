@@ -5,7 +5,7 @@ import {
     inputValidator,
     isValidBlog,
     isValidId,
-    isValidPage
+    isValidPage, isValidPost
 } from "../middlewares/input-validator-middlewares";
 import {checkAuth} from "../middlewares/basic-auth";
 import {postsService} from "../domain/posts-service";
@@ -125,6 +125,7 @@ bloggersRouter.get('/',
     .post('/:bloggerId/posts',
         checkAuth,
         isValidId,
+        isValidPost,
         inputValidator,
         async (req: Request, res: Response) => {
             const bloggerId = req.params.bloggerId

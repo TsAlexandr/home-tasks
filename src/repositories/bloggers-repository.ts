@@ -14,10 +14,10 @@ export const bloggersRepository = {
         const total = Math.ceil(count/pageSize)
 
         const bloggersInPage = {
-            pagesCount: count,
+            pagesCount: total,
             page: page,
             pageSize: pageSize,
-            totalCount: total,
+            totalCount: count,
             items: bloggers
         }
         return bloggersInPage

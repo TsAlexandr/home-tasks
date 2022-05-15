@@ -8,7 +8,7 @@ export const usersRepo = {
             .limit(pageSize)
             .skip((page - 1) * pageSize)
             .toArray()
-        const count = await usersCollection.countDocuments()
+        const count = await usersCollection.countDocuments({})
         const total = Math.ceil(count / pageSize)
 
         const userInPages:Paginator<Users> = {
@@ -37,5 +37,9 @@ export const usersRepo = {
     async findById(id: string) {
         const user = await usersCollection.findOne({id}, {projection: {_id:0}})
         return user
+    },
+
+    async deleteOne(id: string) {
+        return await usersCollection.deleteOne({id})
     }
 }

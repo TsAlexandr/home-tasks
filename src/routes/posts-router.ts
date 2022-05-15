@@ -1,5 +1,12 @@
 import {Router, Request, Response} from "express";
-import {getPage, inputValidator, isValidId, isValidPage, isValidPost} from "../middlewares/input-validator-middlewares";
+import {
+    getPage,
+    inputValidator,
+    isValidComma,
+    isValidId,
+    isValidPage,
+    isValidPost
+} from "../middlewares/input-validator-middlewares";
 import {postsService} from "../domain/posts-service";
 import {bloggersRepository} from "../repositories/bloggers-repository";
 import {checkAuth} from "../middlewares/basic-auth";
@@ -65,6 +72,7 @@ postsRouter
 
     .post('/:postId/comments',
         authMiddleware,
+        isValidComma,
         inputValidator,
         async (req: Request, res: Response) => {
             const postId = req.params.postId

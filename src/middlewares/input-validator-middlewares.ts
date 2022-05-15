@@ -75,6 +75,8 @@ export const isValidComma = [
         .isLength({min: 20, max: 300})
 ]
 
+
+
 export const getDataPage = (query: any) => {
     const page = typeof query.PageNumber === 'string' ? +query.PageNumber : 1
     const pageSize = typeof query.PageSize === 'string' ? +query.PageSize : 10
