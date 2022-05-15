@@ -5,8 +5,8 @@ import {v4} from "uuid";
 
 
 export const usersService = {
-    async getUsers(page: number, pageSize: number) {
-        const users = await usersRepo.findUsers(page, pageSize)
+    async getUsers(page: number, pageSize: number, searchNameTerm: string) {
+        const users = await usersRepo.findUsers(page, pageSize, searchNameTerm)
         return users
     },
 
