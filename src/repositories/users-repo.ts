@@ -3,15 +3,16 @@ import {Paginator, Users, usersCollection} from "./db";
 
 export const usersRepo = {
     async findUsers(page: number, pageSize: number) {
-        const user:Users[] = await usersCollection
-            .find({}, {projection: {_id:0, passwordHash: 0}})
+        const user = await usersCollection
+            .find({}, )
+            .project({_id: 0})
             .limit(pageSize)
             .skip((page - 1) * pageSize)
             .toArray()
         const total = await usersCollection.countDocuments({})
         const pages = Math.ceil(total / pageSize)
 
-        const userInPages:Paginator<Users> = {
+        const userInPages = {
             pagesCount: pages,
             page: page,
             pageSize: pageSize,
@@ -25,7 +26,7 @@ export const usersRepo = {
         await usersCollection.insertOne(newUser, {forceServerObjectId: true})
         return await usersCollection.findOne(
             {id: newUser.id},
-            {projection: {_id: false, password: false}})
+            {projection: {_id: false, password: false, passwordHash: false}})
     },
 
     async findByLogin(login: string) {

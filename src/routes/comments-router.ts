@@ -27,9 +27,9 @@ commentsRouter
                 res.sendStatus(204)
             }
         })
-    .get('/:id', inputValidator,
+    .get('/:commentId', inputValidator,
         async (req: Request, res: Response) => {
-        const id = req.params.id
+        const id = req.params.commentId
         const comment = await commentService.getCommentById(id)
             if (!comment) {
                 res.sendStatus(404)
