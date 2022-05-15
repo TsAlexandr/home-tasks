@@ -8,8 +8,8 @@ export const authService = {
     async checkCredentials(login: string, password: string){
         const user: any = await usersRepo.findByLogin(login)
         if(!user) return false
-        const passwordHash = await this._correctHash(password, user.passwordHash)
-        if(!passwordHash) {
+        const isItHash = await this._correctHash(password, user.passwordHash)
+        if(!isItHash) {
             return false
         } else {
             const token = jwt.sign({userId: user.id}, 'secret', {expiresIn: '1d'})

@@ -19,7 +19,7 @@ export const commentService = {
                 content,
                 userId,
                 userLogin,
-                addedAt: (new Date()).toISOString()
+                addedAt: new Date()
             }
             return await commentsRepo.createComments(newComment)
         }

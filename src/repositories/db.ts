@@ -1,4 +1,4 @@
-import {MongoClient, ObjectId} from 'mongodb'
+import {MongoClient} from 'mongodb'
 
 const mongoUri = process.env.MONGO_URI || "mongodb://localhost:27017/?maxPoolSize=20&w=majority"
 
@@ -56,7 +56,7 @@ export type Comment = {
     content: string,
     userId: string,
     userLogin: string,
-    addedAt: string
+    addedAt: Date
 }
 
 export type Login = {

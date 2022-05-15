@@ -1,7 +1,7 @@
 import {Router, Request, Response} from "express";
 import {usersService} from "../domain/users-service";
 import {authMiddleware} from "../middlewares/auth-middleware";
-import {getPage, inputValidator, isValidUser} from "../middlewares/input-validator-middlewares";
+import {getPage, inputValidator, isValidPage, isValidUser} from "../middlewares/input-validator-middlewares";
 import {checkAuth} from "../middlewares/basic-auth";
 
 
@@ -9,6 +9,7 @@ export const usersRouter = Router({})
 
 
 usersRouter.get('/',
+    isValidPage,
     inputValidator,
     async (req: Request, res: Response) => {
         const {page, pageSize} = getPage(req.query)

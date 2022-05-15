@@ -19,7 +19,7 @@ export const inputValidator = (req: Request, res: Response, next: NextFunction) 
 }
 
 export const isValidId = [
-    check('id').isInt({gt:8})
+    check('id').isString()
 ]
 
 export const isValidBlog = [
