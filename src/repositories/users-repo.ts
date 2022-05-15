@@ -25,8 +25,8 @@ export const usersRepo = {
         await usersCollection.insertOne(newUser)
         const addUser = await usersCollection.findOne({id: newUser.id})
         return {
-            id: newUser.id,
-            login: newUser.login
+            id: addUser!.id,
+            login: addUser!.login
         }
     },
 
