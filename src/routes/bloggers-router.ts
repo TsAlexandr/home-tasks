@@ -55,7 +55,7 @@ bloggersRouter.get('/',
         isValidId,
         inputValidator,
         async (req: Request, res: Response) => {
-            const id = +req.params.id
+            const id = req.params.id
             const blogger = await bloggersService.getBloggersById(id)
             if (blogger) {
                 res.send(blogger).status(200)
@@ -70,7 +70,7 @@ bloggersRouter.get('/',
         isValidBlog,
         inputValidator,
         async (req: Request, res: Response) => {
-            const id = +req.params.id
+            const id = req.params.id
             const {name, youtubeUrl} = req.body
             const updBlogger = await bloggersService.updateBloggerById(
                 id,
@@ -87,10 +87,9 @@ bloggersRouter.get('/',
 
     .delete('/:id',
         checkAuth,
-        isValidId,
         inputValidator,
         async (req: Request, res: Response) => {
-            const id = +req.params.id
+            const id = req.params.id
             const isDeleted = await bloggersService.deleteBloggerById(id)
             if (isDeleted) {
                 res.sendStatus(204)
@@ -105,7 +104,7 @@ bloggersRouter.get('/',
         isValidPage,
         inputValidator,
         async (req: Request, res: Response) => {
-            const bloggerId = parseInt(req.params.bloggerId)
+            const bloggerId = req.params.bloggerId
             const {pageSize, page} = getPage(req.query)
             const blogger = await bloggersService.getBloggersById(bloggerId)
             if (!blogger) {
@@ -128,7 +127,7 @@ bloggersRouter.get('/',
         isValidId,
         inputValidator,
         async (req: Request, res: Response) => {
-            const bloggerId = +req.params.bloggerId
+            const bloggerId = req.params.bloggerId
             const {title, shortDescription, content} = req.body
             const newPostForBlogger = await postsService.createPosts({
                 bloggerId,
