@@ -1,7 +1,7 @@
 import {Router, Request, Response} from "express";
 import {usersService} from "../domain/users-service";
 import {
-    getDataPage,
+    getDataPage, getPage,
     inputValidator,
     isValidPage,
     isValidUser
@@ -16,8 +16,8 @@ usersRouter.get('/',
     isValidPage,
     inputValidator,
     async (req: Request, res: Response) => {
-        const {page, pageSize, searchNameTerm} = getDataPage(req.query)
-        const users = usersService.getUsers(page, pageSize, searchNameTerm)
+        const {page, pageSize} = getPage(req.query)
+        const users = usersService.getUsers(page, pageSize)
         res.status(200).send(users)
     })
 
