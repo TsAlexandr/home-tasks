@@ -4,8 +4,7 @@ import {Users, usersCollection} from "./db";
 export const usersRepo = {
     async findUsers(page: number, pageSize: number) {
         const user = await usersCollection
-            .find({})
-            .project({_id: 0})
+            .find({}, {projection:{_id:0}})
             .skip((page - 1) * pageSize)
             .limit(pageSize)
             .toArray()
