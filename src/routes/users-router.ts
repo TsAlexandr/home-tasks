@@ -26,11 +26,8 @@ usersRouter.get('/',
                 req.body.login,
                 req.body.password
             )
-            if (newUser) {
-                res.status(201).send(newUser)
-            } else {
-                res.sendStatus(400)
-            }
+            res.status(201).send(newUser)
+
         })
 
     .delete('/:userId',

@@ -4,7 +4,7 @@ import {Paginator, Users, usersCollection} from "./db";
 export const usersRepo = {
     async findUsers(page: number, pageSize: number) {
         const user:Users[] = await usersCollection
-            .find({}, {projection: {_id:0}})
+            .find({}, {projection: {_id:0, passwordHash: 0}})
             .limit(pageSize)
             .skip((page - 1) * pageSize)
             .toArray()
@@ -22,7 +22,7 @@ export const usersRepo = {
     },
 
     async createUser(newUser: Users) {
-        await usersCollection.insertOne(newUser, {forceServerObjectId: true})
+        await usersCollection.findOne({id: newUser.id})
         return {
             id: newUser.id,
             login: newUser.login
@@ -35,11 +35,12 @@ export const usersRepo = {
     },
 
     async findById(id: string) {
-        const user = await usersCollection.findOne({id}, {projection: {_id:0}})
+        const user = await usersCollection.findOne({id})
         return user
     },
 
     async deleteOne(id: string) {
-        return await usersCollection.deleteOne({id})
+        const result = await usersCollection.deleteOne({id})
+        return result.deletedCount === 1
     }
 }
