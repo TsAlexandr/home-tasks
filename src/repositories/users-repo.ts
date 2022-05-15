@@ -2,11 +2,11 @@ import {Users, usersCollection} from "./db";
 
 
 export const usersRepo = {
-    async findUsers(page: number, pageSize: number, searchNameTerm: string) {
+    async getUsers(page: number, pageSize: number, searchNameTerm: string) {
         const filter = {login : {$regex : searchNameTerm ? searchNameTerm : ""}}
         const user = await usersCollection
             .find(filter)
-            .project({_id:0})
+            .project({_id:0, passwordHash: 0})
             .skip((page - 1) * pageSize)
             .limit(pageSize)
             .toArray()
@@ -25,8 +25,11 @@ export const usersRepo = {
 
     async createUser(newUser: Users) {
         await usersCollection.insertOne(newUser)
-        const created = await usersCollection.findOne({id: newUser.id})
-        return created
+        const createUser = await usersCollection.findOne({id: newUser.id})
+        return {
+            id: createUser.id,
+            login: createUser.login
+        }
     },
 
     async findByLogin(login: string) {

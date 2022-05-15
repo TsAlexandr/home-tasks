@@ -1,21 +1,20 @@
 import {usersRepo} from "../repositories/users-repo";
-import {usersCollection} from "../repositories/db";
+import {Users, usersCollection} from "../repositories/db";
 import {authService} from "./auth-service";
 import {v4} from "uuid";
 
 
 export const usersService = {
     async getUsers(page: number, pageSize: number, searchNameTerm: string) {
-        const users = await usersRepo.findUsers(page, pageSize, searchNameTerm)
+        const users = await usersRepo.getUsers(page, pageSize, searchNameTerm)
         return users
     },
 
-    async createUser(login: string, password: string) {
+    async createUser(login: string, password: string): Promise<Users> {
         const passwordHash = await authService._generateHash(password)
         const newUser = {
             id: v4(),
             login,
-            password,
             passwordHash
         }
         const createdUser = await usersRepo.createUser(newUser)
@@ -23,7 +22,6 @@ export const usersService = {
     },
 
     async deleteUser(id: string){
-        const isDeleted = await usersCollection.deleteOne({id})
-        return isDeleted.deletedCount === 1
+        return await usersCollection.deleteOne({id})
     },
 }
