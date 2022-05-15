@@ -87,6 +87,7 @@ bloggersRouter.get('/',
 
     .delete('/:id',
         checkAuth,
+        isValidId,
         inputValidator,
         async (req: Request, res: Response) => {
             const id = req.params.id
@@ -124,7 +125,6 @@ bloggersRouter.get('/',
 
     .post('/:bloggerId/posts',
         checkAuth,
-        isValidId,
         isValidPost,
         inputValidator,
         async (req: Request, res: Response) => {

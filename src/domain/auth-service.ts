@@ -13,6 +13,9 @@ export const authService = {
             return false
         } else {
             const token = jwt.sign({userId: user.id}, 'secret', {expiresIn: '1d'})
+            return {
+                token: token
+            }
         }
 
     },
