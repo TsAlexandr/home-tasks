@@ -13,6 +13,7 @@ export const usersRouter = Router({})
 
 
 usersRouter.get('/',
+    isValidUser,
     inputValidator,
     async (req: Request, res: Response) => {
         const {page, pageSize} = getPage(req.query)
