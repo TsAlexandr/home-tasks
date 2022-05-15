@@ -74,7 +74,7 @@ export type UserInput = {
 }
 
 export type Users = {
-    id?: string
+    id: string
     login: string
     passwordHash?: string
 }
