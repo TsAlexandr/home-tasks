@@ -7,7 +7,7 @@ export const client = new MongoClient(mongoUri);
 export const bloggersCollection = client.db("bloggers-posts").collection<Bloggers>('bloggers')
 export const postsCollection = client.db("bloggers-posts").collection<PostsCon>('posts')
 export const usersCollection = client.db("bloggers-posts").collection<Users>('users')
-export const commentsCollection = client.db("bloggers-posts").collection('comments')
+export const commentsCollection = client.db("bloggers-posts").collection<Comment>('comments')
 
 
 export async function runDb() {
@@ -21,26 +21,18 @@ export async function runDb() {
 }
 
 export type Bloggers = {
-    id: number,
+    id: string,
     name: string
     youtubeUrl: string | null
 }
 
-export type Users = {
-    id?: ObjectId
-    login: string | null
-    passwordHash: string
-    passwordSalt: string
-}
-
 export type PostsCon = {
-    id: number
+    id: string,
     bloggerId: Bloggers['id'],
     title: string | null
     shortDescription: string | null
     content: string | null
     bloggerName?: Bloggers['name']
-
 }
 
 export type NewPost = {
@@ -58,4 +50,30 @@ export type Paginator<T> = {
     items: T[]
 }
 
+export type Comment = {
+    id: string,
+    postId: PostsCon['id']
+    content: string,
+    userId: string,
+    userLogin: string,
+    addedAt: string
+}
 
+export type Login = {
+    login: string,
+    password: string
+}
+
+export type LoginSuccess = {
+    token: string
+}
+
+export type UserInput = {
+    login: string
+    password: string
+}
+
+export type Users = {
+    id: string
+    login: string
+}
