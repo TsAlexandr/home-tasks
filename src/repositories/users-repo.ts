@@ -3,7 +3,7 @@ import {Users, usersCollection} from "./db";
 
 export const usersRepo = {
     async findUsers(page: number, pageSize: number, searchNameTerm: string) {
-        const filter = {name : {$regex : searchNameTerm ? searchNameTerm : ""}}
+        const filter = {login : {$regex : searchNameTerm ? searchNameTerm : ""}}
         const user = await usersCollection
             .find(filter)
             .project({_id: 0})
