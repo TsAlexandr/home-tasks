@@ -5,7 +5,7 @@ export const usersRepo = {
     async findUsers(page: number, pageSize: number) {
         const user = await usersCollection
             .find()
-            .project({_id: 0})
+            .project({_id: 0, passwordHash: 0, password:0})
             .skip((page - 1) * pageSize)
             .limit(pageSize)
             .toArray()
@@ -24,9 +24,12 @@ export const usersRepo = {
 
     async createUser(newUser: Users) {
         await usersCollection.insertOne(newUser, {forceServerObjectId: true})
-        return await usersCollection.findOne(
-            {id: newUser.id},
-            {projection: {_id: false}})
+        const userReturn =  await usersCollection.findOne(
+            {id: newUser.id})
+        return {
+            id: userReturn!.id,
+            login: userReturn!.login
+        }
     },
 
     async findByLogin(login: string) {
