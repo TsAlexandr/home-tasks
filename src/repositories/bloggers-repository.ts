@@ -22,15 +22,15 @@ export const bloggersRepository = {
         }
         return bloggersInPage
     },
-    async getBloggersById(id: number) {
+    async getBloggersById(id: string) {
         return await bloggersCollection.findOne({id}, {projection: {_id: 0}})
 
     },
-    async deleteBloggerById(id: number) {
+    async deleteBloggerById(id: string) {
         const delBlog = await bloggersCollection.deleteOne({id})
         return delBlog.deletedCount === 1
     },
-    async updateBloggerById(id: number, name: string, youtubeUrl: string) {
+    async updateBloggerById(id: string, name: string, youtubeUrl: string) {
         const updBlog = await bloggersCollection.findOneAndUpdate(
             {id}, {
                 $set: {
