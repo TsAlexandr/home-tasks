@@ -1,15 +1,16 @@
-import {Paginator, Users, usersCollection} from "./db";
+import {Users, usersCollection} from "./db";
 
 
 export const usersRepo = {
-    async findUsers(page: number, pageSize: number) {
+    async findUsers(page: number, pageSize: number, searchNameTerm: string) {
+        const filter = {name : {$regex : searchNameTerm ? searchNameTerm : ""}}
         const user = await usersCollection
-            .find({}, )
+            .find(filter)
             .project({_id: 0})
             .limit(pageSize)
             .skip((page - 1) * pageSize)
             .toArray()
-        const total = await usersCollection.countDocuments({})
+        const total = await usersCollection.countDocuments(filter)
         const pages = Math.ceil(total / pageSize)
 
         const userInPages = {

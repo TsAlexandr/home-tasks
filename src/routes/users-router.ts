@@ -1,7 +1,11 @@
 import {Router, Request, Response} from "express";
 import {usersService} from "../domain/users-service";
-import {authMiddleware} from "../middlewares/auth-middleware";
-import {getPage, inputValidator, isValidPage, isValidUser} from "../middlewares/input-validator-middlewares";
+import {
+    getDataPage,
+    inputValidator,
+    isValidPage,
+    isValidUser
+} from "../middlewares/input-validator-middlewares";
 import {checkAuth} from "../middlewares/basic-auth";
 
 
@@ -12,8 +16,8 @@ usersRouter.get('/',
     isValidPage,
     inputValidator,
     async (req: Request, res: Response) => {
-        const {page, pageSize} = getPage(req.query)
-        const users = usersService.getUsers(page, pageSize)
+        const {page, pageSize, searchNameTerm} = getDataPage(req.query)
+        const users = usersService.getUsers(page, pageSize, searchNameTerm)
         res.status(200).send(users)
     })
 
