@@ -76,8 +76,7 @@ export type UserInput = {
 export type Users = {
     id: string
     login: string
-    passwordHash?: string
-    passwordSalt?: string
+    password: string
 }
 
 export interface BaseAuthData {

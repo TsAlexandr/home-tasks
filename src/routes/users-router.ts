@@ -22,9 +22,10 @@ usersRouter.get('/',
         isValidUser,
         inputValidator,
         async (req: Request, res: Response) => {
+        const {login, password} = req.body
             const newUser = await usersService.createUser(
-                req.body.login,
-                req.body.password
+                login,
+                password
             )
             res.status(201).send(newUser)
 
