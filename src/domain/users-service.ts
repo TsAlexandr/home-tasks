@@ -10,7 +10,7 @@ export const usersService = {
         return users
     },
 
-    async createUser(login: string, password: string): Promise<Users> {
+    async createUser(login: string, password: string) {
         const passwordHash = await authService._generateHash(password)
         const newUser = {
             id: v4(),

@@ -6,7 +6,7 @@ export const client = new MongoClient(mongoUri);
 
 export const bloggersCollection = client.db("bloggers-posts").collection<Bloggers>('bloggers')
 export const postsCollection = client.db("bloggers-posts").collection<PostsCon>('posts')
-export const usersCollection = client.db("bloggers-posts").collection<Users>('users')
+export const usersCollection = client.db("bloggers-posts").collection('users')
 export const commentsCollection = client.db("bloggers-posts").collection<Comment>('comments')
 
 
@@ -74,9 +74,9 @@ export type UserInput = {
 }
 
 export type Users = {
-    id: string
+    id?: string
     login: string
-    password: string
+    passwordHash?: string
 }
 
 export interface BaseAuthData {
