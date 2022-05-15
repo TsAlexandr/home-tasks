@@ -1,12 +1,10 @@
-import {ObjectId} from "mongodb";
 import {commentsRepo} from "../repositories/comments-repo";
 import {postsService} from "./posts-service";
 import {randomUUID} from "crypto";
-import {postsRepository} from "../repositories/posts-repository";
 
 
 export const commentService = {
-    async commentsById(id: string) {
+    async getCommentById(id: string) {
         return await commentsRepo.getById(id)
     },
 
