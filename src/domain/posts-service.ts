@@ -1,19 +1,20 @@
 import {postsRepository} from "../repositories/posts-repository";
-import {NewPost, PostsCon} from "../repositories/db";
+import {NewPost} from "../repositories/db";
 import {bloggersService} from "./bloggers-service";
+import {randomUUID} from "crypto";
 
 
 export const postsService = {
     async getPosts(page: number, pageSize: number) {
         return await postsRepository.getPosts( page, pageSize )
     },
-    async getPostsById(id: number) {
+    async getPostsById(id: string) {
         return await postsRepository.getPostsById(id)
     },
-    async deletePostsById(id: number) {
+    async deletePostsById(id: string) {
         return await postsRepository.deletePostsById(id)
     },
-    async updatePostsById(id: number, name: string, updatePost: NewPost) {
+    async updatePostsById(id: string, name: string, updatePost: NewPost) {
             const bloggerName = name
             return await postsRepository.updatePostsById({id, bloggerName, ...updatePost})
     },
@@ -25,11 +26,11 @@ export const postsService = {
         const createPost = {
             ...newPost,
             bloggerName: blogger.name,
-            id: +(new Date())
+            id: randomUUID()
         }
         return await postsRepository.createPosts(createPost)
     },
-    async getPostsInPages(bloggerId: number, page: number, pageSize: number) {
+    async getPostsInPages(bloggerId: string, page: number, pageSize: number) {
         const post = await postsRepository.getPostInPages(bloggerId, page, pageSize)
         return post
     }
