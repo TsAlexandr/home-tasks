@@ -36,7 +36,6 @@ usersRouter.get('/',
 
     .delete('/:userId',
         checkAuth,
-        isValidId,
         inputValidator,
         async (req: Request, res: Response) => {
             const userId = req.params.userId
