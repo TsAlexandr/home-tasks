@@ -15,8 +15,8 @@ export const commentsRepo = {
             }
     },
 
-    async getCommaById(postId: string, page: number, pageSize: number) {
-        const filter = {postId}
+    async getCommaById(id: string, page: number, pageSize: number) {
+        const filter = {id}
         const commentsForPosts = await commentsCollection.find
             (filter)
             .project({_id: 0, postId: false})
@@ -45,9 +45,9 @@ export const commentsRepo = {
         return newComma
     },
 
-    async updComments(commentId: string, content: string) {
+    async updComments(id: string, content: string) {
         const updComment = await commentsCollection.findOneAndUpdate
-        ({commentId}, {$set: {'content': content}})
+        ({id}, {$set: {'content': content}})
         return updComment.value
     },
 

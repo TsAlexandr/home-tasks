@@ -57,14 +57,14 @@ postsRouter
     .get('/:postId/comments',
         inputValidator,
         async (req: Request, res: Response) => {
-            const postId = req.params.postId
+            const id = req.params.postId
             const {page, pageSize} = getPage(req.query)
-            const isPost = await postsService.getPostsById(postId)
+            const isPost = await postsService.getPostsById(id)
             if(!isPost) {
                 res.sendStatus(404)
                 return
             } else {
-                const commInPages = await commentService.getCommaById(postId, page, pageSize)
+                const commInPages = await commentService.getCommaById(id, page, pageSize)
                 res.status(200).send(commInPages)
             }
 

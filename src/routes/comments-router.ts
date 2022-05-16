@@ -14,13 +14,14 @@ commentsRouter
         isValidComma,
         inputValidator,
         async (req: Request, res: Response) => {
-        const {commentId, content} = req.body
-            const findComment = await commentsRepo.getById(commentId)
+        const id = req.params.commentId
+        const content = req.body.content
+            const findComment = await commentsRepo.getById(id)
             if(!findComment) {
                 res.sendStatus(400)
                 return
             }
-            const updComment = await commentService.updComments(commentId, content)
+            const updComment = await commentService.updComments(id, content)
             if(!updComment) {
                 res.sendStatus(404)
                 return

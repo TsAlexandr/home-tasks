@@ -5,8 +5,8 @@ import {PostsCon} from "../repositories/db";
 
 
 export const commentService = {
-    async getCommaById(postId: string, page: number, pageSize: number) {
-        const comm = await commentsRepo.getCommaById(postId, page, pageSize)
+    async getCommaById(id: string, page: number, pageSize: number) {
+        const comm = await commentsRepo.getCommaById(id, page, pageSize)
         return comm
     },
 
@@ -29,8 +29,8 @@ export const commentService = {
 
     },
 
-    async updComments(commentId: string, content: string) {
-        const update = await commentsRepo.updComments(commentId, content)
+    async updComments(id: string, content: string) {
+        const update = await commentsRepo.updComments(id, content)
         return update
     },
 
