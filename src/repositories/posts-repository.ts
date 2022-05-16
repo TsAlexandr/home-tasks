@@ -20,7 +20,7 @@ export const postsRepository = {
         return postInPages
     },
     async getPostsById(id: string) {
-        const postsById = await postsCollection.findOne({id}, {projection: {_id:0}})
+        const postsById: any = await postsCollection.findOne({id})
             if(postsById) {
                 return {
                     bloggerId: postsById.bloggerId,
