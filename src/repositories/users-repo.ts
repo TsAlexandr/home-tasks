@@ -23,8 +23,10 @@ export const usersRepo = {
 
     async createUser(newUser: Users) {
         await usersCollection.insertOne(newUser)
-        const createUser = await usersCollection.findOne({id: newUser.id})
-        return createUser
+        return {
+            id: newUser.id,
+            login: newUser.login
+        }
     },
 
     async findByLogin(login: string) {
@@ -37,7 +39,7 @@ export const usersRepo = {
         return user
     },
 
-    async deleteOne(id: string) {
+    async delUser(id: string) {
         const result = await usersCollection.deleteOne({id})
         return result.deletedCount === 1
     }

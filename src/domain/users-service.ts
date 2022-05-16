@@ -22,6 +22,6 @@ export const usersService = {
     },
 
     async deleteUser(id: string){
-        return await usersCollection.deleteOne({id})
+        return await usersRepo.delUser(id)
     },
 }
