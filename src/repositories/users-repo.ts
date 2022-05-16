@@ -2,14 +2,13 @@ import {Users, usersCollection} from "./db";
 
 
 export const usersRepo = {
-    async getUsers(page: number, pageSize: number, searchNameTerm: string) {
-        const filter = {login : {$regex : searchNameTerm ? searchNameTerm : ""}}
+    async getUsers(page: number, pageSize: number) {
         const user = await usersCollection
-            .find(filter)
+            .find()
             .skip((page - 1) * pageSize)
             .limit(pageSize)
             .toArray()
-        const total = await usersCollection.countDocuments(filter)
+        const total = await usersCollection.countDocuments()
         const pages = Math.ceil(total / pageSize)
 
         const userInPages = {

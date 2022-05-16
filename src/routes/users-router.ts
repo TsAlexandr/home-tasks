@@ -15,7 +15,7 @@ usersRouter.get('/',
     inputValidator,
     async (req: Request, res: Response) => {
         const {page, pageSize, searchNameTerm} = getDataPage(req.query)
-        const users = usersService.getUsers(page, pageSize, searchNameTerm)
+        const users = usersService.getUsers(page, pageSize)
         res.status(200).send(users)
     })
 
