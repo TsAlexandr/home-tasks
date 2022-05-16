@@ -11,7 +11,6 @@ import {postsService} from "../domain/posts-service";
 import {bloggersRepository} from "../repositories/bloggers-repository";
 import {checkAuth} from "../middlewares/basic-auth";
 import {postsRepository} from "../repositories/posts-repository";
-import {commentsRepo} from "../repositories/comments-repo";
 import {commentService} from "../domain/comment-service";
 import {authMiddleware} from "../middlewares/auth-middleware";
 
@@ -76,10 +75,10 @@ postsRouter
         inputValidator,
         async (req: Request, res: Response) => {
             const postId = req.params.postId
-            const {content} = req.body.content
+            const content: string = req.body.content
             const userId = req.user!.id
             const userLogin = req.user!.login
-            const newPost = await commentService.createComments(postId, content, userId, userLogin)
+            const newPost = await commentService.createComments({postId, content, userId, userLogin})
             if(!newPost) {
                 res.sendStatus(404)
                 return

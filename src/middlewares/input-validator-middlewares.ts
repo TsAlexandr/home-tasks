@@ -68,6 +68,8 @@ export const isValidComma = [
     body('content')
         .isString()
         .isLength({min: 20, max: 300})
+        .not()
+        .isEmpty()
 ]
 
 

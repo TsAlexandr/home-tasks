@@ -93,3 +93,10 @@ export type withoutId = {
     userLogin: string,
     addedAt: Date
 }
+
+export type inputComment = {
+    postId?: PostsCon['id']
+    content: string,
+    userId: string,
+    userLogin: string,
+}

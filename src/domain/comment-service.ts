@@ -1,6 +1,6 @@
 import {commentsRepo} from "../repositories/comments-repo";
-import {postsService} from "./posts-service";
 import {v4} from "uuid";
+import {inputComment} from "../repositories/db";
 
 
 export const commentService = {
@@ -14,21 +14,14 @@ export const commentService = {
         return comment
     },
 
-    async createComments(postId: string, content: string, userId: string, userLogin: string) {
-        const post = await postsService.getPostsById(postId)
-        if(!post) {
-            return false
-        } else {
-            const newComment = {
-                id: v4(),
-                postId,
-                content,
-                userId,
-                userLogin,
-                addedAt: new Date()
-            }
-            return await commentsRepo.createComments(newComment)
-        }
+    async createComments(newComments: inputComment) {
+            return await commentsRepo.createComments(
+                {
+                    ...newComments,
+                    addedAt: new Date(),
+                    id: v4()
+                })
+
 
     },
 
