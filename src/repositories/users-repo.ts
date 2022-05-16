@@ -5,7 +5,7 @@ export const usersRepo = {
     async getUsers(page: number, pageSize: number, searchNameTerm: string) {
         const filter = {login : {$regex : searchNameTerm ? searchNameTerm : ""}}
         const user = await usersCollection
-            .find(filter, {projection: {_id: false, passwordHash: false}})
+            .find(filter, {projection: {_id: false}})
             .skip((page - 1) * pageSize)
             .limit(pageSize)
             .toArray()

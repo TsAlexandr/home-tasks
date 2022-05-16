@@ -23,7 +23,6 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
             res.sendStatus(404)
             return
         }
-        // @ts-ignore
         req.user = user
     } catch (e) {
         res.sendStatus(401)
