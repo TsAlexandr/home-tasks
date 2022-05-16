@@ -73,11 +73,15 @@ postsRouter
 
     .post('/:postId/comments',
         authMiddleware,
-        check('postId').isString(),
         isValidComma,
         inputValidator,
         async (req: Request, res: Response) => {
             const postId = req.params.postId
+            const post = await postsService.getPostsById(postId)
+            if(!post) {
+                res.sendStatus(404)
+                return
+            }
             const content: string = req.body.content
             const userId = req.user!.id
             const userLogin = req.user!.login

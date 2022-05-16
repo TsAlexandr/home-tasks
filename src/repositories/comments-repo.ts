@@ -16,15 +16,13 @@ export const commentsRepo = {
     },
 
     async getCommaById(id: string, page: number, pageSize: number) {
-        const user = await commentsRepo.getById(id)
-        const userId = user!.userId
         const commentsForPosts = await commentsCollection.find
-            ({userId})
+            ({id})
             .project({_id: 0, postId: false})
             .limit(pageSize)
             .skip((page - 1) * pageSize)
             .toArray()
-        const total = await postsCollection.countDocuments({userId})
+        const total = await postsCollection.countDocuments({id})
         const pages = Math.ceil(total / pageSize)
 
         const commInPages = {
