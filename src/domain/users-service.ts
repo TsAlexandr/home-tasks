@@ -1,5 +1,4 @@
 import {usersRepo} from "../repositories/users-repo";
-import {Users, usersCollection} from "../repositories/db";
 import {authService} from "./auth-service";
 import {v4} from "uuid";
 
