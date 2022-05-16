@@ -1,4 +1,4 @@
-import {Users, usersCollection} from "./db";
+import {Paginator, Users, usersCollection} from "./db";
 
 
 export const usersRepo = {
@@ -11,7 +11,7 @@ export const usersRepo = {
         const total = await usersCollection.countDocuments({})
         const pages = Math.ceil(total / pageSize)
 
-        const userInPages = {
+        const userInPages: Paginator<Users> = {
             pagesCount: pages,
             page: page,
             pageSize: pageSize,

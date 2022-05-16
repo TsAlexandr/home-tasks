@@ -12,8 +12,9 @@ import {authRouter} from "./routes/auth-router";
 const app = express()
 const port = process.env.PORT || 5000
 
-app.use(cors())
 app.use(bodyParser.json())
+app.use(cors())
+
 
 app.use('/posts', postsRouter)
 app.use('/bloggers', bloggersRouter)
