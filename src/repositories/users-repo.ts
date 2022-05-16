@@ -23,10 +23,8 @@ export const usersRepo = {
 
     async createUser(newUser: Users) {
         await usersCollection.insertOne(newUser)
-        return {
-            id: newUser.id,
-            login: newUser.login
-        }
+        const createUser = await usersCollection.findOne({id: newUser.id})
+        return createUser
     },
 
     async findByLogin(login: string) {

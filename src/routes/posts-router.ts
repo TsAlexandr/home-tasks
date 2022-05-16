@@ -71,6 +71,7 @@ postsRouter
         })
 
     .post('/:postId/comments',
+        authMiddleware,
         isValidComma,
         inputValidator,
         async (req: Request, res: Response) => {
