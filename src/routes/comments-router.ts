@@ -9,8 +9,6 @@ export const commentsRouter = Router({})
 
 commentsRouter
     .put('/:commentId',
-        authMiddleware,
-        checkOwnership,
         isValidId,
         isValidComma,
         inputValidator,
@@ -38,8 +36,6 @@ commentsRouter
             }
         })
     .delete('/:commentId'),
-    authMiddleware,
-    checkOwnership,
     isValidId,
     inputValidator,
     async (req: Request, res: Response) => {
