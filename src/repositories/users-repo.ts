@@ -3,10 +3,10 @@ import {Paginator, Users, usersCollection} from "./db";
 
 export const usersRepo = {
     async getUsers(page: number, pageSize: number) {
-        const user = await usersCollection
-            .find({})
-            .skip((page - 1) * pageSize)
+        const user: Users[] = await usersCollection
+            .find({}, {projection: {_id: 0}})
             .limit(pageSize)
+            .skip((page - 1) * pageSize)
             .toArray()
         const total = await usersCollection.countDocuments({})
         const pages = Math.ceil(total / pageSize)
