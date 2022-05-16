@@ -5,8 +5,7 @@ export const usersRepo = {
     async getUsers(page: number, pageSize: number, searchNameTerm: string) {
         const filter = {login : {$regex : searchNameTerm ? searchNameTerm : ""}}
         const user = await usersCollection
-            .find(filter)
-            .project({_id:0})
+            .find(filter, {projection: {_id: false, passwordHash: false}})
             .skip((page - 1) * pageSize)
             .limit(pageSize)
             .toArray()
@@ -26,7 +25,10 @@ export const usersRepo = {
     async createUser(newUser: Users) {
         await usersCollection.insertOne(newUser)
         const createUser = await usersCollection.findOne({id: newUser.id})
-        return createUser
+        return ({
+            id: createUser?.id,
+            login: createUser?.login
+        })
     },
 
     async findByLogin(login: string) {

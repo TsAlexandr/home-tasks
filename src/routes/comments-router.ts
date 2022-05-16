@@ -1,7 +1,7 @@
 import {Router, Request, Response} from "express";
 import {authMiddleware} from "../middlewares/auth-middleware";
 import {commentService} from "../domain/comment-service";
-import {checkOwnership, inputValidator, isValidComma} from "../middlewares/input-validator-middlewares";
+import {checkOwnership, inputValidator, isValidComma, isValidId} from "../middlewares/input-validator-middlewares";
 import {commentsRepo} from "../repositories/comments-repo";
 
 
@@ -11,6 +11,7 @@ commentsRouter
     .put('/:commentId',
         authMiddleware,
         checkOwnership,
+        isValidId,
         isValidComma,
         inputValidator,
         async (req: Request, res: Response) => {
@@ -24,7 +25,9 @@ commentsRouter
                 res.sendStatus(204)
             }
         })
-    .get('/:commentId', inputValidator,
+    .get('/:commentId',
+        isValidId,
+        inputValidator,
         async (req: Request, res: Response) => {
             const id = req.params.commentId
             const comment = await commentService.getCommentById(id)
@@ -37,6 +40,7 @@ commentsRouter
     .delete('/:commentId'),
     authMiddleware,
     checkOwnership,
+    isValidId,
     inputValidator,
     async (req: Request, res: Response) => {
         const id = req.params.commentId

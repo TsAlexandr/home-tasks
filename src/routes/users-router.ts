@@ -2,7 +2,7 @@ import {Router, Request, Response} from "express";
 import {usersService} from "../domain/users-service";
 import {
     getDataPage, getPage,
-    inputValidator,
+    inputValidator, isValidId,
     isValidUser
 } from "../middlewares/input-validator-middlewares";
 import {checkAuth} from "../middlewares/basic-auth";
@@ -35,6 +35,7 @@ usersRouter.get('/',
 
     .delete('/:userId',
         checkAuth,
+        isValidId,
         inputValidator,
         async (req: Request, res: Response) => {
             const userId = req.params.userId

@@ -69,8 +69,8 @@ export type LoginSuccess = {
 }
 
 export type UserInput = {
+    id: string
     login: string
-    password: string
 }
 
 export type Users = {
