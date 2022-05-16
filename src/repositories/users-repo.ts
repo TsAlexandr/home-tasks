@@ -6,7 +6,6 @@ export const usersRepo = {
         const filter = {login : {$regex : searchNameTerm ? searchNameTerm : ""}}
         const user = await usersCollection
             .find(filter)
-            .project({_id:0})
             .skip((page - 1) * pageSize)
             .limit(pageSize)
             .toArray()
