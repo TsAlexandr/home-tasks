@@ -4,7 +4,7 @@ import {Paginator, Users, usersCollection} from "./db";
 export const usersRepo = {
     async getUsers(page: number, pageSize: number) {
         const user: Users[] = await usersCollection
-            .find({}, {projection: {_id: 0}})
+            .find({}, {projection: {_id: 0, passwordHash: false}})
             .limit(pageSize)
             .skip((page - 1) * pageSize)
             .toArray()
