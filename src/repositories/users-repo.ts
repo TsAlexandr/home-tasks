@@ -4,11 +4,11 @@ import {Users, usersCollection} from "./db";
 export const usersRepo = {
     async getUsers(page: number, pageSize: number) {
         const user = await usersCollection
-            .find()
+            .find({})
             .skip((page - 1) * pageSize)
             .limit(pageSize)
             .toArray()
-        const total = await usersCollection.countDocuments()
+        const total = await usersCollection.countDocuments({})
         const pages = Math.ceil(total / pageSize)
 
         const userInPages = {
