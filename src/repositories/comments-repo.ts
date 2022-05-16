@@ -34,7 +34,7 @@ export const commentsRepo = {
         return commInPages
     },
 
-    async createComments(newComment: withoutId) {
+    async createComments(newComment: Comment) {
         return await commentsCollection.insertOne(newComment, {forceServerObjectId: true})
 
     },

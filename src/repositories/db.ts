@@ -54,7 +54,7 @@ export type Paginator<T> = {
 
 export type Comment = {
     id: string,
-    postId?: PostsCon['id']
+    postId: PostsCon['id']
     content: string,
     userId: string,
     userLogin: string,
@@ -95,7 +95,7 @@ export type withoutId = {
 }
 
 export type inputComment = {
-    postId?: PostsCon['id']
+    postId: PostsCon['id']
     content: string,
     userId: string,
     userLogin: string,
