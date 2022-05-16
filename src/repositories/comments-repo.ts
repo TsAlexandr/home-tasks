@@ -17,7 +17,7 @@ export const commentsRepo = {
 
     async getCommaById(id: string, page: number, pageSize: number) {
         const commentsForPosts = await commentsCollection.find
-        ({id}, {projection: {_id: 0}})
+        ({id}, {projection: {_id: 0, postId: false}})
             .limit(page)
             .skip((pageSize - 1) * page)
             .toArray()
@@ -36,7 +36,13 @@ export const commentsRepo = {
 
     async createComments(newComment: Comment) {
         await commentsCollection.insertOne(newComment, {forceServerObjectId: true})
-        return newComment
+        return {
+            id: newComment.id,
+            content: newComment.content,
+            userId: newComment.userId,
+            userLogin: newComment.userLogin,
+            addedAt: newComment.addedAt
+    }
     },
 
     async updComments(id: string, content: string) {
