@@ -36,13 +36,11 @@ export const commentsRepo = {
 
     async createComments(newComment: Comment) {
         await commentsCollection.insertOne(newComment, {forceServerObjectId: true})
-        return {
-            id: newComment.id,
-            content: newComment.content,
-            userId: newComment.userId,
-            userLogin: newComment.userLogin,
-            addedAt: newComment.addedAt
-    }
+        const newComma = await commentsCollection.findOne({id: newComment.id}, {projection:{postId: false}})
+        if(newComma == null){
+            return false
+        }
+        return newComma
     },
 
     async updComments(id: string, content: string) {
