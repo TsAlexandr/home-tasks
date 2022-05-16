@@ -1,4 +1,4 @@
-import {Comment, commentsCollection, Paginator, postsCollection} from "./db";
+import {Comment, commentsCollection, Paginator, postsCollection, withoutId} from "./db";
 
 
 export const commentsRepo = {
@@ -34,10 +34,9 @@ export const commentsRepo = {
         return commInPages
     },
 
-    async createComments(newComment: Comment) {
-        await commentsCollection.insertOne(newComment, {forceServerObjectId: true})
-        const newComma = await commentsCollection.findOne({id: newComment.id}, {projection:{postId: false, _id: false}})
-        return newComma
+    async createComments(newComment: withoutId) {
+        return await commentsCollection.insertOne(newComment, {forceServerObjectId: true})
+
     },
 
     async updComments(id: string, content: string) {

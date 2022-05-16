@@ -25,22 +25,22 @@ export async function runDb() {
 export type Bloggers = {
     id: string,
     name: string
-    youtubeUrl: string | null
+    youtubeUrl: string
 }
 
 export type PostsCon = {
     id: string,
     bloggerId: Bloggers['id'],
-    title: string | null
-    shortDescription: string | null
-    content: string | null
+    title: string
+    shortDescription: string
+    content: string
     bloggerName?: Bloggers['name']
 }
 
 export type NewPost = {
-    title: string | null
-    shortDescription: string | null
-    content: string | null
+    title: string
+    shortDescription: string
+    content: string
     bloggerId: Bloggers['id']
 }
 
@@ -84,4 +84,12 @@ export type Users = {
 export interface BaseAuthData {
     login: string;
     password: string;
+}
+
+export type withoutId = {
+    id: string,
+    content: string,
+    userId: string,
+    userLogin: string,
+    addedAt: Date
 }
