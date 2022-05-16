@@ -7,14 +7,27 @@ import {BaseAuthData} from "../repositories/db";
 export const authService = {
     async checkCredentials(login: string, password: string){
         const user: any = await usersRepo.findByLogin(login)
-        if(!user) return false
+        if(!user) return {
+            resultCode: 1,
+            data: {
+                token: null
+            }
+        }
         const isItHash = await this._correctHash(password, user.passwordHash)
         if(!isItHash) {
-            return false
+            return {
+                resultCode: 1,
+                data: {
+                    token: null
+                }
+            }
         } else {
             const token = jwt.sign({userId: user.id}, 'secret', {expiresIn: '1d'})
             return {
-                token: token
+                resultCode: 0,
+                data: {
+                    token: token
+                }
             }
         }
 

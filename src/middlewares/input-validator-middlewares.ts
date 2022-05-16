@@ -86,14 +86,13 @@ export const getPage = (query: any) => {
 }
 
 
-export const checkOwnership = async (req: Request, res: Response, next: NextFunction) => {
+export const isItUserCom = async (req: Request, res: Response, next: NextFunction) => {
     const commentId = req.params.commentId
-    const commentToChangeOrRemove = await commentService.getCommentById(commentId)
-    if(!commentToChangeOrRemove ){
+    const comUser = await commentService.getCommentById(commentId)
+    if(!comUser ){
         res.sendStatus(404)
-    }else if(commentToChangeOrRemove.userLogin != req.user!.login){
+    }else if(comUser.userLogin != req.user!.login){
         res.sendStatus(403)
-        console.log(("Forbidden"))
     }else{
         next()
     }

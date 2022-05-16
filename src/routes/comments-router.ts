@@ -1,7 +1,7 @@
 import {Router, Request, Response} from "express";
 import {authMiddleware} from "../middlewares/auth-middleware";
 import {commentService} from "../domain/comment-service";
-import {inputValidator, isValidComma} from "../middlewares/input-validator-middlewares";
+import {inputValidator, isItUserCom, isValidComma} from "../middlewares/input-validator-middlewares";
 import {commentsRepo} from "../repositories/comments-repo";
 
 
@@ -10,6 +10,7 @@ export const commentsRouter = Router({})
 commentsRouter
     .put('/:commentId',
         authMiddleware,
+        isItUserCom,
         isValidComma,
         inputValidator,
         async (req: Request, res: Response) => {
@@ -27,17 +28,21 @@ commentsRouter
                 res.sendStatus(204)
             }
         })
-    .get('/:commentId', inputValidator,
+    .get('/:commentId',
+        inputValidator,
         async (req: Request, res: Response) => {
         const id = req.params.commentId
         const comment = await commentService.getCommentById(id)
             if (!comment) {
                 res.sendStatus(404)
             } else {
-                res.send(comment).status(200)
+                res.status(200).send(comment)
             }
     })
-    .delete('/:commentId'), authMiddleware, inputValidator,
+    .delete('/:commentId'),
+    authMiddleware,
+    isItUserCom,
+    inputValidator,
     async (req: Request, res: Response) => {
         const id = req.params.commentId
         const delCom = await commentService.deleteById(id)

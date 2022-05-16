@@ -6,9 +6,9 @@ export const authRouter = Router({})
 
 authRouter.post('/login', async (req: Request, res: Response) => {
     const {login, password} = req.body
-    const isUser = await authService.checkCredentials(login, password)
-        if(isUser) {
-            res.status(200).send(isUser.token)
+    const result = await authService.checkCredentials(login, password)
+        if(result.resultCode === 0) {
+            res.status(200).send(result.data)
         } else {
             res.sendStatus(401)
         }
