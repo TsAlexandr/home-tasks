@@ -22,7 +22,7 @@ export const commentsRepo = {
             .limit(pageSize)
             .skip((page - 1) * pageSize)
             .toArray()
-        const total = await postsCollection.countDocuments({id})
+        const total = await postsCollection.countDocuments({})
         const pages = Math.ceil(total / pageSize)
 
         const commInPages = {

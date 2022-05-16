@@ -4,7 +4,7 @@ import {usersRepo} from "../repositories/users-repo";
 
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-    if (!req.headers.authorization) {
+    if (!req.headers.authorization || !req.headers) {
         res.sendStatus(401)
         return
     }
@@ -19,7 +19,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
         const decode: any = jwt.verify(token, 'secret')
         const user = await usersRepo.findById(decode.userId)
         if(!user) {
-            res.sendStatus(404)
+            res.sendStatus(403)
             return
         }
         req.user = user
