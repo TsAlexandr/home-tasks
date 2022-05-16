@@ -20,19 +20,8 @@ export const postsRepository = {
         return postInPages
     },
     async getPostsById(id: string) {
-        const postsById: any = await postsCollection.findOne({id})
-            if(postsById) {
-                return {
-                    bloggerId: postsById.bloggerId,
-                    bloggerName: postsById.bloggerName,
-                    content: postsById.content,
-                    id,
-                    shortDescription: postsById.shortDescription,
-                    title: postsById.title
-                }
-            } else {
-                return false
-            }
+        return await postsCollection.findOne({id}, {projection:{_id:0}})
+
 
     },
     async deletePostsById(id: string) {
