@@ -16,7 +16,8 @@ export const commentsRepo = {
     },
 
     async getCommaById(id: string, page: number, pageSize: number) {
-        const filter = {id}
+        const userComment = await commentsCollection.findOne({id})
+        const filter = {userId: userComment!.userId}
         const commentsForPosts = await commentsCollection.find
             (filter)
             .project({_id: 0, postId: false})

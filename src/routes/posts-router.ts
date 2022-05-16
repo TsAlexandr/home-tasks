@@ -14,6 +14,7 @@ import {postsRepository} from "../repositories/posts-repository";
 import {commentsRepo} from "../repositories/comments-repo";
 import {commentService} from "../domain/comment-service";
 import {authMiddleware} from "../middlewares/auth-middleware";
+import {check} from "express-validator";
 
 export const postsRouter = Router({})
 
@@ -72,6 +73,7 @@ postsRouter
 
     .post('/:postId/comments',
         authMiddleware,
+        check('postId').isString(),
         isValidComma,
         inputValidator,
         async (req: Request, res: Response) => {
