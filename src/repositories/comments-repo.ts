@@ -36,8 +36,9 @@ export const commentsRepo = {
 
     async createComments(newComment: Comment) {
         await commentsCollection.insertOne(newComment, {forceServerObjectId: true})
-        delete newComment.postId
-        return newComment
+        const newCom = await commentsCollection.findOne({id: newComment.id}, {projection:{_id: false}})
+        delete newCom!.postId
+        return newCom
     },
 
     async updComments(id: string, content: string) {
