@@ -41,7 +41,7 @@ usersRouter.get('/',
             const userId = req.params.userId
             const delUser = await usersService.deleteUser(userId)
             if (!delUser) {
-                res.sendStatus(404).send({
+                res.status(404).send({
                     "data": {},
                     "errorsMessages": [{
                         message: "blogger not found",
