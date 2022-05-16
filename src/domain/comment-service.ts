@@ -29,8 +29,8 @@ export const commentService = {
 
     },
 
-    async updComments(id: string, content: string) {
-        const update = await commentsRepo.updComments(id, content)
+    async updComments(commentId: string, content: string) {
+        const update = await commentsRepo.updComments(commentId, content)
         return update
     },
 

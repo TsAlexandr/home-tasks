@@ -43,9 +43,9 @@ export const commentsRepo = {
         return newComma
     },
 
-    async updComments(id: string, content: string) {
+    async updComments(commentId: string, content: string) {
         const updComment = await commentsCollection.findOneAndUpdate
-        ({id}, {$set: {'content': content}})
+        ({commentId}, {$set: {'content': content}})
         return updComment.value
     },
 
