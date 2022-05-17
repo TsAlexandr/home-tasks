@@ -17,7 +17,7 @@ export const commentsRepo = {
 
     async getCommaById(id: string, page: number, pageSize: number) {
         const commentsForPosts: Comment[] = await commentsCollection.find
-        ({id}, {projection: {_id: 0, postId: false}})
+        ({id}, {projection: {_id: 0}})
             .limit(pageSize)
             .skip((page - 1) * pageSize)
             .toArray()
