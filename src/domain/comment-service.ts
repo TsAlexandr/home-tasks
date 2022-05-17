@@ -1,7 +1,5 @@
 import {commentsRepo} from "../repositories/comments-repo";
-import {postsService} from "./posts-service";
 import {v4} from "uuid";
-import {PostsCon} from "../repositories/db";
 
 
 export const commentService = {
