@@ -1,4 +1,4 @@
-import {NextFunction, Request, Response} from "express";
+import {Request, Response, NextFunction} from "express";
 import {body, check, validationResult} from "express-validator";
 import {commentService} from "../domain/comment-service";
 
@@ -7,7 +7,7 @@ const reg = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+$/
 export const inputValidator = (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
-        const err = errors.array({ onlyFirstError: true }).map(e => {
+        const err = errors.array({onlyFirstError: true}).map(e => {
             return {
                 message: e.msg,
                 field: e.param
@@ -24,9 +24,9 @@ export const isValidId = [
 ]
 
 export const isValidBlog = [
-    body('name').isString().isLength({max:15}).trim().not().isEmpty(),
-    body('youtubeUrl').matches(reg).isLength({max:100}).withMessage('Please enter a valid url')
-    ]
+    body('name').isString().isLength({max: 15}).trim().not().isEmpty(),
+    body('youtubeUrl').matches(reg).isLength({max: 100}).withMessage('Please enter a valid url')
+]
 
 export const isValidPost = [
     body('title')
@@ -50,7 +50,7 @@ export const isValidPost = [
 ]
 
 export const isValidPage = [
-    check('page').optional({checkFalsy: true}).isInt({gt:1}).notEmpty(),
+    check('page').optional({checkFalsy: true}).isInt({gt: 1}).notEmpty(),
     check('pageSize').optional({checkFalsy: true}).isInt({gt: 1}).notEmpty()
 ]
 
@@ -73,7 +73,6 @@ export const isValidComma = [
 ]
 
 
-
 export const getDataPage = (query: any) => {
     const page = typeof query.PageNumber === 'string' ? +query.PageNumber : 1
     const pageSize = typeof query.PageSize === 'string' ? +query.PageSize : 10
@@ -91,11 +90,11 @@ export const getPage = (query: any) => {
 export const isItUserCom = async (req: Request, res: Response, next: NextFunction) => {
     const commentId = req.params.commentId
     const comUser = await commentService.getCommentById(commentId)
-    if(!comUser ){
+    if (!comUser) {
         res.sendStatus(404)
-    }else if(comUser.userLogin != req.user!.login){
+    } else if (comUser.userLogin != req.user!.login) {
         res.sendStatus(403)
-    }else{
+    } else {
         next()
     }
 }

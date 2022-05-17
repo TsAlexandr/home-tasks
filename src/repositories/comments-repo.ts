@@ -17,15 +17,14 @@ export const commentsRepo = {
 
     async getCommaById(id: string, page: number, pageSize: number) {
         const filter = {id}
-        const commentsForPosts = await commentsCollection.find(filter)
-            .project({_id: false, postId: false})
+        const commentsForPosts = await commentsCollection.find(filter, {projection: {_id: 0, postId: 0}})
             .limit(pageSize)
             .skip((page - 1) * pageSize)
             .toArray()
         const total = await commentsCollection.countDocuments(filter)
         const pages = Math.ceil(total / pageSize)
 
-        const commInPages = {
+        const commInPages: Paginator<Comment> = {
             pagesCount: pages,
             page: page,
             pageSize: pageSize,
@@ -33,6 +32,7 @@ export const commentsRepo = {
             items: commentsForPosts
         }
         return commInPages
+        console.log(commInPages)
     },
 
     async createComments(newComment: Comment) {
