@@ -40,12 +40,11 @@ commentsRouter
                 res.status(200).send(comment)
             }
         })
-    .delete('/:id',
+    .delete('/:commentId',
         authMiddleware,
-        isItUserCom,
         inputValidator,
         async (req: Request, res: Response) => {
-            const id = req.params.id
+            const id = req.params.commentId
             const delCom = await commentService.deleteById(id)
             if (!delCom) {
                 res.sendStatus(404)

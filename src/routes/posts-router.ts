@@ -11,10 +11,8 @@ import {postsService} from "../domain/posts-service";
 import {bloggersRepository} from "../repositories/bloggers-repository";
 import {checkAuth} from "../middlewares/basic-auth";
 import {postsRepository} from "../repositories/posts-repository";
-import {commentsRepo} from "../repositories/comments-repo";
 import {commentService} from "../domain/comment-service";
 import {authMiddleware} from "../middlewares/auth-middleware";
-import {check} from "express-validator";
 
 export const postsRouter = Router({})
 
@@ -37,10 +35,14 @@ postsRouter
             const blogger = await bloggersRepository.getBloggersById(bloggerId)
             if (!blogger) {
                 res.status(400).send(
-                    { errorsMessages:
-                            [{ message: "invalid",
-                                field: "bloggerId" }],
-                                    resultCode: 1 })
+                    {
+                        errorsMessages:
+                            [{
+                                message: "invalid",
+                                field: "bloggerId"
+                            }],
+                        resultCode: 1
+                    })
                 return
             } else {
                 const {title, content, shortDescription} = req.body
@@ -61,7 +63,7 @@ postsRouter
             const id = req.params.postId
             const {page, pageSize} = getPage(req.query)
             const isPost = await postsService.getPostsById(id)
-            if(!isPost) {
+            if (!isPost) {
                 res.sendStatus(404)
                 return
             } else {
@@ -78,7 +80,7 @@ postsRouter
         async (req: Request, res: Response) => {
             const postId = req.params.postId
             const post = await postsService.getPostsById(postId)
-            if(!post) {
+            if (!post) {
                 res.sendStatus(404)
                 return
             }
@@ -86,7 +88,7 @@ postsRouter
             const userId = req.user!.id
             const userLogin = req.user!.login
             const newPost = await commentService.createComments(postId, content, userId, userLogin)
-            if(!newPost) {
+            if (!newPost) {
                 res.sendStatus(404)
                 return
             } else {
@@ -116,7 +118,7 @@ postsRouter
         async (req: Request, res: Response) => {
             const id = req.params.id
             const findPost = await postsRepository.getPostsById(id)
-            if(!findPost) {
+            if (!findPost) {
                 res.sendStatus(404)
                 return
             }
@@ -128,7 +130,7 @@ postsRouter
             }
             const bloggerUpd = await bloggersRepository.getBloggersById(updPost.bloggerId)
             if (!bloggerUpd) {
-                res.status(400).send({ errorsMessages: [{ message: 'invalid', field: "bloggerId" }], resultCode: 1 })
+                res.status(400).send({errorsMessages: [{message: 'invalid', field: "bloggerId"}], resultCode: 1})
                 return
             }
             const updatePost = await postsService.updatePostsById(id, bloggerUpd.name, updPost)

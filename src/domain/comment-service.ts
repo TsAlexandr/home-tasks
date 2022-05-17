@@ -16,15 +16,15 @@ export const commentService = {
     },
 
     async createComments(postId: string, content: string, userId: string, userLogin: string) {
-            const newComment = {
-                id: v4(),
-                postId,
-                content,
-                userId,
-                userLogin,
-                addedAt: new Date()
-            }
-            return await commentsRepo.createComments(newComment)
+        const newComment = {
+            id: v4(),
+            postId,
+            content,
+            userId,
+            userLogin,
+            addedAt: new Date()
+        }
+        return await commentsRepo.createComments(newComment)
 
 
     },

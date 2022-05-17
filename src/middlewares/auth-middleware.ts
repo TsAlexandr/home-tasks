@@ -11,14 +11,14 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
 
     const token = req.headers.authorization.split(' ')[1]
     const version = req.headers.authorization.split(' ')[0]
-    if(version !== 'Bearer') {
+    if (version !== 'Bearer') {
         res.sendStatus(401)
         return
     }
     try {
         const decode: any = jwt.verify(token, 'secret')
         const user = await usersRepo.findById(decode.userId)
-        if(!user) {
+        if (!user) {
             res.sendStatus(403)
             return
         }

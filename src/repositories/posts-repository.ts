@@ -3,14 +3,14 @@ import {Paginator, postsCollection, PostsCon} from "./db";
 export const postsRepository = {
     async getPosts(page: number, pageSize: number) {
         const post: PostsCon[] = await postsCollection
-            .find({}, {projection: {_id:0}} )
+            .find({}, {projection: {_id: 0}})
             .limit(pageSize)
             .skip((page - 1) * pageSize)
             .toArray()
         const total = await postsCollection.countDocuments({})
-        const pages = Math.ceil(total/pageSize)
+        const pages = Math.ceil(total / pageSize)
 
-        const postInPages:Paginator<PostsCon> = {
+        const postInPages: Paginator<PostsCon> = {
             pagesCount: pages,
             page: page,
             pageSize: pageSize,
@@ -20,7 +20,7 @@ export const postsRepository = {
         return postInPages
     },
     async getPostsById(id: string) {
-        return await postsCollection.findOne({id}, {projection:{_id:0}})
+        return await postsCollection.findOne({id}, {projection: {_id: 0}})
 
 
     },
