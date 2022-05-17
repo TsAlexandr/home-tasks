@@ -4,7 +4,7 @@ import {usersRepo} from "../repositories/users-repo";
 
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-    if (!req.headers.authorization || !req.headers) {
+    if (!req.headers.authorization || !req.headers || undefined) {
         res.sendStatus(401)
         return
     }
@@ -24,7 +24,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
         }
         req.user = user
     } catch (e) {
-        res.sendStatus(401)
+        res.sendStatus(403)
         return
     }
     next()
