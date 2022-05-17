@@ -58,6 +58,7 @@ postsRouter
         })
 
     .get('/:postId/comments',
+        isValidPage,
         inputValidator,
         async (req: Request, res: Response) => {
             const id = req.params.postId
