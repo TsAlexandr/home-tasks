@@ -14,15 +14,15 @@ commentsRouter
         isValidComma,
         inputValidator,
         async (req: Request, res: Response) => {
-        const id = req.params.commentId
-        const content = req.body.content
+            const id = req.params.commentId
+            const content = req.body.content
             const findComment = await commentsRepo.getById(id)
-            if(!findComment) {
+            if (!findComment) {
                 res.sendStatus(400)
                 return
             }
             const updComment = await commentService.updComments(id, content)
-            if(!updComment) {
+            if (!updComment) {
                 res.sendStatus(404)
                 return
             } else {
@@ -32,24 +32,24 @@ commentsRouter
     .get('/:commentId',
         inputValidator,
         async (req: Request, res: Response) => {
-        const id = req.params.commentId
-        const comment = await commentService.getCommentById(id)
+            const id = req.params.commentId
+            const comment = await commentService.getCommentById(id)
             if (!comment) {
                 res.sendStatus(404)
             } else {
                 res.status(200).send(comment)
             }
-    })
+        })
     .delete('/:id',
-    authMiddleware,
-    isItUserCom,
-    inputValidator,
-    async (req: Request, res: Response) => {
-        const id = req.params.id
-        const delCom = await commentService.deleteById(id)
+        authMiddleware,
+        isItUserCom,
+        inputValidator,
+        async (req: Request, res: Response) => {
+            const id = req.params.id
+            const delCom = await commentService.deleteById(id)
             if (!delCom) {
                 res.sendStatus(404)
             } else {
                 res.sendStatus(204)
             }
-})
+        })
