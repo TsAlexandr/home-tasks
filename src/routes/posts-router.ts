@@ -61,14 +61,14 @@ postsRouter
         isValidPage,
         inputValidator,
         async (req: Request, res: Response) => {
-            const id = req.params.postId
+            const postId = req.params.postId
             const {page, pageSize} = getPage(req.query)
-            const isPost = await postsService.getPostsById(id)
+            const isPost = await postsService.getPostsById(postId)
             if (!isPost) {
                 res.sendStatus(404)
                 return
             } else {
-                const commInPages = await commentService.getCommaById(id, page, pageSize)
+                const commInPages = await commentService.getCommaById(postId, page, pageSize)
                 res.status(200).send(commInPages)
             }
 

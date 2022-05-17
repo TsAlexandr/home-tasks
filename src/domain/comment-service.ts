@@ -3,8 +3,8 @@ import {v4} from "uuid";
 
 
 export const commentService = {
-    async getCommaById(id: string, page: number, pageSize: number) {
-        const comm = await commentsRepo.getCommaById(id, page, pageSize)
+    async getCommaById(postId: string, page: number, pageSize: number) {
+        const comm = await commentsRepo.getCommaById(postId, page, pageSize)
         return comm
     },
 

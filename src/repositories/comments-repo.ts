@@ -15,8 +15,8 @@ export const commentsRepo = {
         }
     },
 
-    async getCommaById(id: string, page: number, pageSize: number) {
-        const filter = {id}
+    async getCommaById(postId: string, page: number, pageSize: number) {
+        const filter = {postId}
         const commentsForPosts = await commentsCollection.find(filter, {projection: {_id: 0, postId: 0}})
             .limit(pageSize)
             .skip((page - 1) * pageSize)
@@ -32,7 +32,6 @@ export const commentsRepo = {
             items: commentsForPosts
         }
         return commInPages
-        console.log(commInPages)
     },
 
     async createComments(newComment: Comment) {
