@@ -13,3 +13,27 @@ authRouter.post('/login', async (req: Request, res: Response) => {
             res.sendStatus(401)
         }
 })
+
+authRouter.post('/registration', async (req: Request, res: Response) => {
+    const {login, email, password} = req.body
+    const user = await authService.createUser(login, email, password)
+    if (!user) {
+        res.sendStatus(400)
+    }else {
+        res.status(201).send()
+    }
+
+})
+
+authRouter.post('/confirm-email', async (req: Request, res: Response) => {
+    const result = await authService.confirmEmail(req.body.login)
+    if(!result) {
+        res.sendStatus(400)
+    } else {
+        res.sendStatus(201)
+    }
+})
+
+authRouter.post('/resend-registration-code', async (req: Request, res: Response) => {
+
+})

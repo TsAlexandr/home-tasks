@@ -2,6 +2,9 @@ import {usersRepo} from "../repositories/users-repo";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import {BaseAuthData} from "../repositories/db";
+import {ObjectId} from "mongodb";
+import {v4} from "uuid";
+import add from 'date-fns/add'
 
 
 export const authService = {
@@ -50,5 +53,31 @@ export const authService = {
             login: loginAndPassword[0],
             password: loginAndPassword[1],
         };
+    },
+    async createUser(login: string, email: string, password: string) {
+        const passwordHash = await this._generateHash(password)
+        const user: UserAccountType = {
+            _id: new ObjectId(),
+            accountData: {
+                username: login,
+                email,
+                passwordHash,
+                createdAt: new Date()
+            },
+            emailConfirm: {
+                confirmationCode: v4(),
+                expirationData: add(new Date(), {
+                    hours: 1
+                }),
+                isConfirmed: false
+            }
+        }
+        const createResult = usersRepo.createUser(user)
+        await emailManager.sendEmailConfirmationMessage(user)
+        return createResult
+    },
+    async confirmEmail(login:string) {
+        let user = await usersRepo.findByLogin(login)
+        if(!user) return false
     }
 }
