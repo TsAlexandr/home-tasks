@@ -8,6 +8,7 @@ import {bloggersRouter} from "./routes/bloggers-router";
 import {commentsRouter} from "./routes/comments-router";
 import {usersRouter} from "./routes/users-router";
 import {authRouter} from "./routes/auth-router";
+import {emailRouter} from "./routes/email-router";
 
 const app = express()
 const port = process.env.PORT || 5000
@@ -21,7 +22,7 @@ app.use('/bloggers', bloggersRouter)
 app.use('/comments', commentsRouter)
 app.use('/users', usersRouter)
 app.use('/auth', authRouter)
-
+app.use('/email', emailRouter)
 
 
 
