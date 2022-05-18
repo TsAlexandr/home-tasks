@@ -1,4 +1,4 @@
-import {Comment, commentsCollection, Paginator, postsCollection} from "./db";
+import {Comment, commentsCollection, Paginator} from "./db";
 
 
 export const commentsRepo = {
@@ -58,4 +58,8 @@ export const commentsRepo = {
         const deleteComment = await commentsCollection.deleteOne({id})
         return deleteComment.deletedCount === 1
     }
+}
+
+export class UsersRepository {
+
 }
