@@ -1,8 +1,7 @@
 import {Router, Request, Response} from "express";
 import {authMiddleware} from "../middlewares/auth-middleware";
-import {commentService} from "../domain/comment-service";
 import {inputValidator, isItUserCom, isValidComma} from "../middlewares/input-validator-middlewares";
-import {commentsRepo} from "../repositories/comments-repo";
+import {commentsRepository, commentsService} from "../iocContainer";
 
 
 export const commentsRouter = Router({})
@@ -16,12 +15,12 @@ commentsRouter
         async (req: Request, res: Response) => {
             const id = req.params.commentId
             const content = req.body.content
-            const findComment = await commentsRepo.getById(id)
+            const findComment = await commentsRepository.getById(id)
             if (!findComment) {
                 res.sendStatus(400)
                 return
             }
-            const updComment = await commentService.updComments(id, content)
+            const updComment = await commentsService.updComments(id, content)
             if (!updComment) {
                 res.sendStatus(404)
                 return
@@ -33,7 +32,7 @@ commentsRouter
         inputValidator,
         async (req: Request, res: Response) => {
             const id = req.params.commentId
-            const comment = await commentService.getCommentById(id)
+            const comment = await commentsService.getCommentById(id)
             if (!comment) {
                 res.sendStatus(404)
             } else {
@@ -46,7 +45,7 @@ commentsRouter
         inputValidator,
         async (req: Request, res: Response) => {
             const id = req.params.commentId
-            const delCom = await commentService.deleteById(id)
+            const delCom = await commentsService.deleteById(id)
             if (!delCom) {
                 res.sendStatus(404)
             } else {

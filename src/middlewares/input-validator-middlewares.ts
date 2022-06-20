@@ -1,6 +1,6 @@
 import {Request, Response, NextFunction} from "express";
 import {body, check, validationResult} from "express-validator";
-import {commentService} from "../domain/comment-service";
+import {commentsService} from "../iocContainer";
 
 const reg = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+$/
 
@@ -89,7 +89,7 @@ export const getPage = (query: any) => {
 
 export const isItUserCom = async (req: Request, res: Response, next: NextFunction) => {
     const commentId = req.params.commentId
-    const comUser = await commentService.getCommentById(commentId)
+    const comUser = await commentsService.getCommentById(commentId)
     if (!comUser) {
         res.sendStatus(404)
     } else if (comUser.userLogin != req.user!.login) {

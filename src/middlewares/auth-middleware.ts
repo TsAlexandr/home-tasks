@@ -1,6 +1,6 @@
 import {NextFunction, Request, Response} from "express";
 import jwt from "jsonwebtoken";
-import {usersRepo} from "../repositories/users-repo";
+import {usersRepository} from "../iocContainer";
 
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
@@ -17,7 +17,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
     }
     try {
         const decode: any = jwt.verify(token, 'secret')
-        const user = await usersRepo.findById(decode.userId)
+        const user = await usersRepository.findById(decode.userId)
         if (!user) {
             res.sendStatus(403)
             return
