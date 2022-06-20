@@ -1,5 +1,6 @@
 import {injectable} from "inversify";
 import {NextFunction, Request, Response} from "express";
+import "reflect-metadata";
 import {usersRepository} from "../iocContainer";
 import {AttemptsRepository} from "../repositories/attempts-repository";
 import {ObjectId} from "mongodb";
@@ -9,13 +10,13 @@ import {ObjectId} from "mongodb";
 export class AttemptsControlMiddleware {
     constructor(private attemptsRepository: AttemptsRepository) {
     }
-    private attemptsInteval = 10 * 1000
+    private attemptsInterval = 10 * 1000
 
     async checkAttempts(req: Request, res: Response, next: NextFunction) {
         const ip = req.ip
         const url = req.url
         const currentTime: Date = new Date()
-        const attemptsTime = new Date(currentTime.getTime() - this.attemptsInteval)
+        const attemptsTime = new Date(currentTime.getTime() - this.attemptsInterval)
         const attemptsCount = await this.attemptsRepository.getLastAttempts(ip, url, attemptsTime)
         await this.attemptsRepository.addAttempt(ip, url, currentTime)
         if(attemptsCount < 5) {
@@ -43,5 +44,5 @@ export class AttemptsControlMiddleware {
 export interface IAttemptsRepository {
     addAttempt(ip: string, url: string, time: Date): Promise<ObjectId>
     removeOldAttempts(): Promise<number>
-    getLastAttempts(ip: string, url: string, limitTime: Date): Promise<number>
+    getLastAttempts(ip: string, url: string, attemptsTime: Date): Promise<number>
 }

@@ -23,11 +23,11 @@ export class AttemptsRepository implements IAttemptsRepository {
         return result.deletedCount
     }
 
-    async getLastAttempts(ip: string, url: string, limitTime: Date) {
+    async getLastAttempts(ip: string, url: string, attemptsTime: Date) {
         const count = await this.attemptsCollection.countDocuments({
             userIp: ip,
             url,
-            time: {$gt: limitTime}
+            time: {$gt: attemptsTime}
         })
         return count
     }
