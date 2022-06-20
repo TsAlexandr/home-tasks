@@ -29,14 +29,9 @@ export class UsersRepository implements IUsersRepository {
         })
     }
 
-    async createUser(newUser: UserType): Promise<UserType | null> {
-        await this.usersCollection.insertOne(newUser)
-        const createdUser = await this.usersCollection.findOne({"accountData.id": newUser.accountData.id})
-        if(createdUser) {
-            return createdUser
-        }else {
-            return null
-        }
+    async createUser(newUser: UserType): Promise<UserType> {
+        const result = await this.usersCollection.insertOne(newUser)
+        return newUser
     }
 
     async findByLogin(login: string) {

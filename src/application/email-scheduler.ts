@@ -14,7 +14,7 @@ export class EmailScheduler {
                 console.log("error: ", error)
                 await notificationRepository.updateMessage(sendMail._id)
                 await this.emailSendRunning()
-            }, 1000)
+            }, 500)
         }
     }
 }

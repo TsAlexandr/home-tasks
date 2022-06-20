@@ -56,7 +56,7 @@ export class UsersService {
 }
 export interface IUsersRepository {
     getUsers(page: number, pageSize: number): Promise<Paginator<UserType[]>>
-    createUser(newUser: UserType): Promise<UserType | null>
+    createUser(newUser: UserType): Promise<UserType>
     delUser(id: string): Promise<boolean>
 }
 
