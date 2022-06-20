@@ -1,7 +1,5 @@
 import nodemailer from 'nodemailer'
 import {injectable} from "inversify";
-import {EmailConfirmType, emailType} from "../repositories/db";
-import {emailScheduler, notificationRepository} from "../iocContainer";
 
 export const templateService = {
     getConfirmMessage(confirmationCode: string) {
@@ -32,10 +30,5 @@ export class EmailService {
         }catch (err) {
             console.log(err)
         }
-    }
-    async addMessageInQueue(message: emailType) {
-        const result = await notificationRepository.enqueueMessage(message)
-        if(result) await emailScheduler.emailSendRunning()
-        return result
     }
 }

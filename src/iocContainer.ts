@@ -17,9 +17,7 @@ import {UsersService} from "./domain/users-service";
 import {CommentsRepository} from "./repositories/comments-repo";
 import {CommentsService} from "./domain/comment-service";
 import {EmailService} from "./domain/email-service";
-import {EmailScheduler} from "./application/email-scheduler";
 import {AuthService} from "./domain/auth-service";
-import {NotificationRepo} from "./repositories/notification-repository";
 import {AttemptsRepository} from "./repositories/attempts-repository";
 import {AttemptsControlMiddleware} from "./middlewares/attempts-control";
 
@@ -36,8 +34,6 @@ export const commentsRepository = new CommentsRepository(commentsCollection)
 export const commentsService = new CommentsService(commentsRepository)
 export const emailService = new EmailService()
 export const authService = new AuthService(emailService)
-export const emailScheduler = new EmailScheduler(emailService)
-export const notificationRepository = new NotificationRepo(enqueueMessageCollection)
 export const attemptsRepository = new AttemptsRepository(attemptsCollection)
 export const attemptsControl = new AttemptsControlMiddleware(attemptsRepository)
 
