@@ -4,7 +4,9 @@ import {addHours} from "date-fns";
 import {templateService} from "./email-service";
 import {UsersRepository} from "../repositories/users-repo";
 import {authService, emailService} from "../iocContainer";
+import {injectable} from "inversify";
 
+@injectable()
 export class UsersService {
     constructor(private usersRepository: UsersRepository) {
     }
