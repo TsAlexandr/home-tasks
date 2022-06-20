@@ -36,7 +36,7 @@ authRouter.post('/registration',
     if (!user) {
         res.sendStatus(400)
     } else {
-        res.status(201).send()
+        res.sendStatus(204)
     }
 
 })
@@ -49,7 +49,9 @@ authRouter.post('/registration-confirmation',
     const code = req.body.code
     const result = await authService.confirmEmail(code)
     if (!result) {
-        res.sendStatus(400)
+        res.status(400).send({
+            errorsMessages: [{message: "wrong code", field: "code"}]
+        })
     } else {
         res.sendStatus(204)
     }
@@ -62,7 +64,13 @@ authRouter.post('/registration-email-resending',
     async (req: Request, res: Response) => {
     const result = await authService.resendRegistrationCode(req.body.email)
     if (!result) {
-        res.sendStatus(400)
+        res.status(400)
+            .send({
+                errorsMessages: [{
+                    message: "invalid email",
+                    field: "email"
+                }]
+            })
     } else {
         res.sendStatus(204)
     }
