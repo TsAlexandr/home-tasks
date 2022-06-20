@@ -1,17 +1,22 @@
-import {commentsRepo} from "../repositories/comments-repo";
+import {CommentsRepository} from "../repositories/comments-repo";
 import {v4} from "uuid";
+import {injectable} from "inversify";
+import {Paginator} from "../repositories/db";
 
+@injectable()
+export class CommentsService  {
+    constructor(private commentsRepository: CommentsRepository) {
+    }
 
-export const commentService = {
     async getCommaById(postId: string, page: number, pageSize: number) {
-        const comm = await commentsRepo.getCommaById(postId, page, pageSize)
+        const comm = await this.commentsRepository.getCommaById(postId, page, pageSize)
         return comm
-    },
+    }
 
     async getCommentById(id: string) {
-        const comment = await commentsRepo.getById(id)
+        const comment = await this.commentsRepository.getById(id)
         return comment
-    },
+    }
 
     async createComments(postId: string, content: string, userId: string, userLogin: string) {
         const newComment = {
@@ -22,18 +27,26 @@ export const commentService = {
             userLogin,
             addedAt: new Date()
         }
-        return await commentsRepo.createComments(newComment)
+        return await this.commentsRepository.createComments(newComment)
 
 
-    },
+    }
 
     async updComments(id: string, content: string) {
-        const update = await commentsRepo.updComments(id, content)
+        const update = await this.commentsRepository.updComments(id, content)
         return update
-    },
+    }
 
     async deleteById(id: string) {
-        return await commentsRepo.deleteById(id)
-    },
+        return await this.commentsRepository.deleteById(id)
+    }
 
+}
+
+export interface ICommentRepository {
+    getById(id: string): Promise<Comment | false>
+    getCommaById(postId: string, page: number, pageSize: number): Promise<Paginator<Comment[]>>
+    createComments(postId: string, content: string, userId: string, userLogin: string): Promise<Comment | false>
+    updComments(id: string, content: string): Promise<Comment | false>
+    deleteById(id: string): Promise<boolean>
 }
