@@ -21,13 +21,16 @@ export class EmailService {
         });
 
         // send mail with defined transport object
-        let info = await transporter.sendMail({
-            from: 'Alex Gerber', // sender address
-            to: email, // list of receivers
-            subject: subject, // Subject line
-            html: message, // html body
-        });
-        return info
+        try {
+            await transporter.sendMail({
+                from: 'Alex Gerber', // sender address
+                to: email, // list of receivers
+                subject: subject, // Subject line
+                html: message, // html body
+            }, (err) => err)
+        }catch (e) {
+            console.log(e)
+        }
     }
     async addMessageInQueue(message: emailType) {
         const result = await notificationRepository.enqueueMessage(message)
