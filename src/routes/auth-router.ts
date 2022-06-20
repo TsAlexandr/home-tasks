@@ -5,7 +5,7 @@ import {
     isValidCode,
     isValidEmail,
     isValidLogin,
-    isValidPass, isValidUser
+    isValidPass, isValidUser, validInput
 } from "../middlewares/input-validator-middlewares";
 
 
@@ -26,7 +26,7 @@ authRouter.post('/login',
 })
 
 authRouter.post('/registration',
-    isValidEmail, isValidLogin, isValidPass,
+    validInput,
     inputValidator,
     attemptsControl.checkAttempts.bind(attemptsControl),
     attemptsControl.checkExisting.bind(attemptsControl),
