@@ -1,10 +1,21 @@
 import {Router, Request, Response} from "express";
-import {authService, usersService} from "../iocContainer";
+import {attemptsControl, authService, usersService} from "../iocContainer";
+import {
+    inputValidator,
+    isValidCode,
+    isValidEmail,
+    isValidLogin,
+    isValidPass, isValidUser
+} from "../middlewares/input-validator-middlewares";
 
 
 export const authRouter = Router({})
 
-authRouter.post('/login', async (req: Request, res: Response) => {
+authRouter.post('/login',
+    isValidUser,
+    inputValidator,
+    attemptsControl.checkAttempts.bind(attemptsControl),
+    async (req: Request, res: Response) => {
     const {login, password} = req.body
     const result = await authService.checkCredentials(login, password)
     if (result.resultCode === 0) {
@@ -14,7 +25,12 @@ authRouter.post('/login', async (req: Request, res: Response) => {
     }
 })
 
-authRouter.post('/registration', async (req: Request, res: Response) => {
+authRouter.post('/registration',
+    isValidEmail, isValidLogin, isValidPass,
+    inputValidator,
+    attemptsControl.checkAttempts.bind(attemptsControl),
+    attemptsControl.checkExisting.bind(attemptsControl),
+    async (req: Request, res: Response) => {
     const {login, email, password} = req.body
     const user = await usersService.createUser(login, email, password)
     if (!user) {
@@ -25,7 +41,11 @@ authRouter.post('/registration', async (req: Request, res: Response) => {
 
 })
 
-authRouter.post('/registration-confirmation', async (req: Request, res: Response) => {
+authRouter.post('/registration-confirmation',
+    isValidCode,
+    inputValidator,
+    attemptsControl.checkAttempts.bind(attemptsControl),
+    async (req: Request, res: Response) => {
     const code = req.body.code
     const result = await authService.confirmEmail(code)
     if (!result) {
@@ -35,7 +55,11 @@ authRouter.post('/registration-confirmation', async (req: Request, res: Response
     }
 })
 
-authRouter.post('/registration-email-resending', async (req: Request, res: Response) => {
+authRouter.post('/registration-email-resending',
+    isValidEmail,
+    inputValidator,
+    attemptsControl.checkAttempts.bind(attemptsControl),
+    async (req: Request, res: Response) => {
     const result = await authService.resendRegistrationCode(req.body.email)
     if (!result) {
         res.sendStatus(400)
