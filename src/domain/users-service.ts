@@ -45,7 +45,6 @@ export class UsersService {
                 createdAt: new Date()
             })
             return createdUser
-            console.log(createdUser)
         } else {
             return null
         }

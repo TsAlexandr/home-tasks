@@ -12,7 +12,7 @@ export const templateService = {
 
 @injectable()
 export class EmailService {
-    async sendEmail(email: string, message: string, subject: string) {
+    async sendEmail(email: string, subject: string, message: string) {
         let transporter = nodemailer.createTransport({
             service: "smtp.yandex.ru",
             auth: {
@@ -36,7 +36,7 @@ export class EmailService {
     }
     async addMessageInQueue(message: emailType) {
         const result = await notificationRepository.enqueueMessage(message)
-        if (result) await emailScheduler.emailSend()
+        if (result && !emailScheduler.isRunning) await emailScheduler.emailSend()
         return result
     }
 }
