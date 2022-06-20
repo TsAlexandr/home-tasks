@@ -31,7 +31,7 @@ authRouter.post('/registration',
     attemptsControl.checkExisting.bind(attemptsControl),
     async (req: Request, res: Response) => {
     const {login, email, password} = req.body
-    const user = await usersService.createUser(login, password, email)
+    const user = await usersService.createUser(login, email, password)
     if (!user) {
         res.sendStatus(400)
     } else {

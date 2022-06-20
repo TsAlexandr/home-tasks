@@ -16,7 +16,7 @@ export class UsersService {
         return users
     }
 
-    async createUser(login: string, password: string, email: string) {
+    async createUser(login: string, email: string, password: string) {
         const passwordHash = await authService._generateHash(password)
         const newUser: UserType = {
             accountData: {
