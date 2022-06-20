@@ -3,12 +3,14 @@ import bcrypt from "bcrypt";
 import {BaseAuthData} from "../repositories/db";
 import {injectable} from "inversify";
 import {isAfter} from "date-fns";
-import {templateService} from "./email-service";
+import {EmailService, templateService} from "./email-service";
 import {emailService, usersRepository} from "../iocContainer";
 
 @injectable()
 export class AuthService {
+    constructor(private emailService: EmailService) {
 
+    }
     async checkCredentials(login: string, password: string) {
         const user: any = await usersRepository.findByLogin(login)
         if (!user || !user.emailConfirm.isConfirmed) return {
@@ -44,17 +46,7 @@ export class AuthService {
         const equal = await bcrypt.compare(password, hash)
         return equal
     }
-    decodeBaseAuth(token: string): BaseAuthData {
-        const buff = Buffer.from(token, "base64");
 
-        const decodedString = buff.toString("ascii");
-
-        const loginAndPassword = decodedString.split(":");
-        return {
-            login: loginAndPassword[0],
-            password: loginAndPassword[1],
-        };
-    }
     async confirmEmail(code:string) {
         let user = await usersRepository.findByConfirmCode(code)
         if(!user || user.emailConfirm.isConfirmed) return false
@@ -69,13 +61,31 @@ export class AuthService {
     async resendRegistrationCode(email:string) {
         let user = await usersRepository.findByEmail(email)
         if(!user || user.emailConfirm.isConfirmed) return false
-        const updUser = await usersRepository.updateConfirm(user.accountData.id)
+        const updUser = await usersRepository.updateConfirmationCode(user.accountData.id)
         if(updUser) {
             const message = templateService.getConfirmMessage(updUser.emailConfirm.confirmationCode)
-            await emailService.sendEmail(updUser.accountData.email, "Confirm email", message)
+            await emailService.addMessageInQueue({
+                email: updUser.accountData.email,
+                message: message,
+                subject: "E-mail confirmation ",
+                isSent: false,
+                createdAt: new Date()
+            })
             return true
         }
         return false
+    }
+
+    decodeBaseAuth(token: string): BaseAuthData {
+        const buff = Buffer.from(token, "base64");
+
+        const decodedString = buff.toString("ascii");
+
+        const loginAndPassword = decodedString.split(":");
+        return {
+            login: loginAndPassword[0],
+            password: loginAndPassword[1],
+        };
     }
 }
 
