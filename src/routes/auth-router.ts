@@ -7,11 +7,11 @@ export const authRouter = Router({})
 authRouter.post('/login', async (req: Request, res: Response) => {
     const {login, password} = req.body
     const result = await authService.checkCredentials(login, password)
-        if(result.resultCode === 0) {
-            res.status(200).send(result.data)
-        } else {
-            res.sendStatus(401)
-        }
+    if (result.resultCode === 0) {
+        res.status(200).send(result.data)
+    } else {
+        res.sendStatus(401)
+    }
 })
 
 authRouter.post('/registration', async (req: Request, res: Response) => {
@@ -19,21 +19,27 @@ authRouter.post('/registration', async (req: Request, res: Response) => {
     const user = await authService.createUser(login, email, password)
     if (!user) {
         res.sendStatus(400)
-    }else {
+    } else {
         res.status(201).send()
     }
 
 })
 
-authRouter.post('/confirm-email', async (req: Request, res: Response) => {
-    const result = await authService.confirmEmail(req.body.login)
-    if(!result) {
+authRouter.post('/registration-confirmation', async (req: Request, res: Response) => {
+    const code = req.body.code
+    const result = await authService.confirmEmail(code)
+    if (!result) {
         res.sendStatus(400)
     } else {
-        res.sendStatus(201)
+        res.sendStatus(204)
     }
 })
 
-authRouter.post('/resend-registration-code', async (req: Request, res: Response) => {
-
+authRouter.post('/registration-email-resending', async (req: Request, res: Response) => {
+    const result = await authService.resendRegistrationCode(req.body.email)
+    if (!result) {
+        res.sendStatus(400)
+    } else {
+        res.sendStatus(204)
+    }
 })
