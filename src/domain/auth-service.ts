@@ -4,7 +4,7 @@ import {BaseAuthData} from "../repositories/db";
 import {injectable} from "inversify";
 import {isAfter} from "date-fns";
 import {EmailService, templateService} from "./email-service";
-import {emailService, usersRepository} from "../iocContainer";
+import {usersRepository} from "../iocContainer";
 
 @injectable()
 export class AuthService {
@@ -49,7 +49,7 @@ export class AuthService {
 
     async confirmEmail(code:string) {
         let user = await usersRepository.findByConfirmCode(code)
-        if(!user || user.emailConfirm.isConfirmed) return false
+        if(!user) return false
         const dbConfirmCode = user.emailConfirm.confirmationCode
         const expired = isAfter(user.emailConfirm.expirationDate, new Date())
         if(dbConfirmCode === code && expired) {
@@ -60,7 +60,7 @@ export class AuthService {
     }
     async resendRegistrationCode(email:string) {
         let user = await usersRepository.findByEmail(email)
-        if(!user || user.emailConfirm.isConfirmed) return null
+        if(!user) return null
         const updUser = await usersRepository.updateConfirmationCode(user.accountData.id)
         if(updUser) {
             const message = templateService.getConfirmMessage(updUser.emailConfirm.confirmationCode)

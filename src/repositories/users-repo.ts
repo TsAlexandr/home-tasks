@@ -63,13 +63,9 @@ export class UsersRepository implements IUsersRepository {
     }
 
     async updateConfirm(id: string) {
-        const result = await this.usersCollection.findOneAndUpdate(
-            {"accountData.id": id}, {
-                $set: {
-                    "emailConfirm.isConfirmed": true
-                }
-            })
-        return result.value
+        let result = await this.usersCollection
+            .updateOne({"accountData.id": id}, {$set: {"emailConfirm.isConfirmed": true}})
+        return result.modifiedCount === 1
     }
 
     async updateConfirmationCode(id: string) {
