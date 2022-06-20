@@ -29,14 +29,12 @@ export class EmailService {
                 subject: subject, // Subject line
                 html: message, // html body
             }, (err) => err)
-            console.log(email, message, subject)
         }catch (err) {
             console.log(err)
         }
     }
     async addMessageInQueue(message: emailType) {
         const result = await notificationRepository.enqueueMessage(message)
-        if (result && !emailScheduler.isRunning) await emailScheduler.emailSend()
         return result
     }
 }

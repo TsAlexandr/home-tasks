@@ -32,9 +32,11 @@ export class UsersRepository implements IUsersRepository {
     async createUser(newUser: UserType): Promise<UserType | null> {
         await this.usersCollection.insertOne(newUser)
         const createdUser = await this.usersCollection.findOne({"accountData.id": newUser.accountData.id})
-        return createdUser
-            ? createdUser
-            : null
+        if(createdUser) {
+            return createdUser
+        }else {
+            return null
+        }
     }
 
     async findByLogin(login: string) {

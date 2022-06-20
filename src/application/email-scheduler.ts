@@ -11,14 +11,15 @@ export class EmailScheduler {
     public get isRunning() {
         return this._isRunning
     }
-    async emailSend() {
+    async emailSendRunning() {
         this._isRunning = true
         const sendMail = await notificationRepository.dequeueMessage()
         if (sendMail) {
             setTimeout(async () => {
                 let error = await this.emailService.sendEmail(sendMail.email, sendMail.subject, sendMail.message)
+                console.log(error)
                 await notificationRepository.updateMessage(sendMail._id)
-                await this.emailSend()
+                await this.emailSendRunning()
             }, 1000)
         }else{
             this._isRunning = false
