@@ -22,7 +22,7 @@ app.use('/users', usersRouter)
 app.use('/auth', authRouter)
 app.use('/email', emailRouter)
 
-app.delete('/api/testing/all-data', (req: Request, res: Response) => {
+app.delete('/testing/all-data', (req: Request, res: Response) => {
     removeAll().then(()=> res.sendStatus(204))
 })
 
