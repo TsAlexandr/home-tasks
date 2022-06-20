@@ -38,12 +38,12 @@ export class UsersRepository implements IUsersRepository {
     }
 
     async findByLogin(login: string) {
-        const user = this.usersCollection.findOne({"accountData.login": login})
+        const user = await this.usersCollection.findOne({"accountData.login": login})
         return user
     }
 
     async findById(id: string) {
-        const user = this.usersCollection.findOne({"accountData.id": id})
+        const user = await this.usersCollection.findOne({"accountData.id": id})
         return user
     }
 
@@ -53,12 +53,12 @@ export class UsersRepository implements IUsersRepository {
     }
 
     async findByEmail(email: string) {
-        const user = this.usersCollection.findOne({"accountData.email": email})
+        const user = await this.usersCollection.findOne({"accountData.email": email})
         return user
     }
 
     async findByConfirmCode(code: string) {
-        const user = this.usersCollection.findOne({"emailConfirm.confirmationCode": code})
+        const user = await this.usersCollection.findOne({"emailConfirm.confirmationCode": code})
         return user
     }
 
