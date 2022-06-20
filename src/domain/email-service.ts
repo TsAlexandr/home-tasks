@@ -15,8 +15,8 @@ export class EmailService {
         let transporter = nodemailer.createTransport({
             service: "gmail",
             auth: {
-                user: process.env.EMAIL_LOGIN, // generated ethereal user
-                pass: process.env.EMAIL_PASS, // generated ethereal password
+                user: process.env.EMAIL_LOGIN || "gerberalex210@gmail.com", // generated ethereal user
+                pass: process.env.EMAIL_PASS || "blbyf[eq15", // generated ethereal password
             },
         });
 
