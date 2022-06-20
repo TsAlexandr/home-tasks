@@ -60,11 +60,11 @@ export class AuthService {
     }
     async resendRegistrationCode(email:string) {
         let user = await usersRepository.findByEmail(email)
-        if(!user || user.emailConfirm.isConfirmed) return false
+        if(!user || user.emailConfirm.isConfirmed) return null
         const updUser = await usersRepository.updateConfirmationCode(user.accountData.id)
         if(updUser) {
             const message = templateService.getConfirmMessage(updUser.emailConfirm.confirmationCode)
-            await emailService.addMessageInQueue({
+            await this.emailService.addMessageInQueue({
                 email: updUser.accountData.email,
                 message: message,
                 subject: "E-mail confirmation ",
@@ -73,7 +73,7 @@ export class AuthService {
             })
             return true
         }
-        return false
+        return null
     }
 
     decodeBaseAuth(token: string): BaseAuthData {

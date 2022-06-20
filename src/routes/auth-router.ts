@@ -36,6 +36,7 @@ authRouter.post('/registration',
         res.sendStatus(400)
     } else {
         res.sendStatus(204)
+        console.log(user)
     }
 
 })
