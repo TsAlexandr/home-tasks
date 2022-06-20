@@ -1,5 +1,4 @@
 import {Router, Request, Response} from "express";
-import {bloggersService} from "../domain/bloggers-service";
 import {
     getDataPage, getPage,
     inputValidator,
@@ -8,7 +7,7 @@ import {
     isValidPage, isValidPost
 } from "../middlewares/input-validator-middlewares";
 import {checkAuth} from "../middlewares/basic-auth";
-import {postsService} from "../domain/posts-service";
+import {bloggersService, postsService} from "../iocContainer";
 
 export const bloggersRouter = Router({})
 
