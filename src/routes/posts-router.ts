@@ -7,12 +7,9 @@ import {
     isValidPage,
     isValidPost
 } from "../middlewares/input-validator-middlewares";
-import {postsService} from "../domain/posts-service";
-import {bloggersRepository} from "../repositories/bloggers-repository";
 import {checkAuth} from "../middlewares/basic-auth";
-import {postsRepository} from "../repositories/posts-repository";
-import {commentService} from "../domain/comment-service";
 import {authMiddleware} from "../middlewares/auth-middleware";
+import {bloggersRepository, commentsService, postsRepository, postsService} from "../iocContainer";
 
 export const postsRouter = Router({})
 
@@ -68,7 +65,7 @@ postsRouter
                 res.sendStatus(404)
                 return
             } else {
-                const commInPages = await commentService.getCommaById(postId, page, pageSize)
+                const commInPages = await commentsService.getCommaById(postId, page, pageSize)
                 res.status(200).send(commInPages)
             }
 
@@ -88,7 +85,7 @@ postsRouter
             const content: string = req.body.content
             const userId = req.user!.id
             const userLogin = req.user!.login
-            const newPost = await commentService.createComments(postId, content, userId, userLogin)
+            const newPost = await commentsService.createComments(postId, content, userId, userLogin)
             if (!newPost) {
                 res.sendStatus(404)
                 return
