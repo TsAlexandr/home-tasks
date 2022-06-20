@@ -3,12 +3,12 @@ import {EmailService} from "../domain/email-service";
 
 
 export class EmailScheduler {
-    private _isRunning: boolean;
+    private _isRunning: boolean
     constructor(private emailService: EmailService) {
-        this._isRunning = false;
+        this._isRunning = false
     }
     async emailSend() {
-        this._isRunning = true;
+        this._isRunning = true
         const sendMail = await notificationRepository.dequeueMessage()
         if (sendMail) {
             setTimeout(async () => {
@@ -17,7 +17,7 @@ export class EmailScheduler {
                 await this.emailSend()
             }, 1000)
         }else{
-            this._isRunning = false;
+            this._isRunning = false
         }
     }
 }

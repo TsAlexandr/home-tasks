@@ -29,6 +29,7 @@ export class EmailService {
                 subject: subject, // Subject line
                 html: message, // html body
             }, (err) => err)
+            console.log(email, message, subject)
         }catch (err) {
             console.log(err)
         }
