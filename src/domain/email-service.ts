@@ -5,7 +5,7 @@ import {emailScheduler, notificationRepository} from "../iocContainer";
 
 export const templateService = {
     getConfirmMessage(confirmationCode: string) {
-        return `<a href="https://homework00001.herokuapp.com/auth/registration-confirmation?confirmCode=${confirmationCode}">Confirm your email</a>`
+        return `<a href="https://homework00001.herokuapp.com/auth/registration-confirmation?confirmCode=${confirmationCode}">${confirmationCode}</a>`
     }
 }
 
@@ -34,7 +34,6 @@ export class EmailService {
     }
     async addMessageInQueue(message: emailType) {
         const result = await notificationRepository.enqueueMessage(message)
-        if(result) await emailScheduler.emailSend()
         return result
     }
 }

@@ -60,7 +60,7 @@ export class AuthService {
     }
     async confirmEmail(code:string) {
         let user = await usersRepository.findByConfirmCode(code)
-        if(!user) return false
+        if(!user || user.emailConfirm.isConfirmed) return false
         const dbConfirmCode = user.emailConfirm.confirmationCode
         const expired = isAfter(user.emailConfirm.expirationDate, new Date())
         if(dbConfirmCode === code && expired) {
@@ -71,7 +71,7 @@ export class AuthService {
     }
     async resendRegistrationCode(email:string) {
         let user = await usersRepository.findByEmail(email)
-        if(!user) return false
+        if(!user || user.emailConfirm.isConfirmed) return false
         const updUser = await usersRepository.updateConfirm(user.accountData.id)
         if(updUser) {
             const message = templateService.getConfirmMessage(updUser.emailConfirm.confirmationCode)

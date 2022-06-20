@@ -4,8 +4,7 @@ import {
     inputValidator,
     isValidCode,
     isValidEmail,
-    isValidLogin,
-    isValidPass, isValidUser, validInput
+    isValidUser, validInput
 } from "../middlewares/input-validator-middlewares";
 
 
@@ -32,7 +31,7 @@ authRouter.post('/registration',
     attemptsControl.checkExisting.bind(attemptsControl),
     async (req: Request, res: Response) => {
     const {login, email, password} = req.body
-    const user = await usersService.createUser(login, email, password)
+    const user = await usersService.createUser(login, password, email)
     if (!user) {
         res.sendStatus(400)
     } else {
