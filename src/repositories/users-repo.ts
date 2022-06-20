@@ -1,8 +1,6 @@
 import {Paginator, usersCollection, UserType} from "./db";
 import {injectable} from "inversify";
 import * as MongoClient from "mongodb";
-import {v4} from "uuid";
-import {addHours} from "date-fns";
 import {IUsersRepository} from "../domain/users-service";
 
 
@@ -38,12 +36,12 @@ export class UsersRepository implements IUsersRepository {
     }
 
     async findByLogin(login: string) {
-        const user = await this.usersCollection.findOne({"accountData.login": login})
+        const user = this.usersCollection.findOne({"accountData.login": login})
         return user
     }
 
     async findById(id: string) {
-        const user = await this.usersCollection.findOne({"accountData.id": id})
+        const user = this.usersCollection.findOne({"accountData.id": id})
         return user
     }
 
@@ -52,11 +50,11 @@ export class UsersRepository implements IUsersRepository {
         return result.deletedCount === 1
     }
     async findByEmail(email: string) {
-        const user = await this.usersCollection.findOne({"accountData.email": email})
+        const user = this.usersCollection.findOne({"accountData.email": email})
         return user
     }
     async findByConfirmCode(code: string) {
-        const user = await this.usersCollection.findOne({"emailConfirm.confirmationCode": code})
+        const user = this.usersCollection.findOne({"emailConfirm.confirmationCode": code})
         return user
     }
     async updateConfirm(id: string) {

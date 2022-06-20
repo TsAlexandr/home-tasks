@@ -1,21 +1,19 @@
-import {injectable} from "inversify";
-import {EmailService} from "../domain/email-service";
 import {notificationRepository} from "../iocContainer";
 
-@injectable()
+
 export class EmailScheduler {
     private _isRunning: boolean;
-    constructor(private emailService: EmailService) {
+    constructor() {
         this._isRunning = false;
     }
-    async emailSend() {
+    async emailSend(sendEmail: (...args: any) => Promise<any>) {
         this._isRunning = true;
-        const sendEmail = await notificationRepository.dequeueMessage()
-        if (sendEmail) {
+        const sendMail = await notificationRepository.dequeueMessage()
+        if (sendMail) {
             setTimeout(async () => {
-                let error = await this.emailService.sendEmail(sendEmail.email, sendEmail.message, sendEmail.subject)
-                await notificationRepository.updateMessage(sendEmail._id)
-                await this.emailSend()
+                let error = await sendEmail(sendMail.email, sendMail.message, sendMail.subject)
+                await notificationRepository.updateMessage(sendMail._id)
+                await this.emailSend(sendEmail)
             }, 1000)
         }else{
             this._isRunning = false;

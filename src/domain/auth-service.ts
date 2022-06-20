@@ -1,12 +1,9 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import {BaseAuthData} from "../repositories/db";
-import {ObjectId} from "mongodb";
-import {v4} from "uuid";
-import add from 'date-fns/add'
 import {injectable} from "inversify";
 import {isAfter} from "date-fns";
-import {EmailService, templateService} from "./email-service";
+import {templateService} from "./email-service";
 import {emailService, usersRepository} from "../iocContainer";
 
 @injectable()
@@ -14,13 +11,13 @@ export class AuthService {
 
     async checkCredentials(login: string, password: string) {
         const user: any = await usersRepository.findByLogin(login)
-        if (!user) return {
+        if (!user || !user.emailConfirm.isConfirmed) return {
             resultCode: 1,
             data: {
                 token: null
             }
         }
-        const isItHash = await this._correctHash(password, user.passwordHash)
+        const isItHash = await this._correctHash(password, user.accountData.passwordHash)
         if (!isItHash) {
             return {
                 resultCode: 1,
@@ -29,7 +26,7 @@ export class AuthService {
                 }
             }
         } else {
-            const token = jwt.sign({userId: user.id}, 'secret', {expiresIn: '1d'})
+            const token = jwt.sign({userId: user.accountData.id}, 'secret', {expiresIn: '1d'})
             return {
                 resultCode: 0,
                 data: {
@@ -75,13 +72,7 @@ export class AuthService {
         const updUser = await usersRepository.updateConfirm(user.accountData.id)
         if(updUser) {
             const message = templateService.getConfirmMessage(updUser.emailConfirm.confirmationCode)
-            await emailService.addMessageInQueue({
-                email: updUser.accountData.email,
-                message: message,
-                subject: 'Confirm your email',
-                isSent: false,
-                createdAt: new Date()
-            })
+            await emailService.sendEmail(updUser.accountData.email, "Confirm email", message)
             return true
         }
         return false
