@@ -20,7 +20,6 @@ app.use('/bloggers', bloggersRouter)
 app.use('/comments', commentsRouter)
 app.use('/users', usersRouter)
 app.use('/auth', authRouter)
-app.use('/email', emailRouter)
 
 app.delete('/testing/all-data', (req: Request, res: Response) => {
     removeAll().then(()=> res.sendStatus(204))

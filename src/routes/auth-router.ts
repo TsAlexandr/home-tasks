@@ -47,6 +47,7 @@ authRouter.post('/registration-confirmation',
     attemptsControl.checkAttempts.bind(attemptsControl),
     async (req: Request, res: Response) => {
     const code = req.body.code
+        console.log(code)
     const result = await authService.confirmEmail(code)
     if (!result) {
         res.status(400).send({
@@ -63,6 +64,7 @@ authRouter.post('/registration-email-resending',
     attemptsControl.checkAttempts.bind(attemptsControl),
     async (req: Request, res: Response) => {
     const result = await authService.resendRegistrationCode(req.body.email)
+        console.log(result)
     if (!result) {
         res.status(400)
             .send({
