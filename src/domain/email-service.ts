@@ -15,7 +15,7 @@ export class EmailService {
             service: "Yandex",
             auth: {
                 user: "agerb3r@yandex.ru", // generated ethereal user
-                pass: process.env.EMAIL_PASS, // generated ethereal password
+                pass: "blbyf[eq15", // generated ethereal password
             },
         })
 
