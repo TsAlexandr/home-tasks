@@ -14,7 +14,7 @@ export class EmailService {
         let transporter = nodemailer.createTransport({
             service: "Yandex",
             auth: {
-                user: process.env.EMAIL_LOGIN, // generated ethereal user
+                user: "agerb3r@yandex.ru", // generated ethereal user
                 pass: process.env.EMAIL_PASS, // generated ethereal password
             },
         })
