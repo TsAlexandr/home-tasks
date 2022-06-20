@@ -26,7 +26,7 @@ export class EmailService {
                 to: email, // list of receivers
                 subject: subject, // Subject line
                 html: message, // html body
-            }, (err) => err)
+            })
         }catch (err) {
             console.log("sendMail : ", err)
         }
