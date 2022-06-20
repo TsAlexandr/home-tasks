@@ -2,6 +2,7 @@ import {v4} from "uuid";
 import {bloggersRepository} from "../iocContainer";
 import {BloggersRepository} from "../repositories/bloggers-repository";
 import {inject, injectable} from "inversify";
+import "reflect-metadata"
 import {TYPES} from "../TYPES";
 import {Bloggers, Paginator} from "../repositories/db";
 
