@@ -38,17 +38,17 @@ export class UsersRepository implements IUsersRepository {
     }
 
     async findByLogin(login: string) {
-        const user = await this.usersCollection.findOne({login})
+        const user = await this.usersCollection.findOne({"accountData.login": login})
         return user
     }
 
     async findById(id: string) {
-        const user = await this.usersCollection.findOne({id})
+        const user = await this.usersCollection.findOne({"accountData.id": id})
         return user
     }
 
     async delUser(id: string) {
-        const result = await this.usersCollection.deleteOne({id})
+        const result = await this.usersCollection.deleteOne({"accountData.id": id})
         return result.deletedCount === 1
     }
     async findByEmail(email: string) {
@@ -61,27 +61,11 @@ export class UsersRepository implements IUsersRepository {
     }
     async updateConfirm(id: string) {
         const result = await this.usersCollection.findOneAndUpdate(
-            {id}, {
+            {"accountData.id": id}, {
                 $set: {
                     "emailConfirm.isConfirmed": true
                 }
             })
         return result.value
-    }
-    async updateConfirmCode(id: string) {
-        let update = await this.usersCollection.findOneAndUpdate({
-        'accountData.id': id}, {
-            $set: {
-                "emailConfirm.confirmationCode": v4(),
-                "emailConfirm.expirationDate": addHours(new Date(), 24)
-            }
-        }, {returnDocument: 'after'})
-        return update.value
-    }
-    async findExistingUser(login: string, email: string) {
-        const user = await this.usersCollection.findOne({
-            $or: [{'accountData.login': login}, {'accountData.email': email}]
-        })
-        return user
     }
 }

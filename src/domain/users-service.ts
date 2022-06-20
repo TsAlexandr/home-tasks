@@ -1,13 +1,10 @@
 import {v4} from "uuid";
-import {injectable} from "inversify";
 import {Paginator, UserType} from "../repositories/db";
 import {addHours} from "date-fns";
 import {templateService} from "./email-service";
-import {AuthService} from "./auth-service";
 import {UsersRepository} from "../repositories/users-repo";
 import {authService, emailService} from "../iocContainer";
 
-@injectable()
 export class UsersService {
     constructor(private usersRepository: UsersRepository) {
     }
