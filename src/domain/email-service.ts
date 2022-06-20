@@ -12,7 +12,7 @@ export const templateService = {
 export class EmailService {
     async sendEmail(email: string, subject: string, message: string) {
         let transporter = nodemailer.createTransport({
-            service: "smtp.yandex.ru",
+            service: 'gmail',
             auth: {
                 user: process.env.EMAIL_LOGIN, // generated ethereal user
                 pass: process.env.EMAIL_PASS, // generated ethereal password
@@ -28,7 +28,7 @@ export class EmailService {
                 html: message, // html body
             }, (err) => err)
         }catch (err) {
-            console.log(err)
+            console.log("sendMail : ", err)
         }
     }
 }
