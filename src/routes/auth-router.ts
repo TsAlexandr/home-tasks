@@ -1,5 +1,5 @@
 import {Router, Request, Response} from "express";
-import {authService} from "../domain/auth-service";
+import {authService, usersService} from "../iocContainer";
 
 
 export const authRouter = Router({})
@@ -16,7 +16,7 @@ authRouter.post('/login', async (req: Request, res: Response) => {
 
 authRouter.post('/registration', async (req: Request, res: Response) => {
     const {login, email, password} = req.body
-    const user = await authService.createUser(login, email, password)
+    const user = await usersService.createUser(login, email, password)
     if (!user) {
         res.sendStatus(400)
     } else {
