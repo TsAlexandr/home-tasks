@@ -7,7 +7,6 @@ import {bloggersRouter} from "./routes/bloggers-router";
 import {commentsRouter} from "./routes/comments-router";
 import {usersRouter} from "./routes/users-router";
 import {authRouter} from "./routes/auth-router";
-import {emailRouter} from "./routes/email-router";
 import {removeAll} from "./application/autotests";
 const app = express()
 const port = process.env.PORT || 5000
