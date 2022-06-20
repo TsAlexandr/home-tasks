@@ -1,11 +1,10 @@
 import {Request, Response, NextFunction} from "express";
-import {authService} from "../domain/auth-service";
+import {authService} from "../iocContainer";
 
 enum DataAdmin {
     login = 'admin',
     password = 'qwerty'
 }
-
 
 
 export const checkAuth = async (req: Request, res: Response, next: NextFunction) => {
