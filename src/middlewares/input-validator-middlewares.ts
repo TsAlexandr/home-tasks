@@ -73,12 +73,15 @@ export const isValidComma = [
         .isEmpty()
 ]
 
-export const isValidEmail = check('email').matches(emailValidator)
-export const isValidLogin = check('login').isString()
-    .isLength({min: 3, max: 10})
-export const isValidPass = check('password').isString()
-    .isLength({min: 6, max: 20})
-export const isValidCode = check('code').isString()
+export const isValidEmail =[ check('email').matches(emailValidator)]
+
+export const isValidLogin = [check('login').isString()
+    .isLength({min: 3, max: 10})]
+
+export const isValidPass = [check('password').isString()
+    .isLength({min: 6, max: 20})]
+
+export const isValidCode = [check('code').isString()]
 
 
 
