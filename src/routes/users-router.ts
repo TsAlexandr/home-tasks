@@ -1,11 +1,11 @@
 import {Router, Request, Response} from "express";
-import {usersService} from "../domain/users-service";
 import {
     getPage,
     inputValidator, isValidId, isValidPage,
     isValidUser
 } from "../middlewares/input-validator-middlewares";
 import {checkAuth} from "../middlewares/basic-auth";
+import {usersService} from "../iocContainer";
 
 
 export const usersRouter = Router({})
@@ -25,10 +25,11 @@ usersRouter.get('/',
         isValidUser,
         inputValidator,
         async (req: Request, res: Response) => {
-        const {login, password} = req.body
+            const {login, password, email} = req.body
             const newUser = await usersService.createUser(
                 login,
-                password
+                password,
+                email
             )
             res.status(201).send(newUser)
 
