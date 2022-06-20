@@ -1,12 +1,11 @@
 import nodemailer from 'nodemailer'
 import {injectable} from "inversify";
-import {EmailConfirmType, emailType} from "../repositories/db";
-import {EmailScheduler} from "../application/email-scheduler";
+import {emailType} from "../repositories/db";
 import {emailScheduler, notificationRepository} from "../iocContainer";
 
 export const templateService = {
     getConfirmMessage(confirmationCode: string) {
-        return `<a href="https://homework00001.herokuapp.com/api/auth/registration-confirmation?confirmCode=${confirmationCode}">Confirm your email</a>`
+        return `<a href="https://homework00001.herokuapp.com/auth/registration-confirmation?confirmCode=${confirmationCode}">Confirm your email</a>`
     }
 }
 
