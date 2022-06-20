@@ -19,7 +19,7 @@ export class EmailService {
                 user: process.env.EMAIL_LOGIN, // generated ethereal user
                 pass: process.env.EMAIL_PASS, // generated ethereal password
             },
-        });
+        })
 
         // send mail with defined transport object
         try {
@@ -35,7 +35,6 @@ export class EmailService {
     }
     async addMessageInQueue(message: emailType) {
         const result = await notificationRepository.enqueueMessage(message)
-        if(result) await emailScheduler.emailSendRunning()
         return result
     }
 }
