@@ -62,6 +62,7 @@ export class AuthService {
         let user = await usersRepository.findByEmail(email)
         if(!user) return null
         const updUser = await usersRepository.updateConfirmationCode(user.accountData.id)
+        console.log(updUser)
         if(updUser) {
             const message = templateService.getConfirmMessage(updUser.emailConfirm.confirmationCode)
             await this.emailService.addMessageInQueue({

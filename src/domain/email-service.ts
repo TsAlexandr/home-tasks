@@ -5,7 +5,7 @@ import {emailScheduler, notificationRepository} from "../iocContainer";
 
 export const templateService = {
     getConfirmMessage(confirmationCode: string) {
-        return `<a href="https://homework00001.herokuapp.com/auth/registration-confirmation/?confirmCode=${confirmationCode}">${confirmationCode}</a>`
+        return `<a href="https://homework00001.herokuapp.com/auth/registration-confirmation/?code=${confirmationCode}">${confirmationCode}</a>`
     }
 
 }
