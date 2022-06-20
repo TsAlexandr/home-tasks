@@ -15,7 +15,7 @@ export class AttemptsControlMiddleware {
     async checkAttempts(req: Request, res: Response, next: NextFunction) {
         const ip = req.ip
         const url = req.url
-        const currentTime: Date = new Date()
+        const currentTime = new Date()
         const attemptsTime = new Date(currentTime.getTime() - this.attemptsInterval)
         const attemptsCount = await this.attemptsRepository.getLastAttempts(ip, url, attemptsTime)
         await this.attemptsRepository.addAttempt(ip, url, currentTime)
