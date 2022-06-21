@@ -40,6 +40,9 @@ export class CommentsRepository {
                 _id: false
             }
         })
+        if(!newComma) {
+            return null
+        }
         return newComma
     }
 
