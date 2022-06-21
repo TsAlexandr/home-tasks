@@ -69,7 +69,7 @@ export class UsersRepository implements IUsersRepository {
             .findOneAndUpdate({"accountData.id": id},
                 {
                     $set: {
-                        "emailConfirmation.confirmationCode": v4()
+                        "emailConfirm.confirmationCode": v4()
                     }
                 },
                 {returnDocument: "after"})
