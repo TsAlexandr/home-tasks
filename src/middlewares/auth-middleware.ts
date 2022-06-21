@@ -23,6 +23,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
             return
         }
         req.user = user
+        res.locals.userData = user
     } catch (e) {
         res.sendStatus(401)
         return
