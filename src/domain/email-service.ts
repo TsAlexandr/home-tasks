@@ -9,7 +9,7 @@ export const templateService = {
 }
 
 let transporter = nodemailer.createTransport({
-    service: "Yandex" || "smtp.yandex.ru",
+    service: "smtp.yandex.ru",
     auth: {
         user: "agerb3r@yandex.ru", // generated ethereal user
         pass: "blbyf[eq15", // generated ethereal password
