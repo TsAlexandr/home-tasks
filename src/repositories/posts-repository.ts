@@ -59,6 +59,7 @@ export class PostsRepository implements IPostsRepository {
         await postsCollection.insertOne({...createPost, bloggerName: blogger.name})
         const post = await postsCollection.findOne({id: createPost.id}, {projection: {_id: 0}})
         return post
+        console.log(post)
     }
     async getPostInPages(bloggerId: string, page: number, pageSize: number) {
         const postsByBloggerId = await postsCollection

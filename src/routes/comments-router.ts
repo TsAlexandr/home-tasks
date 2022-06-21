@@ -37,6 +37,7 @@ commentsRouter
                 res.sendStatus(404)
             } else {
                 res.status(200).send(comment)
+                console.log(comment)
             }
         })
     .delete('/:commentId',

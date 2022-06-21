@@ -58,6 +58,7 @@ export class BloggersRepository implements IBloggersRepository {
     async createBlogger(newBlogger: Bloggers) {
         await bloggersCollection.insertOne(newBlogger)
         return newBlogger
+        console.log(newBlogger)
     }
 }
 

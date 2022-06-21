@@ -67,6 +67,7 @@ postsRouter
             } else {
                 const commInPages = await commentsService.getCommaById(postId, page, pageSize)
                 res.status(200).send(commInPages)
+                console.log(commInPages)
             }
 
         })
