@@ -119,7 +119,7 @@ export const isItUserCom = async (req: Request, res: Response, next: NextFunctio
     const comUser = await commentsService.getCommentById(commentId)
     if (!comUser) {
         res.sendStatus(404)
-    } else if (comUser.userLogin != res.locals.accountData.login) {
+    } else if (comUser.userLogin != req.user.accountData.login) {
         res.sendStatus(403)
     } else {
         next()
