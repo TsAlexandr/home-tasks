@@ -1,12 +1,11 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import {BaseAuthData} from "../repositories/db";
-import {injectable} from "inversify";
 import {isAfter} from "date-fns";
 import {EmailService, templateService} from "./email-service";
 import {usersRepository} from "../iocContainer";
 
-@injectable()
+
 export class AuthService {
     constructor(private emailService: EmailService) {
 
