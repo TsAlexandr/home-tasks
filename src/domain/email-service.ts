@@ -22,7 +22,7 @@ export class EmailService {
     async sendEmail(email: string, subject: string, message: string) {
         // send mail with defined transport object
         return await transporter.sendMail({
-            from: 'Alex Gerber <agerb3r@yandex.ru>', // sender address
+            from: 'Alex Gerber <process.env.EMAIL_LOGIN>', // sender address
             to: email, // list of receivers
             subject: subject, // Subject line
             html: message, // html body
