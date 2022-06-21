@@ -44,7 +44,6 @@ export class CommentsRepository {
             return null
         }
         return newComma
-        console.log(newComma)
     }
 
     async updComments(id: string, content: string) {

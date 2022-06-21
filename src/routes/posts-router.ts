@@ -84,8 +84,8 @@ postsRouter
                 return
             }
             const content: string = req.body.content
-            const userId = req.user.id
-            const userLogin = req.user.login
+            const userId = req.body.userId
+            const userLogin = req.body.userLogin
             const newPost = await commentsService.createComments(postId, content, userId, userLogin)
             if (!newPost) {
                 res.sendStatus(404)
