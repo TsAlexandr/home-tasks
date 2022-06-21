@@ -35,10 +35,8 @@ export class UsersService {
             }
         }
         const createdUser = await this.usersRepository.createUser(newUser)
-
         if (createdUser) {
             const messageBody = templateService.getConfirmMessage(createdUser.emailConfirm.confirmationCode)
-            console.log(createdUser.accountData.email)
             await emailService.sendEmail(createdUser.accountData.email, "Confirm your email", messageBody)
             return createdUser
         } else {
@@ -50,9 +48,12 @@ export class UsersService {
         return await this.usersRepository.delUser(id)
     }
 }
+
 export interface IUsersRepository {
     getUsers(page: number, pageSize: number): Promise<Paginator<UserType[]>>
+
     createUser(newUser: UserType): Promise<UserType>
+
     delUser(id: string): Promise<boolean>
 }
 

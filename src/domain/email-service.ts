@@ -1,15 +1,12 @@
 import nodemailer from 'nodemailer'
 import {injectable} from "inversify";
 
-
-
 export const templateService = {
     getConfirmMessage(confirmationCode: string) {
         return `<a href="https://homework00001.herokuapp.com/auth/registration-confirmation/?code=${confirmationCode}">${confirmationCode}</a>`
     }
 
 }
-
 
 @injectable()
 export class EmailService {
@@ -21,9 +18,6 @@ export class EmailService {
                 pass: process.env.EMAIL_PASS, // generated ethereal password
             },
         });
-
-        console.log(process.env.EMAIL_LOGIN, process.env.EMAIL_PASS)
-
         // send mail with defined transport object
         return await transporter.sendMail({
             from: 'Alex Gerber <process.env.EMAIL_LOGIN>', // sender address

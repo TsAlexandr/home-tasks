@@ -53,8 +53,8 @@ authRouter.post('/registration-confirmation',
     attemptsControl.checkAttempts.bind(attemptsControl),
     async (req: Request, res: Response) => {
         const code = req.body.code
-        console.log(code)
         const result = await authService.confirmEmail(code)
+        console.log(result)
         if (!result) {
             res.status(400).send({
                 errorsMessages: [{message: "wrong code", field: "code"}]
