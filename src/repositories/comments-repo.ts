@@ -8,16 +8,9 @@ export class CommentsRepository {
     }
 
     async getById(id: string) {
-        const getCom = await this.commentsCollection.findOne({id}, {projection: {_id: 0}})
-        if (getCom) {
-            return {
-                id,
-                content: getCom.content,
-                userId: getCom.userId,
-                userLogin: getCom.userLogin,
-                addedAt: getCom.addedAt
-            }
-        }
+        const getCom = await this.commentsCollection.findOne({id}, {projection: {_id: 0, postId: 0}})
+        if(!getCom) return null
+        return getCom
     }
 
     async getCommaById(postId: string, page: number, pageSize: number): Promise<Paginator<Comment[]>> {

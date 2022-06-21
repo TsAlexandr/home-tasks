@@ -40,6 +40,6 @@ export interface IPostsRepository {
     getPostsById(id: string): Promise<PostsCon | false>
     deletePostsById(id: string): Promise<boolean>
     updatePostsById(updatePost: PostsCon): Promise<Boolean>
-    createPosts(newPost: NewPost): Promise<PostsCon | null>
+    createPosts(newPost: NewPost): Promise<PostsCon |  null>
     getPostInPages(bloggerId: string, page: number, pageSize: number): Promise<Paginator<PostsCon[]>>
 }
