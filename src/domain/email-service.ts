@@ -12,7 +12,7 @@ export const templateService = {
 export class EmailService {
     async sendEmail(email: string, subject: string, message: string) {
         let transporter = nodemailer.createTransport({
-            service: "Yandex",
+            service: "Yandex" || "smtp.yandex.ru",
             auth: {
                 user: "agerb3r@yandex.ru", // generated ethereal user
                 pass: "blbyf[eq15", // generated ethereal password
