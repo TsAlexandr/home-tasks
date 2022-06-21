@@ -22,6 +22,7 @@ app.use('/auth', authRouter)
 
 app.delete('/testing/all-data', (req: Request, res: Response) => {
     removeAll().then(()=> res.sendStatus(204))
+    return
 })
 
 const startApp = async () => {

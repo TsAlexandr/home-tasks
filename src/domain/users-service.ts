@@ -35,8 +35,10 @@ export class UsersService {
             }
         }
         const createdUser = await this.usersRepository.createUser(newUser)
+
         if (createdUser) {
             const messageBody = templateService.getConfirmMessage(createdUser.emailConfirm.confirmationCode)
+            console.log(createdUser.accountData.email)
             await emailService.sendEmail(createdUser.accountData.email, "Confirm your email", messageBody)
             return createdUser
         } else {
