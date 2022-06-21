@@ -19,8 +19,10 @@ authRouter.post('/login',
         const result = await authService.checkCredentials(login, password)
         if (result.resultCode === 0) {
             res.status(200).send(result.data)
+            return
         } else {
             res.sendStatus(401)
+            return
         }
     })
 
@@ -36,8 +38,10 @@ authRouter.post('/registration',
 
         if (!user) {
             res.sendStatus(400)
+            return
         } else {
             res.sendStatus(204)
+            return
             console.log(user)
         }
 
@@ -55,8 +59,10 @@ authRouter.post('/registration-confirmation',
             res.status(400).send({
                 errorsMessages: [{message: "wrong code", field: "code"}]
             })
+            return
         } else {
             res.sendStatus(204)
+            return
         }
     })
 
@@ -75,7 +81,9 @@ authRouter.post('/registration-email-resending',
                         field: "email"
                     }]
                 })
-        } else {
-            res.sendStatus(204)
+            return
         }
+
+        res.sendStatus(204)
+        return
     })

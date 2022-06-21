@@ -2,7 +2,6 @@ import {Paginator, usersCollection, UserType} from "./db";
 import {injectable} from "inversify";
 import * as MongoClient from "mongodb";
 import {IUsersRepository} from "../domain/users-service";
-import {addHours} from "date-fns";
 import {v4} from "uuid";
 
 
@@ -70,18 +69,11 @@ export class UsersRepository implements IUsersRepository {
             .findOneAndUpdate({"accountData.id": id},
                 {
                     $set: {
-                        "emailConfirmation.confirmationCode": v4(),
-                        "emailConfirmation.expirationDate": addHours(new Date(), 24)
+                        "emailConfirmation.confirmationCode": v4()
                     }
                 },
                 {returnDocument: "after"})
         return updatedUser.value
 
-    }
-
-    async findExistingUser(login: string, email: string) {
-        const result = await this.usersCollection
-            .findOne({$or: [{"accountData.login": login}, {"accountData.email": email}]})
-        return result
     }
 }
