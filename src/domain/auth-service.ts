@@ -51,8 +51,7 @@ export class AuthService {
         if(!user) return false
         if(user.emailConfirm.isConfirmed) return false
         const dbConfirmCode = user.emailConfirm.confirmationCode
-        const expired = isAfter(user.emailConfirm.expirationDate, new Date())
-        if(dbConfirmCode === code && expired) {
+        if(dbConfirmCode === code) {
             const result = await usersRepository.updateConfirm(user.accountData.id)
             return result
         }
