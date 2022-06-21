@@ -98,7 +98,6 @@ export type inputComment = {
 export type EmailConfirmType = {
     isConfirmed: boolean;
     confirmationCode: string;
-    expirationDate: Date;
     sentEmails: SentConfirmEmailType[];
 }
 export type SentConfirmEmailType = {

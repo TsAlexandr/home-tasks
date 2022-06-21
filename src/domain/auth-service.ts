@@ -66,7 +66,7 @@ export class AuthService {
         if(updUser) {
             const message = templateService.getConfirmMessage(updUser.emailConfirm.confirmationCode)
             console.log(message)
-            await this.emailService.sendEmail(user.accountData.email, "Confirm your email", message)
+            await this.emailService.sendEmail(updUser.accountData.email, "Confirm your email", message)
             return true
         }
         return null

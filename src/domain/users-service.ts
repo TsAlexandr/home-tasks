@@ -30,7 +30,6 @@ export class UsersService {
             emailConfirm: {
                 sentEmails: [],
                 confirmationCode: v4(),
-                expirationDate: addHours(new Date(), 24),
                 isConfirmed: false
             }
         }
