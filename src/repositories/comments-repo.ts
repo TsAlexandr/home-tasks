@@ -20,7 +20,7 @@ export class CommentsRepository {
         }
     }
 
-    async getCommaById(postId: string, page: number, pageSize: number) {
+    async getCommaById(postId: string, page: number, pageSize: number): Promise<Paginator<Comment[]>> {
         const filter = {postId}
         const commentsForPosts = await this.commentsCollection.find(filter, {projection: {_id: 0, postId: 0}})
             .limit(pageSize)
@@ -38,17 +38,14 @@ export class CommentsRepository {
         })
     }
 
-    async createComments(newComment: Comment) {
-        await this.commentsCollection.insertOne(newComment, {forceServerObjectId: true})
-        const newComma = await this.commentsCollection.findOne({id: newComment.id}, {
+    async createComments(newComment: Comment): Promise<Comment | null> {
+        await this.commentsCollection.insertOne(newComment)
+        const newComma = await this.commentsCollection.findOne<Comment>({id: newComment.id}, {
             projection: {
                 postId: false,
                 _id: false
             }
         })
-        if (!newComma) {
-            return null
-        }
         return newComma
     }
 
