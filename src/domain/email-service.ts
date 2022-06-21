@@ -1,20 +1,22 @@
 import nodemailer from 'nodemailer'
 import {injectable} from "inversify";
 
+
+export let transporter = nodemailer.createTransport({
+    service: "yandex",
+    auth: {
+        user: process.env.EMAIL_LOGIN, // generated ethereal user
+        pass: process.env.EMAIL_PASS, // generated ethereal password
+    },
+});
+
+
 export const templateService = {
     getConfirmMessage(confirmationCode: string) {
         return `<a href="https://homework00001.herokuapp.com/auth/registration-confirmation/?code=${confirmationCode}">${confirmationCode}</a>`
     }
 
 }
-
-let transporter = nodemailer.createTransport({
-    service: "smtp.yandex.ru",
-    auth: {
-        user: process.env.EMAIL_LOGIN, // generated ethereal user
-        pass: process.env.EMAIL_PASS, // generated ethereal password
-    },
-});
 
 
 @injectable()
