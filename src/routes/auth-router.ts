@@ -33,7 +33,6 @@ authRouter.post('/registration',
     attemptsControl.checkExisting.bind(attemptsControl),
     async (req: Request, res: Response) => {
         const {login, email, password} = req.body
-        console.log(login, email, password)
         const user = await usersService.createUser(login, email, password)
 
         if (!user) {
@@ -42,7 +41,6 @@ authRouter.post('/registration',
         } else {
             res.sendStatus(204)
             return
-            console.log(user)
         }
 
     })
@@ -73,6 +71,7 @@ authRouter.post('/registration-email-resending',
     async (req: Request, res: Response) => {
         const email = req.body.email
         const result = await authService.resendRegistrationCode(email)
+        console.log(result)
         if (!result) {
             res.status(400)
                 .send({
