@@ -14,13 +14,15 @@ export const templateService = {
 @injectable()
 export class EmailService {
     async sendEmail(email: string, subject: string, message: string) {
-        let transporter = nodemailer.createTransport({
-            service: "yandex",
+        let transporter = nodemailer.createTransport("SMTP",{
+            service: "Yandex",
             auth: {
                 user: process.env.EMAIL_LOGIN, // generated ethereal user
                 pass: process.env.EMAIL_PASS, // generated ethereal password
             },
         });
+
+        console.log(process.env.EMAIL_LOGIN, process.env.EMAIL_PASS)
 
         // send mail with defined transport object
         return await transporter.sendMail({
