@@ -45,8 +45,8 @@ export class CommentsService  {
 
 export interface ICommentRepository {
     getById(id: string): Promise<Comment | false>
-    getCommaById(postId: string, page: number, pageSize: number): Promise<Paginator<Comment[]>>
-    createComments(postId: string, content: string, userId: string, userLogin: string): Promise<Comment>
+    getCommaById(postId: string, page: number, pageSize: number): Promise<Comment>
+    createComments(postId: string, content: string, userId: string, userLogin: string): Promise<Paginator<Comment[]>>
     updComments(id: string, content: string): Promise<Comment | false>
     deleteById(id: string): Promise<boolean>
 }

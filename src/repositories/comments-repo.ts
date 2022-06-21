@@ -29,13 +29,14 @@ export class CommentsRepository {
         const total = await this.commentsCollection.countDocuments(filter)
         const pages = Math.ceil(total / pageSize)
 
-        return ({
+        const commInPages = {
             pagesCount: pages,
             page: page,
             pageSize: pageSize,
             totalCount: total,
             items: commentsForPosts
-        })
+        }
+        return commInPages
     }
 
     async createComments(newComment: Comment): Promise<Comment | null> {
