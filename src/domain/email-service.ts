@@ -11,8 +11,8 @@ export const templateService = {
 let transporter = nodemailer.createTransport({
     service: "smtp.yandex.ru",
     auth: {
-        user: "agerb3r@yandex.ru", // generated ethereal user
-        pass: "blbyf[eq15", // generated ethereal password
+        user: process.env.EMAIL_LOGIN, // generated ethereal user
+        pass: process.env.EMAIL_PASS, // generated ethereal password
     },
 });
 
@@ -20,17 +20,13 @@ let transporter = nodemailer.createTransport({
 @injectable()
 export class EmailService {
     async sendEmail(email: string, subject: string, message: string) {
-
-
-
         // send mail with defined transport object
-
-            return await transporter.sendMail({
-                from: 'Alex Gerber <agerb3r@yandex.ru>' , // sender address
-                to: email, // list of receivers
-                subject: subject, // Subject line
-                html: message, // html body
-            })
+        return await transporter.sendMail({
+            from: 'Alex Gerber <agerb3r@yandex.ru>', // sender address
+            to: email, // list of receivers
+            subject: subject, // Subject line
+            html: message, // html body
+        })
 
     }
 }
