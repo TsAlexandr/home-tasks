@@ -26,7 +26,7 @@ export class EmailService {
         // send mail with defined transport object
 
             return await transporter.sendMail({
-                from: 'Alex Gerber', // sender address
+                from: 'Alex Gerber <agerb3r@yandex.ru>' , // sender address
                 to: email, // list of receivers
                 subject: subject, // Subject line
                 html: message, // html body
